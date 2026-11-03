@@ -325,6 +325,9 @@ public sealed partial class SettingsViewModel : ObservableObject
 
         // 2. Keyboard
         var previousMode = s.WindowState.Mode;
+        var previousWidth = s.WindowState.Width;
+        var previousHeight = s.WindowState.Height;
+        var previousAlwaysOnTop = s.WindowState.AlwaysOnTop;
         var previousHookEnabled = s.PhysicalKeyboardHookEnabled;
         s.WindowState.Mode = DefaultWindowMode;
         if (DefaultWindowMode is KeyboardMode.Expanded or KeyboardMode.Compact)
@@ -380,7 +383,13 @@ public sealed partial class SettingsViewModel : ObservableObject
 
         _ = _themeManager.ApplyCurrentSettingsTheme();
 
-        if (previousMode != s.WindowState.Mode)
+        var windowGeometryOrModeChanged =
+            previousMode != s.WindowState.Mode ||
+            Math.Abs(previousWidth - s.WindowState.Width) > 0.5 ||
+            Math.Abs(previousHeight - s.WindowState.Height) > 0.5 ||
+            previousAlwaysOnTop != s.WindowState.AlwaysOnTop;
+
+        if (windowGeometryOrModeChanged)
         {
             _windowManagerService?.ApplyWindowMode(s.WindowState.Mode);
         }
@@ -500,6 +509,7 @@ public sealed partial class SettingsViewModel : ObservableObject
 
         ReloadFromCurrentSettings();
         _ = _themeManager.ApplyCurrentSettingsTheme();
+        _windowManagerService?.ApplyWindowMode(defaults.WindowState.Mode);
         HotkeysReloadRequested?.Invoke(this, EventArgs.Empty);
         PhysicalKeyboardHookToggled?.Invoke(this, defaults.PhysicalKeyboardHookEnabled);
 

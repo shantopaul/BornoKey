@@ -9,11 +9,11 @@
 
 | Field | Current Status |
 |---|---|
-| **Current Stage** | **Phase 9: Customization, Themes & Settings Panel** (In Progress) |
-| **Currently Active File** | `src/BengaliKeyboard.UI/Themes/Colors.Light.xaml` |
-| **Last Completed File** | `src/BengaliKeyboard.Tests/PredictionEngineTests.cs` |
+| **Current Stage** | **Phase 9: Customization, Themes & Settings Panel** (100% Complete — Ready for Phase 10) |
+| **Currently Active File** | None (Phase 9 Completed & Verified; Next up: Phase 10 `README.md`, `INSTALLATION.md` & `BornoKeySetup.iss`) |
+| **Last Completed File** | `src/BengaliKeyboard.Tests/Phase1FoundationTests.cs` |
 | **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln` — 0 Warnings, 0 Errors) |
-| **Automated Test Status** | **PASSING** (`42 / 42` xUnit tests passing across Phases 1 through 8) |
+| **Automated Test Status** | **PASSING** (`44 / 44` xUnit tests passing across Phases 1 through 9) |
 | **Last Updated** | 2026-11-03 |
 
 ---
@@ -32,9 +32,9 @@
 
 ## 3. Currently Active Work Item
 
-- **Current Phase:** **Phase 8 Complete** → Ready for **Phase 9 — Customization, Themes & Settings Panel**
-- **File Currently Being Worked On:** None (Phase 8 completed, tested twice, and verified)
-- **Next Immediate Action:** Start Phase 9 (`src/BengaliKeyboard.UI/Themes/Colors.Light.xaml`, `SettingsWindow.xaml`, and `SettingsViewModel.cs`).
+- **Current Phase:** **Phase 9 Complete** → Ready for **Phase 10 — Comprehensive Testing, Documentation & Release Installer**
+- **File Currently Being Worked On:** None (Phase 9 completed, tested twice, and verified)
+- **Next Immediate Action:** Start Phase 10 (`README.md`, `docs/INSTALLATION.md`, and `installer/BornoKeySetup.iss`).
 
 ---
 
@@ -135,10 +135,11 @@
 - [x] `src/BengaliKeyboard.UI/ViewModels/SuggestionBarViewModel.cs`
 - [x] `src/BengaliKeyboard.Tests/PredictionEngineTests.cs` (`4/4` passing; `42/42` total passing)
 
-### Phase 9 — Customization, Themes & Settings Panel
-- [ ] `src/BengaliKeyboard.UI/Themes/Colors.Light.xaml`
-- [ ] `src/BengaliKeyboard.UI/Windows/SettingsWindow.xaml` (`.cs`)
-- [ ] `src/BengaliKeyboard.UI/ViewModels/SettingsViewModel.cs`
+### Phase 9 — Customization, Themes & Settings Panel (100% Complete)
+- [x] `src/BengaliKeyboard.UI/Themes/Colors.Light.xaml`
+- [x] `src/BengaliKeyboard.UI/Themes/ThemeManager.cs` (Dark, Light, and System Default `AppsUseLightTheme` detection + custom hex overrides)
+- [x] `src/BengaliKeyboard.UI/Windows/SettingsWindow.xaml` (`.cs` — 8-section Windows 11-inspired 2-pane navigation)
+- [x] `src/BengaliKeyboard.UI/ViewModels/SettingsViewModel.cs` (8 sections + Privacy clear/HMAC rotation & 2-step Reset guard; `44/44` total tests passing)
 
 ### Phase 10 — Comprehensive Testing, Documentation & Release Installer
 - [ ] `README.md`

@@ -1,13 +1,18 @@
 using System.IO;
+using System.Windows;
+using System.Windows.Media;
 using BengaliKeyboard.App;
 using BengaliKeyboard.App.Logging;
 using BengaliKeyboard.Core.Enums;
+using BengaliKeyboard.Core.Events;
 using BengaliKeyboard.Core.Interfaces;
 using BengaliKeyboard.Core.Models;
 using BengaliKeyboard.Storage;
 using BengaliKeyboard.Storage.Configuration;
 using BengaliKeyboard.Storage.Database;
 using BengaliKeyboard.Storage.Security;
+using BengaliKeyboard.UI.Themes;
+using BengaliKeyboard.UI.ViewModels;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
@@ -283,6 +288,138 @@ public sealed class Phase1FoundationTests : IDisposable
         Assert.NotNull(provider.GetRequiredService<DatabaseInitializer>());
         Assert.NotNull(provider.GetRequiredService<ISettingsService>());
         Assert.NotNull(provider.GetRequiredService<IMessenger>());
+        Assert.NotNull(provider.GetRequiredService<ThemeManager>());
+        Assert.NotNull(provider.GetRequiredService<SettingsViewModel>());
+    }
+
+    [Fact]
+    public void ThemeManager_ResolvesDarkLightAndSystemThemes_AndAppliesCustomHexColors()
+    {
+        var paths = new AppPaths(_tempTestRoot);
+        var settingsService = new JsonSettingsService(paths);
+        var messenger = new WeakReferenceMessenger();
+
+        ThemeChangedMessage? lastMessage = null;
+        messenger.Register<Phase1FoundationTests, ThemeChangedMessage>(this, (_, msg) => lastMessage = msg);
+
+        Assert.Equal(AppTheme.Dark, ThemeManager.ResolveEffectiveTheme(AppTheme.Dark));
+        Assert.Equal(AppTheme.Light, ThemeManager.ResolveEffectiveTheme(AppTheme.Light));
+        Assert.Equal(AppTheme.Light, ThemeManager.ResolveEffectiveTheme(AppTheme.System, () => true));
+        Assert.Equal(AppTheme.Dark, ThemeManager.ResolveEffectiveTheme(AppTheme.System, () => false));
+
+        Assert.True(ThemeManager.TryParseHexColor("#3B82F6", out var blue));
+        Assert.Equal(Color.FromRgb(0x3B, 0x82, 0xF6), blue);
+        Assert.False(ThemeManager.TryParseHexColor("not-a-color", out _));
+
+        var themeManager = new ThemeManager(settingsService, messenger, () => true);
+        var targetDict = new ResourceDictionary();
+
+        // 1. Default Dark Theme
+        settingsService.Current.Theme = AppTheme.Dark;
+        var appliedDark = themeManager.ApplyThemeToDictionary(targetDict, settingsService.Current, out var darkDict);
+        Assert.Equal(AppTheme.Dark, appliedDark);
+        Assert.Equal(Color.FromRgb(0x17, 0x19, 0x1F), (Color)darkDict["Color.Window.Background"]);
+
+        // 2. Switch to Light Theme + Custom Accent Color Override
+        settingsService.Current.Theme = AppTheme.Light;
+        settingsService.Current.CustomAccentColorHex = "#10B981";
+        settingsService.Current.Opacity = 0.85;
+        var appliedLight = themeManager.ApplyThemeToDictionary(targetDict, settingsService.Current, out var lightDict);
+        Assert.Equal(AppTheme.Light, appliedLight);
+        Assert.Single(targetDict.MergedDictionaries);
+        Assert.Equal(Color.FromRgb(0xEC, 0xEE, 0xF2), (Color)lightDict["Color.Window.Background"]);
+        Assert.Equal(Color.FromRgb(0x10, 0xB9, 0x81), (Color)lightDict["Color.Accent.Primary"]);
+
+        _ = themeManager.ApplyCurrentSettingsTheme();
+        Assert.NotNull(lastMessage);
+        Assert.Equal(AppTheme.Light, lastMessage!.Theme);
+        Assert.Equal(0.85, lastMessage.Opacity);
+    }
+
+    [Fact]
+    public async Task SettingsViewModel_All8Sections_ModifyLiveSettings_AndExecutePrivacyPurgeAndFactoryReset()
+    {
+        using var bootstrapper = new Bootstrapper();
+        var provider = bootstrapper.ConfigureServices(_tempTestRoot);
+        await bootstrapper.InitializeCoreServicesAsync();
+
+        var settingsVm = provider.GetRequiredService<SettingsViewModel>();
+        var settingsService = provider.GetRequiredService<ISettingsService>();
+        var emojiService = provider.GetRequiredService<IEmojiService>();
+        var clipboardService = provider.GetRequiredService<IClipboardService>();
+        var predictionService = provider.GetRequiredService<IPredictionService>();
+        var dbInitializer = provider.GetRequiredService<DatabaseInitializer>();
+
+        // 1. Verify all 8 navigation sections
+        Assert.Equal(8, SettingsViewModel.OrderedSections.Count);
+        foreach (var section in SettingsViewModel.OrderedSections)
+        {
+            settingsVm.SelectSectionCommand.Execute(section);
+            Assert.Equal(section, settingsVm.SelectedSection);
+        }
+
+        // 2. Modify settings across sections and SaveAndApply
+        var hotkeysReloaded = false;
+        settingsVm.HotkeysReloadRequested += (_, _) => hotkeysReloaded = true;
+
+        settingsVm.LaunchMinimized = true;
+        settingsVm.ActiveLanguage = LanguageMode.English;
+        settingsVm.KeyboardWidth = 920;
+        settingsVm.SelectedTheme = AppTheme.Light;
+        settingsVm.Opacity = 0.82;
+        settingsVm.KeyCornerRadius = 10.0;
+        settingsVm.CustomAccentColorHex = "#2563EB";
+        settingsVm.SuggestionCount = 5;
+        settingsVm.EmojiHistoryLimit = 60;
+        settingsVm.ClipboardHistoryLimit = 150;
+        settingsVm.ToggleLanguageHotkey = "Alt+Shift+B";
+
+        await settingsVm.SaveAndApplyCommand.ExecuteAsync(null);
+
+        Assert.True(hotkeysReloaded);
+        Assert.True(settingsService.Current.LaunchMinimized);
+        Assert.Equal(LanguageMode.English, settingsService.Current.ActiveLanguage);
+        Assert.Equal(920, settingsService.Current.WindowState.Width);
+        Assert.Equal(AppTheme.Light, settingsService.Current.Theme);
+        Assert.Equal(0.82, settingsService.Current.Opacity);
+        Assert.Equal(10.0, settingsService.Current.KeyCornerRadius);
+        Assert.Equal("#2563EB", settingsService.Current.CustomAccentColorHex);
+        Assert.Equal(5, settingsService.Current.SuggestionCount);
+        Assert.Equal(60, settingsService.Current.EmojiHistoryLimit);
+        Assert.Equal(150, settingsService.Current.ClipboardHistoryLimit);
+        Assert.Equal("Alt+Shift+B", settingsService.Current.ToggleLanguageHotkey);
+
+        // 3. Seed Emoji, Clipboard, and UserDictionary data, then execute ClearAllApplicationDataCommand
+        var initialHmacKey = await dbInitializer.GetOrCreateClipboardHmacKeyAsync();
+        await emojiService.RecordUsageAsync("😀");
+        _ = await clipboardService.CaptureTextAsync("গোপন ক্লিপবোর্ড টেক্সট");
+        await predictionService.RecordAcceptedWordAsync("স্বাধীনতা", "আমার");
+
+        Assert.NotEmpty(await emojiService.GetFrequentlyUsedAsync());
+        Assert.NotEmpty(await clipboardService.GetHistoryAsync());
+
+        await settingsVm.ClearAllApplicationDataCommand.ExecuteAsync(null);
+
+        Assert.Empty(await emojiService.GetFrequentlyUsedAsync());
+        Assert.Empty(await clipboardService.GetHistoryAsync());
+        var rotatedHmacKey = await dbInitializer.GetOrCreateClipboardHmacKeyAsync();
+        Assert.NotEqual(initialHmacKey, rotatedHmacKey);
+
+        // 4. Verify Two-Step Confirmation Guard & Factory Reset
+        settingsVm.RequestResetConfirmationCommand.Execute(null);
+        Assert.True(settingsVm.IsResetConfirmationPending);
+
+        settingsVm.CancelResetConfirmationCommand.Execute(null);
+        Assert.False(settingsVm.IsResetConfirmationPending);
+
+        settingsVm.RequestResetConfirmationCommand.Execute(null);
+        await settingsVm.ResetSettingsToDefaultsCommand.ExecuteAsync(null);
+
+        Assert.False(settingsVm.IsResetConfirmationPending);
+        Assert.Equal(LanguageMode.Bangla, settingsService.Current.ActiveLanguage);
+        Assert.Equal(AppTheme.Dark, settingsService.Current.Theme);
+        Assert.Equal(AppSettings.DefaultOpacity, settingsService.Current.Opacity);
+        Assert.Equal("Ctrl+Space", settingsService.Current.ToggleLanguageHotkey);
     }
 
     public void Dispose()

@@ -22,6 +22,15 @@ public sealed class ThemeManager
     private const string PersonalizeRegistryPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
     private const string AppsUseLightThemeValueName = "AppsUseLightTheme";
 
+    static ThemeManager()
+    {
+        if (!UriParser.IsKnownScheme("pack"))
+        {
+            _ = System.IO.Packaging.PackUriHelper.UriSchemePack;
+            _ = Application.Current;
+        }
+    }
+
     private readonly ISettingsService _settingsService;
     private readonly IMessenger _messenger;
     private readonly Func<bool> _systemLightThemeDetector;
