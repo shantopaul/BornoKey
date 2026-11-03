@@ -40,9 +40,18 @@ public sealed class SqliteConnectionFactory
         };
 
         var connection = new SqliteConnection(builder.ToString());
-        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
-        await ApplyConnectionPragmasAsync(connection, isReadOnly: false, cancellationToken).ConfigureAwait(false);
-        return connection;
+        try
+        {
+            await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+            await ApplyConnectionPragmasAsync(connection, isReadOnly: false, cancellationToken).ConfigureAwait(false);
+            return connection;
+        }
+        catch
+        {
+            await connection.DisposeAsync().ConfigureAwait(false);
+            SqliteConnection.ClearPool(connection);
+            throw;
+        }
     }
 
     /// <summary>
@@ -69,13 +78,22 @@ public sealed class SqliteConnectionFactory
         };
 
         var connection = new SqliteConnection(builder.ToString());
-        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
-        await ApplyConnectionPragmasAsync(
-            connection,
-            isReadOnly: openMode == SqliteOpenMode.ReadOnly,
-            cancellationToken).ConfigureAwait(false);
+        try
+        {
+            await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+            await ApplyConnectionPragmasAsync(
+                connection,
+                isReadOnly: openMode == SqliteOpenMode.ReadOnly,
+                cancellationToken).ConfigureAwait(false);
 
-        return connection;
+            return connection;
+        }
+        catch
+        {
+            await connection.DisposeAsync().ConfigureAwait(false);
+            SqliteConnection.ClearPool(connection);
+            throw;
+        }
     }
 
     /// <summary>
