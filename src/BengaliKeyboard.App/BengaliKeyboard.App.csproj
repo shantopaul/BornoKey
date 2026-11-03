@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>BengaliKeyboard.App</RootNamespace>
+    <AssemblyName>BengaliKeyboard.App</AssemblyName>
+    <UseWPF>true</UseWPF>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <StartupObject>BengaliKeyboard.App.Program</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
+    <PackageReference Include="Serilog" Version="4.2.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BengaliKeyboard.Core\BengaliKeyboard.Core.csproj" />
+    <ProjectReference Include="..\BengaliKeyboard.Storage\BengaliKeyboard.Storage.csproj" />
+    <ProjectReference Include="..\BengaliKeyboard.UI\BengaliKeyboard.UI.csproj" />
+  </ItemGroup>
+
+</Project>

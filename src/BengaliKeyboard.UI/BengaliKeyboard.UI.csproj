@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>BengaliKeyboard.UI</RootNamespace>
+    <AssemblyName>BengaliKeyboard.UI</AssemblyName>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BengaliKeyboard.Core\BengaliKeyboard.Core.csproj" />
+  </ItemGroup>
+
+</Project>
