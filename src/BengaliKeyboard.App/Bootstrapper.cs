@@ -1,5 +1,6 @@
 using System.IO;
 using BengaliKeyboard.App.Logging;
+using BengaliKeyboard.Clipboard;
 using BengaliKeyboard.Core.Interfaces;
 using BengaliKeyboard.Emoji;
 using BengaliKeyboard.Input;
@@ -76,12 +77,20 @@ public sealed class Bootstrapper : IDisposable
         services.AddSingleton<EmojiUsageService>();
         services.AddSingleton<IEmojiService>(sp => sp.GetRequiredService<EmojiUsageService>());
 
+        // Event-Driven Privacy-First Clipboard History Manager
+        services.AddSingleton<ClipboardMonitor>();
+        services.AddSingleton<ClipboardRepository>();
+        services.AddSingleton<ClipboardHistoryService>();
+        services.AddSingleton<IClipboardService>(sp => sp.GetRequiredService<ClipboardHistoryService>());
+
         // UI ViewModels & Windows
         services.AddSingleton<KeyboardViewModel>();
         services.AddSingleton<EmojiViewModel>();
+        services.AddSingleton<ClipboardViewModel>();
         services.AddSingleton<KeyboardWindow>();
         services.AddSingleton<FloatingIconWindow>();
         services.AddSingleton<EmojiWindow>();
+        services.AddSingleton<ClipboardWindow>();
 
         _serviceProvider = services.BuildServiceProvider();
         return _serviceProvider;
