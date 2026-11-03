@@ -22,4 +22,6 @@ public interface IPredictionService
         string word,
         string? previousWord = null,
         CancellationToken cancellationToken = default);
+
+    Task ClearUserDictionaryAsync(CancellationToken cancellationToken = default);
 }

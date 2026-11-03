@@ -64,4 +64,10 @@ public sealed class SuggestionRankingService : IPredictionService
         await _dictionaryService.RecordUserWordAsync(word, cancellationToken).ConfigureAwait(false);
         _nGramModel?.RecordUserBigram(previousWord, word);
     }
+
+    public async Task ClearUserDictionaryAsync(CancellationToken cancellationToken = default)
+    {
+        _nGramModel?.ClearUserBigrams();
+        await _dictionaryService.ClearUserDictionaryAsync(cancellationToken).ConfigureAwait(false);
+    }
 }

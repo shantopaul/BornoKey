@@ -10,6 +10,7 @@ using BengaliKeyboard.Prediction;
 using BengaliKeyboard.Storage;
 using BengaliKeyboard.Storage.Configuration;
 using BengaliKeyboard.Storage.Database;
+using BengaliKeyboard.UI.Themes;
 using BengaliKeyboard.UI.ViewModels;
 using BengaliKeyboard.UI.Windows;
 using BengaliKeyboard.Windows;
@@ -93,14 +94,28 @@ public sealed class Bootstrapper : IDisposable
         services.AddSingleton<IClipboardService>(sp => sp.GetRequiredService<ClipboardHistoryService>());
 
         // UI ViewModels & Windows
+        services.AddSingleton<ThemeManager>();
         services.AddSingleton<KeyboardViewModel>();
         services.AddSingleton<SuggestionBarViewModel>();
         services.AddSingleton<EmojiViewModel>();
         services.AddSingleton<ClipboardViewModel>();
+        services.AddSingleton<SettingsViewModel>(sp => new SettingsViewModel(
+            sp.GetRequiredService<ISettingsService>(),
+            sp.GetRequiredService<ThemeManager>(),
+            sp.GetRequiredService<IStartupService>(),
+            sp.GetRequiredService<ILayoutManager>(),
+            sp.GetRequiredService<IBengaliInputEngine>(),
+            sp.GetRequiredService<IWindowManagerService>(),
+            sp.GetRequiredService<IPredictionService>(),
+            sp.GetRequiredService<IEmojiService>(),
+            sp.GetRequiredService<IClipboardService>(),
+            sp.GetRequiredService<AppPaths>().BaseDirectory,
+            ct => sp.GetRequiredService<DatabaseInitializer>().ClearAllUserDataAsync(ct)));
         services.AddSingleton<KeyboardWindow>();
         services.AddSingleton<FloatingIconWindow>();
         services.AddSingleton<EmojiWindow>();
         services.AddSingleton<ClipboardWindow>();
+        services.AddSingleton<SettingsWindow>();
 
         _serviceProvider = services.BuildServiceProvider();
         return _serviceProvider;

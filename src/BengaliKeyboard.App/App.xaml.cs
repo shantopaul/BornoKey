@@ -4,6 +4,7 @@ using BengaliKeyboard.Clipboard;
 using BengaliKeyboard.Core.Enums;
 using BengaliKeyboard.Core.Interfaces;
 using BengaliKeyboard.Input;
+using BengaliKeyboard.UI.Themes;
 using BengaliKeyboard.UI.ViewModels;
 using BengaliKeyboard.UI.Windows;
 using BengaliKeyboard.Windows;
@@ -49,11 +50,21 @@ public partial class App : Application
             var keyboardViewModel = _bootstrapper.ServiceProvider.GetRequiredService<KeyboardViewModel>();
             var emojiViewModel = _bootstrapper.ServiceProvider.GetRequiredService<EmojiViewModel>();
             var clipboardViewModel = _bootstrapper.ServiceProvider.GetRequiredService<ClipboardViewModel>();
+            var settingsViewModel = _bootstrapper.ServiceProvider.GetRequiredService<SettingsViewModel>();
+            var themeManager = _bootstrapper.ServiceProvider.GetRequiredService<ThemeManager>();
             var clipboardHistoryService = _bootstrapper.ServiceProvider.GetRequiredService<ClipboardHistoryService>();
             var keyboardWindow = _bootstrapper.ServiceProvider.GetRequiredService<KeyboardWindow>();
             var floatingIconWindow = _bootstrapper.ServiceProvider.GetRequiredService<FloatingIconWindow>();
             var emojiWindow = _bootstrapper.ServiceProvider.GetRequiredService<EmojiWindow>();
             var clipboardWindow = _bootstrapper.ServiceProvider.GetRequiredService<ClipboardWindow>();
+            var settingsWindow = _bootstrapper.ServiceProvider.GetRequiredService<SettingsWindow>();
+
+            themeManager.RegisterWindow(keyboardWindow);
+            themeManager.RegisterWindow(floatingIconWindow);
+            themeManager.RegisterWindow(emojiWindow);
+            themeManager.RegisterWindow(clipboardWindow);
+            themeManager.RegisterWindow(settingsWindow);
+            _ = themeManager.ApplyCurrentSettingsTheme();
 
             floatingIconWindow.ActiveLanguage = settingsService.Current.ActiveLanguage;
 
@@ -139,13 +150,37 @@ public partial class App : Application
             // Wire System Tray Icon & 10-Item Context Menu
             systemTrayService.EmojiPanelRequested += async (_, _) => await ShowEmojiOverlayAsync().ConfigureAwait(true);
             systemTrayService.ClipboardPanelRequested += async (_, _) => await ShowClipboardOverlayAsync().ConfigureAwait(true);
+            systemTrayService.SettingsWindowRequested += (_, _) =>
+            {
+                settingsViewModel.ReloadFromCurrentSettings();
+                if (!settingsWindow.IsVisible)
+                {
+                    settingsWindow.Show();
+                }
+                settingsWindow.Activate();
+            };
             systemTrayService.ExitRequested += async (_, _) =>
             {
+                settingsWindow.PrepareForShutdown();
                 var currentGeometry = keyboardWindow.CaptureCurrentWindowGeometry();
                 await windowPositionService.SaveWindowStateAsync(currentGeometry).ConfigureAwait(true);
                 Shutdown(0);
             };
             systemTrayService.Initialize();
+
+            // Wire live SettingsViewModel callbacks
+            settingsViewModel.HotkeysReloadRequested += (_, _) => globalHotkeyService.ReloadHotkeysFromSettings();
+            settingsViewModel.PhysicalKeyboardHookToggled += (_, enabled) =>
+            {
+                if (enabled)
+                {
+                    physicalKeyboardService.Start();
+                }
+                else
+                {
+                    physicalKeyboardService.Stop();
+                }
+            };
 
             // Wire FloatingIconWindow events
             floatingIconWindow.RestoreRequested += (_, _) => windowPositionService.RestoreLastVisibleMode();

@@ -1,0 +1,472 @@
+<Window x:Class="BengaliKeyboard.UI.Windows.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:BengaliKeyboard.UI.ViewModels"
+        Title="BornoKey — Settings &amp; Customization"
+        Width="760"
+        Height="540"
+        MinWidth="680"
+        MinHeight="460"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource Brush.Window.Background}"
+        Foreground="{DynamicResource Brush.Text.Primary}"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/BengaliKeyboard.UI;component/Themes/Colors.Dark.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/BengaliKeyboard.UI;component/Themes/Typography.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/BengaliKeyboard.UI;component/Themes/KeyStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+            <!-- Card Container Style (Design.md Section 5.7: 8px radius, 16px internal padding, 12px vertical spacing) -->
+            <Style x:Key="Style.Border.SettingsCard" TargetType="Border">
+                <Setter Property="Background" Value="{DynamicResource Brush.Header.Background}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource Brush.Window.Border}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="Margin" Value="0,0,0,12" />
+            </Style>
+
+            <!-- Navigation Rail Item Button Style -->
+            <Style x:Key="Style.Button.NavItem" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="Padding" Value="14,9" />
+                <Setter Property="Margin" Value="0,0,0,4" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontWeight" Value="Medium" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="NavBorder"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="6"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="NavBorder" Property="Background" Value="{DynamicResource Brush.Key.Regular.Hover}" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="NavBorder" Property="Background" Value="{DynamicResource Brush.Accent.Subtle}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Action Button Style -->
+            <Style x:Key="Style.Button.PrimaryAction" TargetType="Button">
+                <Setter Property="Background" Value="{DynamicResource Brush.Accent.Primary}" />
+                <Setter Property="Foreground" Value="#FFFFFF" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Padding" Value="14,7" />
+                <Setter Property="FontSize" Value="12.5" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="Cursor" Value="Hand" />
+            </Style>
+
+            <Style x:Key="Style.Button.SecondaryAction" TargetType="Button">
+                <Setter Property="Background" Value="{DynamicResource Brush.Key.Special.Background}" />
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource Brush.Window.Border}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Padding" Value="12,6" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="Cursor" Value="Hand" />
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!-- Left Navigation Rail (200px wide per Design.md Section 5.7) -->
+            <ColumnDefinition Width="200" />
+            <!-- Right Content Area -->
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Navigation Rail -->
+        <Border Grid.Column="0"
+                Background="{DynamicResource Brush.Header.Background}"
+                BorderBrush="{DynamicResource Brush.Window.Border}"
+                BorderThickness="0,0,1,0"
+                Padding="12,16">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top" Margin="4,0,4,16">
+                    <TextBlock Text="BornoKey"
+                               FontSize="17"
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource Brush.Text.Primary}" />
+                    <TextBlock Text="বাংলা ভার্চুয়াল কীবোর্ড"
+                               FontFamily="{StaticResource FontFamily.Bengali}"
+                               FontSize="12"
+                               Foreground="{DynamicResource Brush.Text.Secondary}"
+                               Margin="0,2,0,0" />
+                </StackPanel>
+
+                <ItemsControl ItemsSource="{x:Static vm:SettingsViewModel.OrderedSections}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding}"
+                                    Command="{Binding DataContext.SelectSectionCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    CommandParameter="{Binding}"
+                                    Style="{StaticResource Style.Button.NavItem}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </DockPanel>
+        </Border>
+
+        <!-- Right Content & Footer Host -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ScrollViewer Grid.Row="0"
+                          Padding="20,18,20,10"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
+
+                    <!-- SECTION 1: GENERAL -->
+                    <StackPanel Visibility="{Binding IsGeneralSectionVisible, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="General" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12" />
+
+                        <Border Style="{StaticResource Style.Border.SettingsCard}">
+                            <StackPanel>
+                                <TextBlock Text="Startup &amp; Launch Behavior" FontWeight="SemiBold" FontSize="13.5" Margin="0,0,0,10" />
+                                <CheckBox Content="Start BornoKey automatically when Windows starts"
+                                          IsChecked="{Binding StartWithWindows}"
+                                          Foreground="{DynamicResource Brush.Text.Primary}"
+                                          Margin="0,0,0,8" />
+                                <CheckBox Content="Launch minimized to System Tray"
+                                          IsChecked="{Binding LaunchMinimized}"
+                                          Foreground="{DynamicResource Brush.Text.Primary}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource Style.Border.SettingsCard}">
+                            <StackPanel>
+                                <TextBlock Text="Default Input Language &amp; Layout" FontWeight="SemiBold" FontSize="13.5" Margin="0,0,0,10" />
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Text="Default Active Language:" VerticalAlignment="Center" Width="190" />
+                                    <ComboBox ItemsSource="{x:Static vm:SettingsViewModel.AvailableLanguages}"
+                                              SelectedItem="{Binding ActiveLanguage}"
+                                              Height="28" />
+                                </DockPanel>
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Text="Bangla Layout ID:" VerticalAlignment="Center" Width="190" />
+                                    <TextBox Text="{Binding ActiveBanglaLayoutId, UpdateSourceTrigger=PropertyChanged}"
+                                             Height="26" VerticalContentAlignment="Center" Padding="6,0" />
+                                </DockPanel>
+                                <DockPanel>
+                                    <TextBlock Text="English Layout ID:" VerticalAlignment="Center" Width="190" />
+                                    <TextBox Text="{Binding ActiveEnglishLayoutId, UpdateSourceTrigger=PropertyChanged}"
+                                             Height="26" VerticalContentAlignment="Center" Padding="6,0" />
+                                </DockPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- SECTION 2: KEYBOARD -->
+                    <StackPanel Visibility="{Binding IsKeyboardSectionVisible, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="Keyboard &amp; Window Behavior" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12" />
+
+                        <Border Style="{StaticResource Style.Border.SettingsCard}">
+                            <StackPanel>
+                                <TextBlock Text="Floating Window Mode &amp; Dimensions" FontWeight="SemiBold" FontSize="13.5" Margin="0,0,0,10" />
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Text="Active Window Mode:" VerticalAlignment="Center" Width="190" />
+                                    <ComboBox ItemsSource="{x:Static vm:SettingsViewModel.AvailableWindowModes}"
+                                              SelectedItem="{Binding DefaultWindowMode}"
+                                              Height="28" />
+                                </DockPanel>
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Text="Expanded Width (440–1600 px):" VerticalAlignment="Center" Width="190" />
+                                    <Slider Minimum="440" Maximum="1600" Value="{Binding KeyboardWidth}" TickFrequency="10" IsSnapToTickEnabled="True" VerticalAlignment="Center" />
+                                </DockPanel>
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Text="Expanded Height (180–600 px):" VerticalAlignment="Center" Width="190" />
+                                    <Slider Minimum="180" Maximum="600" Value="{Binding KeyboardHeight}" TickFrequency="10" IsSnapToTickEnabled="True" VerticalAlignment="Center" />
+                                </DockPanel>
+                                <CheckBox Content="Always keep keyboard window on top of other apps"
+                                          IsChecked="{Binding AlwaysOnTop}"
+                                          Foreground="{DynamicResource Brush.Text.Primary}"
+                                          Margin="0,4,0,8" />
+                                <CheckBox Content="Enable Physical Keyboard Direct Bangla Typing Hook"
+                                          IsChecked="{Binding PhysicalKeyboardHookEnabled}"
+                                          Foreground="{DynamicResource Brush.Text.Primary}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource Style.Border.SettingsCard}">
+                            <StackPanel>
+                                <TextBlock Text="Key Spacing &amp; Repeat Timing" FontWeight="SemiBold" FontSize="13.5" Margin="0,0,0,10" />
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Text="Key Spacing (2–8 px):" VerticalAlignment="Center" Width="190" />
+                                    <Slider Minimum="2" Maximum="8" Value="{Binding KeySpacing}" TickFrequency="0.5" IsSnapToTickEnabled="True" VerticalAlignment="Center" />
+                                </DockPanel>
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Text="Key Repeat Delay (150–1000 ms):" VerticalAlignment="Center" Width="190" />
+                                    <Slider Minimum="150" Maximum="1000" Value="{Binding KeyRepeatDelayMs}" TickFrequency="25" IsSnapToTickEnabled="True" VerticalAlignment="Center" />
+                                </DockPanel>
+                                <DockPanel>
+                                    <TextBlock Text="Key Repeat Interval (15–250 ms):" VerticalAlignment="Center" Width="190" />
+                                    <Slider Minimum="15" Maximum="250" Value="{Binding KeyRepeatIntervalMs}" TickFrequency="5" IsSnapToTickEnabled="True" VerticalAlignment="Center" />
+                                </DockPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- SECTION 3: APPEARANCE -->
+                    <StackPanel Visibility="{Binding IsAppearanceSectionVisible, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="Appearance &amp; Themes" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12" />
+
+                        <Border Style="{StaticResource Style.Border.SettingsCard}">
+                            <StackPanel>
+                                <TextBlock Text="Theme &amp; Floating Transparency" FontWeight="SemiBold" FontSize="13.5" Margin="0,0,0,10" />
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Text="Color Theme:" VerticalAlignment="Center" Width="190" />
+                                    <ComboBox ItemsSource="{x:Static vm:SettingsViewModel.AvailableThemes}"
+                                              SelectedItem="{Binding SelectedTheme}"
+                                              Height="28" />
+                                </DockPanel>
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Text="Window Opacity (60%–100%):" VerticalAlignment="Center" Width="190" />
+                                    <Slider Minimum="0.60" Maximum="1.00" Value="{Binding Opacity}" TickFrequency="0.02" IsSnapToTickEnabled="True" VerticalAlignment="Center" />
+                                </DockPanel>
+                                <DockPanel>
+                                    <TextBlock Text="Key Corner Radius (2–14 px):" VerticalAlignment="Center" Width="190" />
+                                    <Slider Minimum="2" Maximum="14" Value="{Binding KeyCornerRadius}" TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Center" />
+                                </DockPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource Style.Border.SettingsCard}">
+                            <StackPanel>
+                                <TextBlock Text="Custom Color Overrides (Optional #RRGGBB)" FontWeight="SemiBold" FontSize="13.5" Margin="0,0,0,10" />
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Text="Custom Accent Color Hex:" VerticalAlignment="Center" Width="190" />
+                                    <TextBox Text="{Binding CustomAccentColorHex, UpdateSourceTrigger=PropertyChanged}"
+                                             Height="26" VerticalContentAlignment="Center" Padding="6,0"
+                                             ToolTip="Example: #3B82F6 (leave blank for theme default)" />
+                                </DockPanel>
+                                <DockPanel>
+                                    <TextBlock Text="Custom Key Background Hex:" VerticalAlignment="Center" Width="190" />
+                                    <TextBox Text="{Binding CustomKeyBackgroundHex, UpdateSourceTrigger=PropertyChanged}"
+                                             Height="26" VerticalContentAlignment="Center" Padding="6,0"
+                                             ToolTip="Example: #30343D (leave blank for theme default)" />
+                                </DockPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- SECTION 4: PREDICTION -->
+                    <StackPanel Visibility="{Binding IsPredictionSectionVisible, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="Smart Bengali Predictive Text" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12" />
+
+                        <Border Style="{StaticResource Style.Border.SettingsCard}">
+                            <StackPanel>
+                                <TextBlock Text="Offline Word Completion &amp; Next-Word Prediction" FontWeight="SemiBold" FontSize="13.5" Margin="0,0,0,10" />
+                                <CheckBox Content="Enable Prefix Word Completion (e.g., 'আমা' → 'আমার')"
+                                          IsChecked="{Binding EnableWordCompletion}"
+                                          Foreground="{DynamicResource Brush.Text.Primary}"
+                                          Margin="0,0,0,8" />
+                                <CheckBox Content="Enable Context-Aware Next-Word Prediction (Bigram/Trigram)"
+                                          IsChecked="{Binding EnableNextWordPrediction}"
+                                          Foreground="{DynamicResource Brush.Text.Primary}"
+                                          Margin="0,0,0,10" />
+                                <DockPanel Margin="0,0,0,12">
+                                    <TextBlock Text="Suggestion Candidate Count:" VerticalAlignment="Center" Width="190" />
+                                    <ComboBox ItemsSource="{x:Static vm:SettingsViewModel.AvailableSuggestionCounts}"
+                                              SelectedItem="{Binding SuggestionCount}"
+                                              Height="28" />
+                                </DockPanel>
+                                <Button Content="Clear Learned User Dictionary Words"
+                                        Command="{Binding ClearUserDictionaryCommand}"
+                                        Style="{StaticResource Style.Button.SecondaryAction}"
+                                        HorizontalAlignment="Left" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- SECTION 5: EMOJI -->
+                    <StackPanel Visibility="{Binding IsEmojiSectionVisible, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="Emoji Keyboard &amp; History" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12" />
+
+                        <Border Style="{StaticResource Style.Border.SettingsCard}">
+                            <StackPanel>
+                                <TextBlock Text="Frequently Used Emoji History" FontWeight="SemiBold" FontSize="13.5" Margin="0,0,0,10" />
+                                <DockPanel Margin="0,0,0,12">
+                                    <TextBlock Text="History Capacity (10–200):" VerticalAlignment="Center" Width="190" />
+                                    <Slider Minimum="10" Maximum="200" Value="{Binding EmojiHistoryLimit}" TickFrequency="10" IsSnapToTickEnabled="True" VerticalAlignment="Center" />
+                                </DockPanel>
+                                <Button Content="Clear Frequently Used Emoji History"
+                                        Command="{Binding ClearEmojiHistoryCommand}"
+                                        Style="{StaticResource Style.Button.SecondaryAction}"
+                                        HorizontalAlignment="Left" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- SECTION 6: CLIPBOARD -->
+                    <StackPanel Visibility="{Binding IsClipboardSectionVisible, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="Clipboard History Manager" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12" />
+
+                        <Border Style="{StaticResource Style.Border.SettingsCard}">
+                            <StackPanel>
+                                <TextBlock Text="Local DPAPI-Encrypted Clipboard Capture" FontWeight="SemiBold" FontSize="13.5" Margin="0,0,0,10" />
+                                <CheckBox Content="Enable Clipboard History Monitoring (Password Managers Excluded)"
+                                          IsChecked="{Binding EnableClipboardHistory}"
+                                          Foreground="{DynamicResource Brush.Text.Primary}"
+                                          Margin="0,0,0,10" />
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Text="Max Unpinned Clips (10–500):" VerticalAlignment="Center" Width="190" />
+                                    <Slider Minimum="10" Maximum="500" Value="{Binding ClipboardHistoryLimit}" TickFrequency="10" IsSnapToTickEnabled="True" VerticalAlignment="Center" />
+                                </DockPanel>
+                                <DockPanel Margin="0,0,0,12">
+                                    <TextBlock Text="Retention Days (1–365 days):" VerticalAlignment="Center" Width="190" />
+                                    <Slider Minimum="1" Maximum="365" Value="{Binding ClipboardRetentionDays}" TickFrequency="5" IsSnapToTickEnabled="True" VerticalAlignment="Center" />
+                                </DockPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Clear Unpinned Clips"
+                                            Command="{Binding ClearUnpinnedClipboardCommand}"
+                                            Style="{StaticResource Style.Button.SecondaryAction}"
+                                            Margin="0,0,8,0" />
+                                    <Button Content="Clear All Clipboard History"
+                                            Command="{Binding ClearClipboardHistoryCommand}"
+                                            Style="{StaticResource Style.Button.SecondaryAction}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- SECTION 7: SHORTCUTS -->
+                    <StackPanel Visibility="{Binding IsShortcutsSectionVisible, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="Global Keyboard Shortcuts" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12" />
+
+                        <Border Style="{StaticResource Style.Border.SettingsCard}">
+                            <StackPanel>
+                                <TextBlock Text="System-Wide Hotkey Bindings" FontWeight="SemiBold" FontSize="13.5" Margin="0,0,0,10" />
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Text="Toggle Bangla / English:" VerticalAlignment="Center" Width="190" />
+                                    <TextBox Text="{Binding ToggleLanguageHotkey, UpdateSourceTrigger=PropertyChanged}"
+                                             Height="26" VerticalContentAlignment="Center" Padding="6,0" />
+                                </DockPanel>
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Text="Show / Hide Keyboard:" VerticalAlignment="Center" Width="190" />
+                                    <TextBox Text="{Binding ToggleKeyboardVisibilityHotkey, UpdateSourceTrigger=PropertyChanged}"
+                                             Height="26" VerticalContentAlignment="Center" Padding="6,0" />
+                                </DockPanel>
+                                <DockPanel Margin="0,0,0,8">
+                                    <TextBlock Text="Open Emoji Panel:" VerticalAlignment="Center" Width="190" />
+                                    <TextBox Text="{Binding OpenEmojiPanelHotkey, UpdateSourceTrigger=PropertyChanged}"
+                                             Height="26" VerticalContentAlignment="Center" Padding="6,0" />
+                                </DockPanel>
+                                <DockPanel>
+                                    <TextBlock Text="Open Clipboard History:" VerticalAlignment="Center" Width="190" />
+                                    <TextBox Text="{Binding OpenClipboardPanelHotkey, UpdateSourceTrigger=PropertyChanged}"
+                                             Height="26" VerticalContentAlignment="Center" Padding="6,0" />
+                                </DockPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- SECTION 8: PRIVACY -->
+                    <StackPanel Visibility="{Binding IsPrivacySectionVisible, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="Privacy &amp; Local Data Management" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12" />
+
+                        <Border Style="{StaticResource Style.Border.SettingsCard}">
+                            <StackPanel>
+                                <TextBlock Text="100% Offline Privacy Guarantee" FontWeight="SemiBold" FontSize="13.5" Margin="0,0,0,6" />
+                                <TextBlock Text="BornoKey makes zero network connections and never logs keystrokes or clipboard text. All data is stored locally under your Windows user profile:"
+                                           Foreground="{DynamicResource Brush.Text.Secondary}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,8" />
+                                <TextBox Text="{Binding LocalDataDirectoryPath, Mode=OneWay}"
+                                         IsReadOnly="True"
+                                         FontFamily="{StaticResource FontFamily.Mono}"
+                                         FontSize="11.5"
+                                         Padding="6,4"
+                                         Margin="0,0,0,12" />
+
+                                <WrapPanel Orientation="Horizontal">
+                                    <Button Content="Clear Emoji History"
+                                            Command="{Binding ClearEmojiHistoryCommand}"
+                                            Style="{StaticResource Style.Button.SecondaryAction}"
+                                            Margin="0,0,8,8" />
+                                    <Button Content="Clear Clipboard History"
+                                            Command="{Binding ClearClipboardHistoryCommand}"
+                                            Style="{StaticResource Style.Button.SecondaryAction}"
+                                            Margin="0,0,8,8" />
+                                    <Button Content="Clear All Application Data"
+                                            Command="{Binding ClearAllApplicationDataCommand}"
+                                            Style="{StaticResource Style.Button.SecondaryAction}"
+                                            Margin="0,0,8,8" />
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource Style.Border.SettingsCard}">
+                            <StackPanel>
+                                <TextBlock Text="Factory Reset Configuration" FontWeight="SemiBold" FontSize="13.5" Margin="0,0,0,8" />
+                                <Button Content="Reset Settings to Defaults..."
+                                        Command="{Binding RequestResetConfirmationCommand}"
+                                        Style="{StaticResource Style.Button.SecondaryAction}"
+                                        HorizontalAlignment="Left" />
+
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,10,0,0"
+                                            Visibility="{Binding IsResetConfirmationPending, Converter={StaticResource BoolToVis}}">
+                                    <Button Content="Confirm Reset to Defaults"
+                                            Command="{Binding ResetSettingsToDefaultsCommand}"
+                                            Style="{StaticResource Style.Button.PrimaryAction}"
+                                            Margin="0,0,8,0" />
+                                    <Button Content="Cancel"
+                                            Command="{Binding CancelResetConfirmationCommand}"
+                                            Style="{StaticResource Style.Button.SecondaryAction}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Bottom Status & Apply Footer -->
+            <Border Grid.Row="1"
+                    Background="{DynamicResource Brush.Header.Background}"
+                    BorderBrush="{DynamicResource Brush.Window.Border}"
+                    BorderThickness="0,1,0,0"
+                    Padding="16,10">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right"
+                            Content="Apply &amp; Save"
+                            Command="{Binding SaveAndApplyCommand}"
+                            Style="{StaticResource Style.Button.PrimaryAction}" />
+                    <TextBlock Text="{Binding StatusMessage}"
+                               Foreground="{DynamicResource Brush.Text.Secondary}"
+                               FontSize="12"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               Margin="0,0,12,0" />
+                </DockPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
