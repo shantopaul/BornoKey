@@ -9,11 +9,11 @@
 
 | Field | Current Status |
 |---|---|
-| **Current Stage** | **Phase 3: Bengali Unicode Input Engine & System-Wide Text Injection** (100% Complete — Ready for Phase 4) |
-| **Currently Active File** | None (Phase 3 Completed & Verified; Next up: Phase 4 `BengaliKeyboard.Windows`) |
-| **Last Completed File** | `src/BengaliKeyboard.Tests/UnicodeProcessorTests.cs` |
+| **Current Stage** | **Phase 4: Adaptive Floating Keyboard & 4-Mode Window Management** (100% Complete — Ready for Phase 5) |
+| **Currently Active File** | None (Phase 4 Completed & Verified; Next up: Phase 5 `SystemTrayService`, `StartupService`, `GlobalHotkeyService`) |
+| **Last Completed File** | `src/BengaliKeyboard.Tests/WindowPositionRestoreTests.cs` |
 | **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln` — 0 Warnings, 0 Errors) |
-| **Automated Test Status** | **PASSING** (`20 / 20` xUnit tests passing across Phase 1, Phase 2 & Phase 3) |
+| **Automated Test Status** | **PASSING** (`24 / 24` xUnit tests passing across Phase 1, Phase 2, Phase 3 & Phase 4) |
 | **Last Updated** | 2026-11-03 |
 
 ---
@@ -32,9 +32,9 @@
 
 ## 3. Currently Active Work Item
 
-- **Current Phase:** **Phase 3 Complete** → Ready for **Phase 4 — Adaptive Floating Keyboard & 4-Mode Window Management**
-- **File Currently Being Worked On:** None (Phase 3 completed, tested twice, and verified)
-- **Next Immediate Action:** Start Phase 4 (`src/BengaliKeyboard.Windows/`, `NativeMethods.cs`, `MonitorService.cs`, `WindowPositionService.cs`, `FloatingIconWindow.xaml`, and `WindowPositionRestoreTests.cs`).
+- **Current Phase:** **Phase 4 Complete** → Ready for **Phase 5 — Windows System Tray, Auto-Startup & State Restoration**
+- **File Currently Being Worked On:** None (Phase 4 completed, tested twice, and verified)
+- **Next Immediate Action:** Start Phase 5 (`src/BengaliKeyboard.Windows/SystemTrayService.cs`, `StartupService.cs`, `GlobalHotkeyService.cs`, and `assets/Icons/`).
 
 ---
 
@@ -91,13 +91,13 @@
 - [x] `native/BengaliKeyboard.TSF/` (`BengaliKeyboard.TSF.vcxproj`, `DllMain.cpp`, `Register.cpp`, `TextService.h`, `TextService.cpp`, `CompositionManager.cpp`)
 - [x] `src/BengaliKeyboard.Tests/UnicodeProcessorTests.cs` (`6/6` passing; `20/20` total passing)
 
-### Phase 4 — Adaptive Floating Keyboard & 4-Mode Window Management
-- [ ] `src/BengaliKeyboard.UI/Windows/FloatingIconWindow.xaml` (`.cs`)
-- [ ] `src/BengaliKeyboard.Windows/BengaliKeyboard.Windows.csproj`
-- [ ] `src/BengaliKeyboard.Windows/NativeMethods.cs`
-- [ ] `src/BengaliKeyboard.Windows/MonitorService.cs`
-- [ ] `src/BengaliKeyboard.Windows/WindowPositionService.cs`
-- [ ] `src/BengaliKeyboard.Tests/WindowPositionRestoreTests.cs`
+### Phase 4 — Adaptive Floating Keyboard & 4-Mode Window Management (100% Complete)
+- [x] `src/BengaliKeyboard.UI/Windows/FloatingIconWindow.xaml` (`.cs` with click-vs-drag threshold & right-click language toggle)
+- [x] `src/BengaliKeyboard.Windows/BengaliKeyboard.Windows.csproj`
+- [x] `src/BengaliKeyboard.Windows/NativeMethods.cs`
+- [x] `src/BengaliKeyboard.Windows/MonitorService.cs` (with 60% intersection rule & per-monitor DPI scaling)
+- [x] `src/BengaliKeyboard.Windows/WindowPositionService.cs` (with 4-mode state machine, disconnected monitor snap-back, and 300ms debounced persistence)
+- [x] `src/BengaliKeyboard.Tests/WindowPositionRestoreTests.cs` (`4/4` passing; `24/24` total passing)
 
 ### Phase 5 — Windows System Tray, Auto-Startup & State Restoration
 - [ ] `src/BengaliKeyboard.Windows/SystemTrayService.cs`
