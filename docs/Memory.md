@@ -9,8 +9,8 @@
 
 | Field | Current Status |
 |---|---|
-| **Current Stage** | **Phase 6: Emoji Keyboard, Keyword Search & Frequently Used History** (100% Complete — Ready for Phase 7) |
-| **Currently Active File** | None (Phase 6 Completed & Verified; Next up: Phase 7 `BengaliKeyboard.Clipboard`) |
+| **Current Stage** | **Phase 7: Privacy-First Clipboard History Manager** (In Progress) |
+| **Currently Active File** | `src/BengaliKeyboard.Clipboard/` |
 | **Last Completed File** | `src/BengaliKeyboard.Tests/EmojiUsageTests.cs` |
 | **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln` — 0 Warnings, 0 Errors) |
 | **Automated Test Status** | **PASSING** (`33 / 33` xUnit tests passing across Phases 1 through 6) |

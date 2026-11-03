@@ -30,6 +30,7 @@
     <ProjectReference Include="..\BengaliKeyboard.Input\BengaliKeyboard.Input.csproj" />
     <ProjectReference Include="..\BengaliKeyboard.Windows\BengaliKeyboard.Windows.csproj" />
     <ProjectReference Include="..\BengaliKeyboard.Emoji\BengaliKeyboard.Emoji.csproj" />
+    <ProjectReference Include="..\BengaliKeyboard.Clipboard\BengaliKeyboard.Clipboard.csproj" />
   </ItemGroup>
 
 </Project>
