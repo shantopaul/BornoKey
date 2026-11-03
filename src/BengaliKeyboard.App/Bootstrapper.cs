@@ -97,6 +97,9 @@ public sealed class Bootstrapper : IDisposable
 
         var windowPositionService = provider.GetRequiredService<WindowPositionService>();
         settings.WindowState = windowPositionService.ValidateAndClampBounds(settings.WindowState);
+
+        var startupService = provider.GetRequiredService<IStartupService>();
+        settings.StartWithWindows = startupService.IsStartupEnabled();
     }
 
     private static void ConfigureLogging(AppPaths appPaths)

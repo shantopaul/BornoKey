@@ -42,6 +42,9 @@ public sealed class SystemTrayService :
     private readonly bool _enableShellIconRegistration;
 
     private readonly Dictionary<string, MenuItem> _menuItemsByKey = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, bool> _checkedStates = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, string> _headerTexts = new(StringComparer.Ordinal);
+    private readonly object _stateLock = new();
     private ContextMenu? _contextMenu;
     private HwndSource? _trayHwndSource;
     private nint _loadedIconHandle = nint.Zero;
@@ -140,42 +143,57 @@ public sealed class SystemTrayService :
         var langLabel = activeLanguage == LanguageMode.Bangla ? "বাংলা" : "ENG";
         CurrentTooltipText = $"BornoKey — {langLabel} ({currentMode})";
 
-        if (_menuItemsByKey.TryGetValue(MenuKeyShowKeyboard, out var showItem))
+        lock (_stateLock)
         {
-            showItem.IsChecked = currentMode == KeyboardMode.Expanded;
-        }
+            _checkedStates[MenuKeyShowKeyboard] = currentMode == KeyboardMode.Expanded;
+            _checkedStates[MenuKeyCompactMode] = currentMode == KeyboardMode.Compact;
+            _checkedStates[MenuKeyMinimalIcon] = currentMode == KeyboardMode.MinimalIcon;
+            _checkedStates[MenuKeyHideKeyboard] = currentMode == KeyboardMode.HiddenToTray;
+            _checkedStates[MenuKeyStartWithWindows] = startupEnabled;
 
-        if (_menuItemsByKey.TryGetValue(MenuKeyCompactMode, out var compactItem))
-        {
-            compactItem.IsChecked = currentMode == KeyboardMode.Compact;
-        }
-
-        if (_menuItemsByKey.TryGetValue(MenuKeyMinimalIcon, out var minimalItem))
-        {
-            minimalItem.IsChecked = currentMode == KeyboardMode.MinimalIcon;
-        }
-
-        if (_menuItemsByKey.TryGetValue(MenuKeyHideKeyboard, out var hideItem))
-        {
-            hideItem.IsChecked = currentMode == KeyboardMode.HiddenToTray;
-        }
-
-        if (_menuItemsByKey.TryGetValue(MenuKeyToggleLanguage, out var langItem))
-        {
-            langItem.Header = activeLanguage == LanguageMode.Bangla
+            _headerTexts[MenuKeyToggleLanguage] = activeLanguage == LanguageMode.Bangla
                 ? "Bangla / English (বাংলা ✓)"
                 : "Bangla / English (ENG ✓)";
         }
 
-        if (_menuItemsByKey.TryGetValue(MenuKeyStartWithWindows, out var startupItem))
+        if (_contextMenu is not null)
         {
-            startupItem.IsChecked = startupEnabled;
+            if (_contextMenu.Dispatcher.CheckAccess())
+            {
+                ApplyVisualStateToMenuItems();
+            }
+            else
+            {
+                _ = _contextMenu.Dispatcher.InvokeAsync(ApplyVisualStateToMenuItems);
+            }
         }
 
         if (_isShellIconAdded && _trayHwndSource is not null)
         {
             var data = CreateNotifyIconData(_trayHwndSource.Handle, NativeMethods.NifTip);
             _ = NativeMethods.ShellNotifyIcon(NativeMethods.NimModify, ref data);
+        }
+    }
+
+    private void ApplyVisualStateToMenuItems()
+    {
+        lock (_stateLock)
+        {
+            foreach (var (key, isChecked) in _checkedStates)
+            {
+                if (_menuItemsByKey.TryGetValue(key, out var item))
+                {
+                    item.IsChecked = isChecked;
+                }
+            }
+
+            foreach (var (key, header) in _headerTexts)
+            {
+                if (_menuItemsByKey.TryGetValue(key, out var item))
+                {
+                    item.Header = header;
+                }
+            }
         }
     }
 
@@ -283,11 +301,21 @@ public sealed class SystemTrayService :
         return true;
     }
 
-    public bool IsMenuItemChecked(string menuKey) =>
-        _menuItemsByKey.TryGetValue(menuKey, out var item) && item.IsChecked;
+    public bool IsMenuItemChecked(string menuKey)
+    {
+        lock (_stateLock)
+        {
+            return _checkedStates.TryGetValue(menuKey, out var isChecked) && isChecked;
+        }
+    }
 
-    public string? GetMenuItemHeader(string menuKey) =>
-        _menuItemsByKey.TryGetValue(menuKey, out var item) ? item.Header as string : null;
+    public string? GetMenuItemHeader(string menuKey)
+    {
+        lock (_stateLock)
+        {
+            return _headerTexts.TryGetValue(menuKey, out var header) ? header : null;
+        }
+    }
 
     public void Receive(LanguageChangedMessage message) => UpdateTrayState();
 
@@ -328,6 +356,12 @@ public sealed class SystemTrayService :
         };
 
         item.Click += async (_, _) => await ExecuteMenuActionAsync(key).ConfigureAwait(true);
+
+        lock (_stateLock)
+        {
+            _checkedStates[key] = false;
+            _headerTexts[key] = header;
+        }
 
         _menuItemsByKey[key] = item;
         _contextMenu?.Items.Add(item);
