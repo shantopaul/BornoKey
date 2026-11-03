@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>BengaliKeyboard.Clipboard</RootNamespace>
+    <AssemblyName>BengaliKeyboard.Clipboard</AssemblyName>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BengaliKeyboard.Core\BengaliKeyboard.Core.csproj" />
+    <ProjectReference Include="..\BengaliKeyboard.Storage\BengaliKeyboard.Storage.csproj" />
+  </ItemGroup>
+
+</Project>

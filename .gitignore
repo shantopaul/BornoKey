@@ -13,6 +13,8 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+publish/
+installer/Output/
 
 # Visual Studio / .NET User-specific files
 .vs/

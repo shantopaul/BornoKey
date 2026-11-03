@@ -1,0 +1,85 @@
+{
+  "Id": "Bangla.Primary",
+  "DisplayName": "বাংলা (Ridmik Primary)",
+  "Language": "Bangla",
+  "Layer": "Primary",
+  "Rows": [
+    {
+      "RowIndex": 0,
+      "HeightRatio": 0.85,
+      "Keys": [
+        { "Id": "bn_num_1", "DisplayLabel": "১", "UnicodeOutput": "১", "AlternateOutput": "!", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 0 },
+        { "Id": "bn_num_2", "DisplayLabel": "২", "UnicodeOutput": "২", "AlternateOutput": "@", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 1 },
+        { "Id": "bn_num_3", "DisplayLabel": "৩", "UnicodeOutput": "৩", "AlternateOutput": "#", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 2 },
+        { "Id": "bn_num_4", "DisplayLabel": "৪", "UnicodeOutput": "৪", "AlternateOutput": "৳", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 3 },
+        { "Id": "bn_num_5", "DisplayLabel": "৫", "UnicodeOutput": "৫", "AlternateOutput": "%", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 4 },
+        { "Id": "bn_num_6", "DisplayLabel": "৬", "UnicodeOutput": "৬", "AlternateOutput": "^", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 5 },
+        { "Id": "bn_num_7", "DisplayLabel": "৭", "UnicodeOutput": "৭", "AlternateOutput": "&", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 6 },
+        { "Id": "bn_num_8", "DisplayLabel": "৮", "UnicodeOutput": "৮", "AlternateOutput": "*", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 7 },
+        { "Id": "bn_num_9", "DisplayLabel": "৯", "UnicodeOutput": "৯", "AlternateOutput": "(", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 8 },
+        { "Id": "bn_num_0", "DisplayLabel": "০", "UnicodeOutput": "০", "AlternateOutput": ")", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 9 }
+      ]
+    },
+    {
+      "RowIndex": 1,
+      "HeightRatio": 1.0,
+      "Keys": [
+        { "Id": "bn_r1_0", "DisplayLabel": "ঙ", "UnicodeOutput": "ঙ", "AlternateOutput": "ং", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 0 },
+        { "Id": "bn_r1_1", "DisplayLabel": "য", "UnicodeOutput": "য", "AlternateOutput": "য়", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 1 },
+        { "Id": "bn_r1_2", "DisplayLabel": "ড", "UnicodeOutput": "ড", "AlternateOutput": "ঢ", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 2 },
+        { "Id": "bn_r1_3", "DisplayLabel": "প", "UnicodeOutput": "প", "AlternateOutput": "ফ", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 3 },
+        { "Id": "bn_r1_4", "DisplayLabel": "ট", "UnicodeOutput": "ট", "AlternateOutput": "ঠ", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 4 },
+        { "Id": "bn_r1_5", "DisplayLabel": "চ", "UnicodeOutput": "চ", "AlternateOutput": "ছ", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 5 },
+        { "Id": "bn_r1_6", "DisplayLabel": "জ", "UnicodeOutput": "জ", "AlternateOutput": "ঝ", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 6 },
+        { "Id": "bn_r1_7", "DisplayLabel": "হ", "UnicodeOutput": "হ", "AlternateOutput": "ঞ", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 7 },
+        { "Id": "bn_r1_8", "DisplayLabel": "গ", "UnicodeOutput": "গ", "AlternateOutput": "ঘ", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 8 },
+        { "Id": "bn_r1_9", "DisplayLabel": "ড়", "UnicodeOutput": "ড়", "AlternateOutput": "ঢ়", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 9 }
+      ]
+    },
+    {
+      "RowIndex": 2,
+      "HeightRatio": 1.0,
+      "Keys": [
+        { "Id": "bn_r2_0", "DisplayLabel": "্র", "UnicodeOutput": "্র", "AlternateOutput": "ৃ", "KeyType": "VowelSign", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 0 },
+        { "Id": "bn_r2_1", "DisplayLabel": "া", "UnicodeOutput": "া", "AlternateOutput": "আ", "KeyType": "VowelSign", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 1 },
+        { "Id": "bn_r2_2", "DisplayLabel": "ি", "UnicodeOutput": "ি", "AlternateOutput": "ঈ", "KeyType": "VowelSign", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 2 },
+        { "Id": "bn_r2_3", "DisplayLabel": "ু", "UnicodeOutput": "ু", "AlternateOutput": "ঊ", "KeyType": "VowelSign", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 3 },
+        { "Id": "bn_r2_4", "DisplayLabel": "র", "UnicodeOutput": "র", "AlternateOutput": "ঋ", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 4 },
+        { "Id": "bn_r2_5", "DisplayLabel": "ক", "UnicodeOutput": "ক", "AlternateOutput": "খ", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 5 },
+        { "Id": "bn_r2_6", "DisplayLabel": "ত", "UnicodeOutput": "ত", "AlternateOutput": "থ", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 6 },
+        { "Id": "bn_r2_7", "DisplayLabel": "দ", "UnicodeOutput": "দ", "AlternateOutput": "ধ", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 7 },
+        { "Id": "bn_r2_8", "DisplayLabel": "স", "UnicodeOutput": "স", "AlternateOutput": "ষ", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 8 },
+        { "Id": "bn_r2_9", "DisplayLabel": "ব", "UnicodeOutput": "ব", "AlternateOutput": "ভ", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 9 }
+      ]
+    },
+    {
+      "RowIndex": 3,
+      "HeightRatio": 1.0,
+      "Keys": [
+        { "Id": "bn_shift", "DisplayLabel": "⇧", "UnicodeOutput": "", "KeyType": "Shift", "TargetLayer": "Shift", "WidthRatio": 1.35, "RowIndex": 3, "ColumnIndex": 0, "Tooltip": "Shift / Alternate Bangla Characters" },
+        { "Id": "bn_r3_1", "DisplayLabel": "ো", "UnicodeOutput": "ো", "AlternateOutput": "ৌ", "KeyType": "VowelSign", "WidthRatio": 0.92, "RowIndex": 3, "ColumnIndex": 1 },
+        { "Id": "bn_r3_2", "DisplayLabel": "ে", "UnicodeOutput": "ে", "AlternateOutput": "ঐ", "KeyType": "VowelSign", "WidthRatio": 0.92, "RowIndex": 3, "ColumnIndex": 2 },
+        { "Id": "bn_r3_3", "DisplayLabel": "্", "UnicodeOutput": "্", "AlternateOutput": "ঁ", "KeyType": "Hasanta", "WidthRatio": 0.92, "RowIndex": 3, "ColumnIndex": 3, "Tooltip": "হসন্ত / যুক্তাক্ষর (Hasanta)" },
+        { "Id": "bn_r3_4", "DisplayLabel": "অ", "UnicodeOutput": "অ", "AlternateOutput": "ঃ", "KeyType": "Character", "WidthRatio": 0.92, "RowIndex": 3, "ColumnIndex": 4 },
+        { "Id": "bn_r3_5", "DisplayLabel": "ম", "UnicodeOutput": "ম", "AlternateOutput": "ণ", "KeyType": "Character", "WidthRatio": 0.92, "RowIndex": 3, "ColumnIndex": 5 },
+        { "Id": "bn_r3_6", "DisplayLabel": "ন", "UnicodeOutput": "ন", "AlternateOutput": "ই", "KeyType": "Character", "WidthRatio": 0.92, "RowIndex": 3, "ColumnIndex": 6 },
+        { "Id": "bn_r3_7", "DisplayLabel": "ল", "UnicodeOutput": "ল", "AlternateOutput": "উ", "KeyType": "Character", "WidthRatio": 0.92, "RowIndex": 3, "ColumnIndex": 7 },
+        { "Id": "bn_r3_8", "DisplayLabel": "শ", "UnicodeOutput": "শ", "AlternateOutput": "এ", "KeyType": "Character", "WidthRatio": 0.92, "RowIndex": 3, "ColumnIndex": 8 },
+        { "Id": "bn_backspace", "DisplayLabel": "⌫", "UnicodeOutput": "", "KeyType": "Backspace", "WidthRatio": 1.35, "RowIndex": 3, "ColumnIndex": 9, "Tooltip": "Backspace" }
+      ]
+    },
+    {
+      "RowIndex": 4,
+      "HeightRatio": 1.05,
+      "Keys": [
+        { "Id": "bn_sym_switch", "DisplayLabel": "?১২৩", "UnicodeOutput": "", "KeyType": "LayoutSwitch", "TargetLayer": "Numbers", "WidthRatio": 1.25, "RowIndex": 4, "ColumnIndex": 0, "Tooltip": "সংখ্যা ও চিহ্ন (Numbers & Symbols)" },
+        { "Id": "bn_emoji", "DisplayLabel": "😀", "UnicodeOutput": "", "KeyType": "EmojiSwitch", "WidthRatio": 0.95, "RowIndex": 4, "ColumnIndex": 1, "Tooltip": "Emoji Keyboard" },
+        { "Id": "bn_comma", "DisplayLabel": ",", "UnicodeOutput": ",", "KeyType": "Punctuation", "WidthRatio": 0.85, "RowIndex": 4, "ColumnIndex": 2 },
+        { "Id": "bn_lang_switch", "DisplayLabel": "ENG", "UnicodeOutput": "", "KeyType": "LanguageSwitch", "WidthRatio": 1.25, "RowIndex": 4, "ColumnIndex": 3, "Tooltip": "Switch to English (Ctrl+Space)" },
+        { "Id": "bn_space", "DisplayLabel": "বাংলা", "UnicodeOutput": " ", "KeyType": "Space", "WidthRatio": 3.35, "RowIndex": 4, "ColumnIndex": 4, "Tooltip": "Space" },
+        { "Id": "bn_dari", "DisplayLabel": "।", "UnicodeOutput": "।", "AlternateOutput": ".", "KeyType": "Punctuation", "WidthRatio": 0.9, "RowIndex": 4, "ColumnIndex": 5, "Tooltip": "দাঁড়ি (Dari)" },
+        { "Id": "bn_enter", "DisplayLabel": "⏎", "UnicodeOutput": "\n", "KeyType": "Enter", "WidthRatio": 1.45, "RowIndex": 4, "ColumnIndex": 6, "Tooltip": "Enter" }
+      ]
+    }
+  ]
+}

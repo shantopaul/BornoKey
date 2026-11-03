@@ -1,0 +1,43 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Font Families (Design.md Section 3.1) -->
+    <FontFamily x:Key="FontFamily.Bengali">Noto Sans Bengali, Nirmala UI, Vrinda, Segoe UI</FontFamily>
+    <FontFamily x:Key="FontFamily.English">Segoe UI Variable Display, Segoe UI, Arial</FontFamily>
+    <FontFamily x:Key="FontFamily.Emoji">Segoe UI Emoji, Segoe UI Symbol</FontFamily>
+    <FontFamily x:Key="FontFamily.Mono">Cascadia Code, Consolas, Courier New</FontFamily>
+
+    <!-- Primary Key Glyph Text Style (Prevents vertical clipping of Bengali matras/kars) -->
+    <Style x:Key="Style.Text.KeyPrimary" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FontFamily.Bengali}" />
+        <Setter Property="FontSize" Value="19" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Padding" Value="0,2,0,2" />
+    </Style>
+
+    <!-- Secondary / Shift Hint Glyph Text Style (Top-Right Corner) -->
+    <Style x:Key="Style.Text.KeySecondary" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FontFamily.Bengali}" />
+        <Setter Property="FontSize" Value="10.5" />
+        <Setter Property="FontWeight" Value="Regular" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Secondary}" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Margin" Value="0,2,5,0" />
+    </Style>
+
+    <!-- Suggestion Candidate Text Style -->
+    <Style x:Key="Style.Text.Suggestion" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FontFamily.Bengali}" />
+        <Setter Property="FontSize" Value="15.5" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Padding" Value="4,2,4,2" />
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,74 @@
+<Window x:Class="BengaliKeyboard.UI.Windows.KeyboardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:BengaliKeyboard.UI.Controls"
+        Title="BornoKey — Bengali Virtual Keyboard"
+        Width="850"
+        Height="310"
+        MinWidth="440"
+        MinHeight="180"
+        MaxWidth="1600"
+        MaxHeight="600"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        Focusable="False"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/BengaliKeyboard.UI;component/Themes/Colors.Dark.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/BengaliKeyboard.UI;component/Themes/Typography.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/BengaliKeyboard.UI;component/Themes/KeyStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Border Background="{DynamicResource Brush.Window.Background}"
+            BorderBrush="{DynamicResource Brush.Window.Border}"
+            BorderThickness="1"
+            CornerRadius="8"
+            ClipToBounds="True">
+        <!-- Proportional Vector Scaling across Expanded (850x310) and Compact (620x230) sizes -->
+        <Viewbox Stretch="Fill">
+            <Grid Width="850" Height="310">
+                <Grid.RowDefinitions>
+                    <!-- Row 0: Draggable Header Toolbar (32px) -->
+                    <RowDefinition Height="32" />
+                    <!-- Row 1: Suggestion Bar (36px) -->
+                    <RowDefinition Height="36" />
+                    <!-- Row 2: Proportional Data-Driven Keyboard Layout Grid -->
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Row 0: Header Toolbar -->
+                <controls:HeaderToolbarControl x:Name="HeaderToolbar"
+                                               Grid.Row="0"
+                                               ActiveLanguage="{Binding ActiveLanguage}"
+                                               ToggleLanguageCommand="{Binding ToggleLanguageCommand}"
+                                               MouseLeftButtonDown="OnHeaderMouseLeftButtonDown"
+                                               CompactModeRequested="OnHeaderCompactModeRequested"
+                                               MinimalIconModeRequested="OnHeaderMinimalIconModeRequested"
+                                               MinimizeRequested="OnHeaderMinimizeRequested"
+                                               CloseRequested="OnHeaderCloseRequested" />
+
+                <!-- Row 1: Smart Suggestion Bar -->
+                <controls:SuggestionBarControl x:Name="SuggestionBar"
+                                               Grid.Row="1"
+                                               Candidates="{Binding Suggestions}"
+                                               CandidateSelectedCommand="{Binding SelectCandidateCommand}" />
+
+                <!-- Row 2: Dynamic Proportional Key Grid Host -->
+                <Grid x:Name="KeyboardGridHost"
+                      Grid.Row="2"
+                      Margin="4,3,4,5" />
+            </Grid>
+        </Viewbox>
+    </Border>
+</Window>
