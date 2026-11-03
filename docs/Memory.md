@@ -9,8 +9,8 @@
 
 | Field | Current Status |
 |---|---|
-| **Current Stage** | **Phase 7: Privacy-First Clipboard History Manager** (100% Complete — Ready for Phase 8) |
-| **Currently Active File** | None (Phase 7 Completed & Verified; Next up: Phase 8 `BengaliKeyboard.Prediction`) |
+| **Current Stage** | **Phase 8: Smart Offline Bengali Predictive Text Engine** (In Progress) |
+| **Currently Active File** | `data/Dictionary/bn_dictionary_seed.json` & `src/BengaliKeyboard.Prediction/` |
 | **Last Completed File** | `src/BengaliKeyboard.Tests/ClipboardServiceTests.cs` |
 | **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln` — 0 Warnings, 0 Errors) |
 | **Automated Test Status** | **PASSING** (`38 / 38` xUnit tests passing across Phases 1 through 7) |

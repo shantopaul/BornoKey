@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>BengaliKeyboard.Prediction</RootNamespace>
+    <AssemblyName>BengaliKeyboard.Prediction</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BengaliKeyboard.Core\BengaliKeyboard.Core.csproj" />
+    <ProjectReference Include="..\BengaliKeyboard.Storage\BengaliKeyboard.Storage.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\data\Dictionary\bn_dictionary_seed.json" Link="data\Dictionary\bn_dictionary_seed.json" CopyToOutputDirectory="PreserveNewest" />
+    <EmbeddedResource Include="..\..\data\Dictionary\bn_dictionary_seed.json" LogicalName="BengaliKeyboard.Prediction.data.Dictionary.bn_dictionary_seed.json" />
+  </ItemGroup>
+
+</Project>
