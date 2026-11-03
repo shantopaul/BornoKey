@@ -12,11 +12,13 @@ public sealed class SuggestionRankingService : IPredictionService
     private readonly DictionaryService _dictionaryService;
     private readonly WordCompletionService _wordCompletionService;
     private readonly NextWordPredictionService _nextWordPredictionService;
+    private readonly NGramModel? _nGramModel;
 
     public SuggestionRankingService(
         DictionaryService dictionaryService,
         WordCompletionService wordCompletionService,
-        NextWordPredictionService nextWordPredictionService)
+        NextWordPredictionService nextWordPredictionService,
+        NGramModel? nGramModel = null)
     {
         ArgumentNullException.ThrowIfNull(dictionaryService);
         ArgumentNullException.ThrowIfNull(wordCompletionService);
@@ -25,6 +27,7 @@ public sealed class SuggestionRankingService : IPredictionService
         _dictionaryService = dictionaryService;
         _wordCompletionService = wordCompletionService;
         _nextWordPredictionService = nextWordPredictionService;
+        _nGramModel = nGramModel;
     }
 
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -59,5 +62,6 @@ public sealed class SuggestionRankingService : IPredictionService
         CancellationToken cancellationToken = default)
     {
         await _dictionaryService.RecordUserWordAsync(word, cancellationToken).ConfigureAwait(false);
+        _nGramModel?.RecordUserBigram(previousWord, word);
     }
 }

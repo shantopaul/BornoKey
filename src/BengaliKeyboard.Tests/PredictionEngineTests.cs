@@ -147,12 +147,17 @@ public sealed class PredictionEngineTests : IDisposable
         var rankingService = CreatePredictionService();
         await rankingService.InitializeAsync();
 
-        await rankingService.RecordAcceptedWordAsync("বর্ণকী");
-        await rankingService.RecordAcceptedWordAsync("বর্ণকী");
+        await rankingService.RecordAcceptedWordAsync("বর্ণকী", previousWord: "আমি");
+        await rankingService.RecordAcceptedWordAsync("বর্ণকী", previousWord: "আমি");
+        await rankingService.RecordAcceptedWordAsync("বর্ণকী", previousWord: "আমি");
 
         var completions = await rankingService.GetWordCompletionsAsync("বর্ণ", maxResults: 4);
         Assert.NotEmpty(completions);
         Assert.Equal("বর্ণকী", completions[0].Word);
+
+        // Learned user bigram ("আমি" -> "বর্ণকী") also boosts "বর্ণকী" into next-word predictions after "আমি"
+        var nextAfterAmi = await rankingService.GetNextWordPredictionsAsync("আমি", maxResults: 4);
+        Assert.Contains(nextAfterAmi, c => c.Word == "বর্ণকী");
     }
 
     private SuggestionRankingService CreatePredictionService()
@@ -161,7 +166,7 @@ public sealed class PredictionEngineTests : IDisposable
         var completionService = new WordCompletionService(dictionaryService);
         var nGramModel = new NGramModel(_connectionFactory, dictionaryService);
         var nextWordService = new NextWordPredictionService(nGramModel);
-        return new SuggestionRankingService(dictionaryService, completionService, nextWordService);
+        return new SuggestionRankingService(dictionaryService, completionService, nextWordService, nGramModel);
     }
 
     public void Dispose()

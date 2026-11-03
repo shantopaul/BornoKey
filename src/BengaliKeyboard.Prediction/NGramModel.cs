@@ -1,15 +1,18 @@
+using System.Collections.Concurrent;
 using System.Text;
 using BengaliKeyboard.Storage.Database;
 
 namespace BengaliKeyboard.Prediction;
 
 /// <summary>
-/// Queries offline Unigram, Bigram, and Trigram language model tables in <c>dictionary.db</c> (ReadOnly mode).
+/// Queries offline Unigram, Bigram, and Trigram language model tables in <c>dictionary.db</c> (ReadOnly mode)
+/// and merges session-learned user bigrams without mutating <c>dictionary.db</c> (CHK-10).
 /// </summary>
 public sealed class NGramModel
 {
     private readonly SqliteConnectionFactory _connectionFactory;
     private readonly DictionaryService _dictionaryService;
+    private readonly ConcurrentDictionary<(string Word1, string Word2), int> _userBigrams = new();
 
     public NGramModel(
         SqliteConnectionFactory connectionFactory,
@@ -20,6 +23,26 @@ public sealed class NGramModel
 
         _connectionFactory = connectionFactory;
         _dictionaryService = dictionaryService;
+    }
+
+    public void RecordUserBigram(string? previousWord, string currentWord)
+    {
+        if (string.IsNullOrWhiteSpace(previousWord) || string.IsNullOrWhiteSpace(currentWord))
+        {
+            return;
+        }
+
+        var norm1 = previousWord.Trim().Normalize(NormalizationForm.FormC);
+        var norm2 = currentWord.Trim().Normalize(NormalizationForm.FormC);
+        if (norm1.Length == 0 || norm2.Length == 0)
+        {
+            return;
+        }
+
+        _userBigrams.AddOrUpdate(
+            (norm1, norm2),
+            addValue: 350,
+            updateValueFactory: (_, existing) => Math.Min(existing + 350, 5000));
     }
 
     public async Task<IReadOnlyList<(string Word, int Frequency)>> QueryTrigramsAsync(
@@ -103,14 +126,28 @@ public sealed class NGramModel
                 command.Parameters.AddWithValue("@w1", norm);
                 command.Parameters.AddWithValue("@limit", clampedLimit);
 
-                var results = new List<(string Word, int Frequency)>();
+                var combined = new Dictionary<string, int>(StringComparer.Ordinal);
+                foreach (var ((w1, w2), freq) in _userBigrams)
+                {
+                    if (string.Equals(w1, norm, StringComparison.Ordinal))
+                    {
+                        combined[w2] = freq;
+                    }
+                }
+
                 await using var reader = await command.ExecuteReaderAsync(ct).ConfigureAwait(false);
                 while (await reader.ReadAsync(ct).ConfigureAwait(false))
                 {
-                    results.Add((reader.GetString(0), reader.GetInt32(1)));
+                    var w2 = reader.GetString(0);
+                    var freq = reader.GetInt32(1);
+                    combined[w2] = combined.TryGetValue(w2, out var existing) ? existing + freq : freq;
                 }
 
-                return (IReadOnlyList<(string Word, int Frequency)>)results;
+                return (IReadOnlyList<(string Word, int Frequency)>)combined
+                    .Select(kvp => (Word: kvp.Key, Frequency: kvp.Value))
+                    .OrderByDescending(x => x.Frequency)
+                    .Take(clampedLimit)
+                    .ToList();
             },
             cancellationToken).ConfigureAwait(false);
     }

@@ -287,7 +287,7 @@ public sealed class DictionaryService
 
         return combined
             .Select(kvp => (Word: kvp.Key, kvp.Value.Frequency, kvp.Value.IsUserWord))
-            .OrderByDescending(x => x.IsUserWord ? x.Frequency + 500 : x.Frequency)
+            .OrderByDescending(x => x.IsUserWord ? x.Frequency * 3500 : x.Frequency)
             .ThenBy(x => x.Word.Length)
             .ThenBy(x => x.Word, StringComparer.Ordinal)
             .Take(clampedMax)

@@ -9,11 +9,11 @@
 
 | Field | Current Status |
 |---|---|
-| **Current Stage** | **Phase 8: Smart Offline Bengali Predictive Text Engine** (In Progress) |
-| **Currently Active File** | `data/Dictionary/bn_dictionary_seed.json` & `src/BengaliKeyboard.Prediction/` |
-| **Last Completed File** | `src/BengaliKeyboard.Tests/ClipboardServiceTests.cs` |
+| **Current Stage** | **Phase 8: Smart Offline Bengali Predictive Text Engine** (100% Complete — Ready for Phase 9) |
+| **Currently Active File** | None (Phase 8 Completed & Verified; Next up: Phase 9 `SettingsWindow` & Themes) |
+| **Last Completed File** | `src/BengaliKeyboard.Tests/PredictionEngineTests.cs` |
 | **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln` — 0 Warnings, 0 Errors) |
-| **Automated Test Status** | **PASSING** (`38 / 38` xUnit tests passing across Phases 1 through 7) |
+| **Automated Test Status** | **PASSING** (`42 / 42` xUnit tests passing across Phases 1 through 8) |
 | **Last Updated** | 2026-11-03 |
 
 ---
@@ -32,9 +32,9 @@
 
 ## 3. Currently Active Work Item
 
-- **Current Phase:** **Phase 7 Complete** → Ready for **Phase 8 — Smart Offline Bengali Predictive Text Engine**
-- **File Currently Being Worked On:** None (Phase 7 completed, tested twice, and verified)
-- **Next Immediate Action:** Start Phase 8 (`data/Dictionary/bn_dictionary_seed.json`, `src/BengaliKeyboard.Prediction/`, `SuggestionBarViewModel.cs`, and `PredictionEngineTests.cs`).
+- **Current Phase:** **Phase 8 Complete** → Ready for **Phase 9 — Customization, Themes & Settings Panel**
+- **File Currently Being Worked On:** None (Phase 8 completed, tested twice, and verified)
+- **Next Immediate Action:** Start Phase 9 (`src/BengaliKeyboard.UI/Themes/Colors.Light.xaml`, `SettingsWindow.xaml`, and `SettingsViewModel.cs`).
 
 ---
 
@@ -124,16 +124,16 @@
 - [x] `src/BengaliKeyboard.UI/ViewModels/ClipboardViewModel.cs`
 - [x] `src/BengaliKeyboard.Tests/ClipboardServiceTests.cs` (`5/5` passing; `38/38` total passing)
 
-### Phase 8 — Smart Offline Bengali Predictive Text Engine
-- [ ] `data/Dictionary/bn_dictionary_seed.json`
-- [ ] `src/BengaliKeyboard.Prediction/BengaliKeyboard.Prediction.csproj`
-- [ ] `src/BengaliKeyboard.Prediction/DictionaryService.cs`
-- [ ] `src/BengaliKeyboard.Prediction/WordCompletionService.cs`
-- [ ] `src/BengaliKeyboard.Prediction/NGramModel.cs`
-- [ ] `src/BengaliKeyboard.Prediction/NextWordPredictionService.cs`
-- [ ] `src/BengaliKeyboard.Prediction/SuggestionRankingService.cs`
-- [ ] `src/BengaliKeyboard.UI/ViewModels/SuggestionBarViewModel.cs`
-- [ ] `src/BengaliKeyboard.Tests/PredictionEngineTests.cs`
+### Phase 8 — Smart Offline Bengali Predictive Text Engine (100% Complete)
+- [x] `data/Dictionary/bn_dictionary_seed.json` (Offline Bengali words, bigrams, and trigrams)
+- [x] `src/BengaliKeyboard.Prediction/BengaliKeyboard.Prediction.csproj`
+- [x] `src/BengaliKeyboard.Prediction/DictionaryService.cs` (Read-only runtime `dictionary.db` + escaped `LIKE` + `UserDictionary` learning)
+- [x] `src/BengaliKeyboard.Prediction/WordCompletionService.cs` (`≤ 50 ms` prefix completion)
+- [x] `src/BengaliKeyboard.Prediction/NGramModel.cs`
+- [x] `src/BengaliKeyboard.Prediction/NextWordPredictionService.cs` (Trigram → Bigram → Unigram backoff)
+- [x] `src/BengaliKeyboard.Prediction/SuggestionRankingService.cs`
+- [x] `src/BengaliKeyboard.UI/ViewModels/SuggestionBarViewModel.cs`
+- [x] `src/BengaliKeyboard.Tests/PredictionEngineTests.cs` (`4/4` passing; `42/42` total passing)
 
 ### Phase 9 — Customization, Themes & Settings Panel
 - [ ] `src/BengaliKeyboard.UI/Themes/Colors.Light.xaml`
