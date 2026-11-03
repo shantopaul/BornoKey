@@ -3,10 +3,14 @@ using System.Windows;
 using BengaliKeyboard.Core.Enums;
 using BengaliKeyboard.Core.Events;
 using BengaliKeyboard.Core.Models;
+using BengaliKeyboard.Input;
+using BengaliKeyboard.Input.TSF;
+using BengaliKeyboard.Layouts;
 using BengaliKeyboard.Storage;
 using BengaliKeyboard.Storage.Configuration;
 using BengaliKeyboard.Windows;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Win32;
 using Xunit;
 
 namespace BengaliKeyboard.Tests;
@@ -202,6 +206,161 @@ public sealed class WindowPositionRestoreTests : IDisposable
         Assert.Equal(@"\\.\DISPLAY2", clamped.MonitorDeviceId);
         Assert.InRange(clamped.Left, -1280, -180);
         Assert.Equal(200, clamped.Top);
+    }
+
+    [Fact]
+    public void StartupService_ShouldEnforceQuotedExecutablePath_RejectInjection_AndPersistToRegistry()
+    {
+        var pathWithSpaces = @"C:\Program Files\BornoKey\BengaliKeyboard.App.exe";
+        var formatted = StartupService.FormatQuotedStartupCommand(pathWithSpaces);
+        Assert.Equal("\"C:\\Program Files\\BornoKey\\BengaliKeyboard.App.exe\" --startup", formatted);
+
+        Assert.Throws<ArgumentException>(() =>
+            StartupService.FormatQuotedStartupCommand(@"C:\Program Files\BornoKey\BengaliKeyboard.App.exe & calc.exe"));
+
+        Assert.Throws<ArgumentException>(() =>
+            StartupService.FormatQuotedStartupCommand(@"C:\Program Files\BornoKey\script.bat"));
+
+        var testRegSubKey = $@"Software\BornoKey_Tests\Run_{Guid.NewGuid():N}";
+        try
+        {
+            var startupService = new StartupService(testRegSubKey, pathWithSpaces);
+            Assert.False(startupService.IsStartupEnabled());
+
+            Assert.True(startupService.SetStartupEnabled(true));
+            Assert.True(startupService.IsStartupEnabled());
+
+            Assert.True(startupService.SetStartupEnabled(false));
+            Assert.False(startupService.IsStartupEnabled());
+        }
+        finally
+        {
+            Registry.CurrentUser.DeleteSubKeyTree(@"Software\BornoKey_Tests", throwOnMissingSubKey: false);
+        }
+    }
+
+    [Fact]
+    public void GlobalHotkeyService_ShouldParseModifierCombinations_AndDispatchHotkeyEvents()
+    {
+        Assert.True(GlobalHotkeyService.TryParseHotkeyString("Ctrl+Space", out var mod1, out var vk1));
+        Assert.Equal(NativeMethods.ModControl | NativeMethods.ModNoRepeat, mod1);
+        Assert.Equal(0x20u, vk1);
+
+        Assert.True(GlobalHotkeyService.TryParseHotkeyString("Alt+Shift+B", out var mod2, out var vk2));
+        Assert.Equal(NativeMethods.ModAlt | NativeMethods.ModShift | NativeMethods.ModNoRepeat, mod2);
+        Assert.Equal((uint)'B', vk2);
+
+        Assert.True(GlobalHotkeyService.TryParseHotkeyString("Ctrl+F12", out _, out var vkF12));
+        Assert.Equal(0x7Bu, vkF12);
+
+        Assert.False(GlobalHotkeyService.TryParseHotkeyString("Space", out _, out _));
+
+        var appPaths = new AppPaths(_tempDir);
+        var settingsService = new JsonSettingsService(appPaths);
+        using var hotkeyService = new GlobalHotkeyService(settingsService);
+
+        var languageToggled = false;
+        var visibilityToggled = false;
+        hotkeyService.LanguageToggleRequested += (_, _) => languageToggled = true;
+        hotkeyService.VisibilityToggleRequested += (_, _) => visibilityToggled = true;
+
+        Assert.True(hotkeyService.DispatchHotkeyById(GlobalHotkeyService.HotkeyIdToggleLanguage));
+        Assert.True(languageToggled);
+
+        Assert.True(hotkeyService.DispatchHotkeyById(GlobalHotkeyService.HotkeyIdToggleVisibility));
+        Assert.True(visibilityToggled);
+    }
+
+    [Fact]
+    public async Task SystemTrayService_ShouldExposeTenContextMenuItems_AndSyncModeLanguageAndStartupStates()
+    {
+        Assert.Equal(10, SystemTrayService.OrderedMenuKeys.Count);
+
+        var testRegSubKey = $@"Software\BornoKey_Tests\Tray_{Guid.NewGuid():N}";
+        try
+        {
+            var appPaths = new AppPaths(_tempDir);
+            var settingsService = new JsonSettingsService(appPaths);
+            var monitorService = new MonitorService(() =>
+            [
+                new MonitorBoundsInfo
+                {
+                    DeviceName = @"\\.\DISPLAY1",
+                    IsPrimary = true,
+                    MonitorBounds = new Rect(0, 0, 1920, 1080),
+                    WorkingArea = new Rect(0, 0, 1920, 1040)
+                }
+            ]);
+
+            var messenger = new WeakReferenceMessenger();
+            using var windowPositionService = new WindowPositionService(settingsService, monitorService, messenger);
+            var layoutLoader = new LayoutLoader(Path.Combine(_tempDir, "Layouts"));
+            var layoutManager = new LayoutManager(layoutLoader, messenger);
+            await layoutManager.InitializeAsync();
+
+            using var inputEngine = new BengaliInputEngine(new UnicodeProcessor(), new Win32SendInputInjector(), null, settingsService, messenger);
+            var startupService = new StartupService(testRegSubKey, @"C:\Program Files\BornoKey\BengaliKeyboard.App.exe");
+
+            Exception? staError = null;
+            var staThread = new Thread(() =>
+            {
+                try
+                {
+                    using var trayService = new SystemTrayService(
+                        windowPositionService,
+                        inputEngine,
+                        layoutManager,
+                        startupService,
+                        settingsService,
+                        messenger,
+                        enableShellIconRegistration: false);
+
+                    trayService.Initialize();
+                    Assert.True(trayService.IsInitialized);
+                    Assert.True(trayService.IsMenuItemChecked(SystemTrayService.MenuKeyShowKeyboard));
+
+                    // Switch to Compact mode via menu
+                    trayService.ExecuteMenuActionAsync(SystemTrayService.MenuKeyCompactMode).GetAwaiter().GetResult();
+                    Assert.Equal(KeyboardMode.Compact, windowPositionService.CurrentMode);
+                    Assert.True(trayService.IsMenuItemChecked(SystemTrayService.MenuKeyCompactMode));
+
+                    // Hide to Tray via menu, then left-click tray icon to restore last visible mode (Compact)
+                    trayService.ExecuteMenuActionAsync(SystemTrayService.MenuKeyHideKeyboard).GetAwaiter().GetResult();
+                    Assert.Equal(KeyboardMode.HiddenToTray, windowPositionService.CurrentMode);
+                    Assert.True(trayService.IsMenuItemChecked(SystemTrayService.MenuKeyHideKeyboard));
+
+                    trayService.HandleTrayPrimaryClick();
+                    Assert.Equal(KeyboardMode.Compact, windowPositionService.CurrentMode);
+
+                    // Toggle language via tray menu
+                    trayService.ExecuteMenuActionAsync(SystemTrayService.MenuKeyToggleLanguage).GetAwaiter().GetResult();
+                    Assert.Equal(LanguageMode.English, layoutManager.ActiveLanguage);
+                    Assert.Contains("ENG ✓", trayService.GetMenuItemHeader(SystemTrayService.MenuKeyToggleLanguage));
+
+                    // Toggle Start with Windows via tray menu
+                    trayService.ExecuteMenuActionAsync(SystemTrayService.MenuKeyStartWithWindows).GetAwaiter().GetResult();
+                    Assert.True(startupService.IsStartupEnabled());
+                    Assert.True(trayService.IsMenuItemChecked(SystemTrayService.MenuKeyStartWithWindows));
+                }
+                catch (Exception ex)
+                {
+                    staError = ex;
+                }
+            });
+
+            staThread.SetApartmentState(ApartmentState.STA);
+            staThread.Start();
+            staThread.Join();
+
+            if (staError is not null)
+            {
+                throw new AggregateException("STA SystemTrayService test failed.", staError);
+            }
+        }
+        finally
+        {
+            Registry.CurrentUser.DeleteSubKeyTree(@"Software\BornoKey_Tests", throwOnMissingSubKey: false);
+        }
     }
 
     public void Dispose()
