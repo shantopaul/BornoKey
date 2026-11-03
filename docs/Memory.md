@@ -9,11 +9,11 @@
 
 | Field | Current Status |
 |---|---|
-| **Current Stage** | **Phase 2: Ridmik-Style Keyboard UI & Configurable Layout Engine** (100% Complete — Ready for Phase 3) |
-| **Currently Active File** | None (Phase 2 Completed & Verified; Next up: Phase 3 `BengaliKeyboard.Input`) |
-| **Last Completed File** | `src/BengaliKeyboard.Tests/LayoutLoaderTests.cs` |
+| **Current Stage** | **Phase 3: Bengali Unicode Input Engine & System-Wide Text Injection** (100% Complete — Ready for Phase 4) |
+| **Currently Active File** | None (Phase 3 Completed & Verified; Next up: Phase 4 `BengaliKeyboard.Windows`) |
+| **Last Completed File** | `src/BengaliKeyboard.Tests/UnicodeProcessorTests.cs` |
 | **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln` — 0 Warnings, 0 Errors) |
-| **Automated Test Status** | **PASSING** (`14 / 14` xUnit tests passing across Phase 1 & Phase 2) |
+| **Automated Test Status** | **PASSING** (`20 / 20` xUnit tests passing across Phase 1, Phase 2 & Phase 3) |
 | **Last Updated** | 2026-11-03 |
 
 ---
@@ -32,9 +32,9 @@
 
 ## 3. Currently Active Work Item
 
-- **Current Phase:** **Phase 2 Complete** → Ready for **Phase 3 — Bengali Unicode Input Engine & System-Wide Text Injection**
-- **File Currently Being Worked On:** None (Phase 2 completed, tested twice, and verified)
-- **Next Immediate Action:** Start Phase 3 (`src/BengaliKeyboard.Input/`, `UnicodeProcessor.cs`, `BengaliInputEngine.cs`, `OnScreenInputService.cs`, `PhysicalKeyboardService.cs`, `Win32SendInputInjector.cs`, `TsfBridgeService.cs`, and `native/BengaliKeyboard.TSF/`).
+- **Current Phase:** **Phase 3 Complete** → Ready for **Phase 4 — Adaptive Floating Keyboard & 4-Mode Window Management**
+- **File Currently Being Worked On:** None (Phase 3 completed, tested twice, and verified)
+- **Next Immediate Action:** Start Phase 4 (`src/BengaliKeyboard.Windows/`, `NativeMethods.cs`, `MonitorService.cs`, `WindowPositionService.cs`, `FloatingIconWindow.xaml`, and `WindowPositionRestoreTests.cs`).
 
 ---
 
@@ -80,16 +80,16 @@
 - [x] `src/BengaliKeyboard.UI/ViewModels/KeyboardViewModel.cs`
 - [x] `src/BengaliKeyboard.Tests/LayoutLoaderTests.cs` (`6/6` passing; `14/14` total passing)
 
-### Phase 3 — Bengali Unicode Input Engine & System-Wide Text Injection
-- [ ] `src/BengaliKeyboard.Input/BengaliKeyboard.Input.csproj`
-- [ ] `src/BengaliKeyboard.Input/UnicodeProcessor.cs`
-- [ ] `src/BengaliKeyboard.Input/BengaliInputEngine.cs`
-- [ ] `src/BengaliKeyboard.Input/OnScreenInputService.cs`
-- [ ] `src/BengaliKeyboard.Input/PhysicalKeyboardService.cs`
-- [ ] `src/BengaliKeyboard.Input/TSF/Win32SendInputInjector.cs`
-- [ ] `src/BengaliKeyboard.Input/TSF/TsfBridgeService.cs`
-- [ ] `native/BengaliKeyboard.TSF/` (`BengaliKeyboard.TSF.vcxproj`, `DllMain.cpp`, `Register.cpp`, `TextService.h`, `TextService.cpp`, `CompositionManager.cpp`)
-- [ ] `src/BengaliKeyboard.Tests/UnicodeProcessorTests.cs`
+### Phase 3 — Bengali Unicode Input Engine & System-Wide Text Injection (100% Complete)
+- [x] `src/BengaliKeyboard.Input/BengaliKeyboard.Input.csproj`
+- [x] `src/BengaliKeyboard.Input/UnicodeProcessor.cs` (with Indic Conjunct Linking for multi-consonant Juktakhor & NFC diffing)
+- [x] `src/BengaliKeyboard.Input/BengaliInputEngine.cs`
+- [x] `src/BengaliKeyboard.Input/OnScreenInputService.cs`
+- [x] `src/BengaliKeyboard.Input/PhysicalKeyboardService.cs` (dynamically unhooked in `English` mode and during session lock)
+- [x] `src/BengaliKeyboard.Input/TSF/Win32SendInputInjector.cs` (with `dwExtraInfo` self-injection marker & UIPI elevation check)
+- [x] `src/BengaliKeyboard.Input/TSF/TsfBridgeService.cs` (with `CurrentUserOnly` PipeSecurity & Program Files path trust check)
+- [x] `native/BengaliKeyboard.TSF/` (`BengaliKeyboard.TSF.vcxproj`, `DllMain.cpp`, `Register.cpp`, `TextService.h`, `TextService.cpp`, `CompositionManager.cpp`)
+- [x] `src/BengaliKeyboard.Tests/UnicodeProcessorTests.cs` (`6/6` passing; `20/20` total passing)
 
 ### Phase 4 — Adaptive Floating Keyboard & 4-Mode Window Management
 - [ ] `src/BengaliKeyboard.UI/Windows/FloatingIconWindow.xaml` (`.cs`)
