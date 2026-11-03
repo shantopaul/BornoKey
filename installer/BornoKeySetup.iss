@@ -50,7 +50,7 @@ Name: "startupicon"; Description: "Start {#MyAppName} automatically when Windows
 
 [Files]
 ; Core published application binaries, JSON layout definitions, offline dictionary seed, and emoji catalog
-Source: "{#MyPublishDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#MyPublishDir}\*"; DestDir: "{app}"; Excludes: "*.pdb"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; Optional native C++ Windows Text Services Framework (TSF) COM DLL (registered only in Administrator-protected {app} per CHK-08)
 Source: "{#MyPublishDir}\BengaliKeyboard.TSF.dll"; DestDir: "{app}"; Flags: ignoreversion regserver noregerror skipifsourcedoesntexist 64bit

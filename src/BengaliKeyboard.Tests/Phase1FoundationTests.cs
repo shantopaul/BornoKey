@@ -422,6 +422,96 @@ public sealed class Phase1FoundationTests : IDisposable
         Assert.Equal("Ctrl+Space", settingsService.Current.ToggleLanguageHotkey);
     }
 
+    [Fact]
+    public async Task EndToEnd_FullTypingPredictionEmojiClipboardThemeAndWindowLifecycle_WorksSeamlessly()
+    {
+        using var bootstrapper = new Bootstrapper();
+        var provider = bootstrapper.ConfigureServices(_tempTestRoot);
+        await bootstrapper.InitializeCoreServicesAsync();
+
+        var layoutManager = provider.GetRequiredService<ILayoutManager>();
+        var keyboardVm = provider.GetRequiredService<KeyboardViewModel>();
+        var suggestionVm = provider.GetRequiredService<SuggestionBarViewModel>();
+        var emojiVm = provider.GetRequiredService<EmojiViewModel>();
+        var clipboardVm = provider.GetRequiredService<ClipboardViewModel>();
+        var windowManager = provider.GetRequiredService<IWindowManagerService>();
+        var settingsVm = provider.GetRequiredService<SettingsViewModel>();
+
+        // 1. Verify Bangla Primary layout and one-shot Shift layer return
+        Assert.Equal(LanguageMode.Bangla, keyboardVm.ActiveLanguage);
+        Assert.Equal(LayoutLayer.Primary, keyboardVm.ActiveLayer);
+
+        await keyboardVm.PressKeyCommand.ExecuteAsync(new KeyDefinition
+        {
+            Id = "shift_key",
+            KeyType = KeyType.Shift,
+            TargetLayer = LayoutLayer.Shift
+        });
+        Assert.Equal(LayoutLayer.Shift, keyboardVm.ActiveLayer);
+
+        // Typing a character on Shift layer automatically returns to Primary layer
+        await keyboardVm.PressKeyCommand.ExecuteAsync(new KeyDefinition
+        {
+            Id = "bn_a",
+            DisplayLabel = "আ",
+            UnicodeOutput = "আ",
+            KeyType = KeyType.Character
+        });
+        Assert.Equal(LayoutLayer.Primary, keyboardVm.ActiveLayer);
+
+        // 2. Continue typing 'ম' + 'া' ('আমা') and verify live word completions in SuggestionBarViewModel
+        await keyboardVm.PressKeyCommand.ExecuteAsync(new KeyDefinition
+        {
+            Id = "bn_m",
+            DisplayLabel = "ম",
+            UnicodeOutput = "ম",
+            KeyType = KeyType.Character
+        });
+        await keyboardVm.PressKeyCommand.ExecuteAsync(new KeyDefinition
+        {
+            Id = "bn_aa_kar",
+            DisplayLabel = "া",
+            UnicodeOutput = "া",
+            KeyType = KeyType.VowelSign
+        });
+
+        Assert.Contains(suggestionVm.Candidates, c => c.Word == "আমার");
+
+        // Commit 'আমার' and verify next-word prediction candidates populate
+        var amarCandidate = suggestionVm.Candidates.First(c => c.Word == "আমার");
+        await suggestionVm.SelectCandidateCommand.ExecuteAsync(amarCandidate);
+        Assert.NotEmpty(suggestionVm.Candidates);
+        Assert.All(suggestionVm.Candidates, c => Assert.True(c.IsNextWordPrediction));
+
+        // 3. Verify EmojiViewModel initialization and Bengali keyword search
+        await emojiVm.InitializeAsync();
+        Assert.NotEmpty(emojiVm.Categories);
+        emojiVm.SearchQuery = "হাসি";
+        await Task.Delay(60);
+        Assert.NotEmpty(emojiVm.DisplayedEmojis);
+
+        // 4. Verify ClipboardViewModel capture, pin, and search
+        var clipService = provider.GetRequiredService<IClipboardService>();
+        var entry = await clipService.CaptureTextAsync("আমার সোনার বাংলা — EndToEnd Clip");
+        Assert.NotNull(entry);
+        await clipboardVm.InitializeAsync();
+        Assert.Contains(clipboardVm.Entries, e => e.Id == entry!.Id);
+
+        // 5. Verify 4-Mode Window State Machine transitions
+        windowManager.ApplyWindowMode(KeyboardMode.Compact);
+        Assert.Equal(KeyboardMode.Compact, windowManager.CurrentMode);
+        windowManager.ApplyWindowMode(KeyboardMode.MinimalIcon);
+        Assert.Equal(KeyboardMode.MinimalIcon, windowManager.CurrentMode);
+        windowManager.RestoreLastVisibleMode();
+        Assert.Equal(KeyboardMode.Compact, windowManager.CurrentMode);
+
+        // 6. Verify Language Toggle & Settings Persistence
+        await keyboardVm.ToggleLanguageCommand.ExecuteAsync(null);
+        Assert.Equal(LanguageMode.English, layoutManager.ActiveLanguage);
+        settingsVm.ReloadFromCurrentSettings();
+        Assert.Equal(LanguageMode.English, settingsVm.ActiveLanguage);
+    }
+
     public void Dispose()
     {
         SqliteConnection.ClearAllPools();

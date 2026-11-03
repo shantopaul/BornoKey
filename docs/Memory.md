@@ -9,11 +9,11 @@
 
 | Field | Current Status |
 |---|---|
-| **Current Stage** | **Phase 10: Comprehensive Testing, Documentation & Release Installer** (In Progress) |
-| **Currently Active File** | `README.md`, `docs/INSTALLATION.md`, `installer/BornoKeySetup.iss` |
-| **Last Completed File** | `src/BengaliKeyboard.Tests/Phase1FoundationTests.cs` |
-| **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln` — 0 Warnings, 0 Errors) |
-| **Automated Test Status** | **PASSING** (`44 / 44` xUnit tests passing across Phases 1 through 9) |
+| **Current Stage** | **Phase 10: Comprehensive Testing, Documentation & Release Installer** (100% Complete — All 10 Phases Complete) |
+| **Currently Active File** | None (All 10 Phases Completed, Verified & Published) |
+| **Last Completed File** | `src/BengaliKeyboard.Tests/Phase1FoundationTests.cs`, `installer/BornoKeySetup.iss` |
+| **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln -c Release` — 0 Warnings, 0 Errors) |
+| **Automated Test Status** | **PASSING** (`45 / 45` xUnit tests passing across Phases 1 through 10) |
 | **Last Updated** | 2026-11-03 |
 
 ---
@@ -32,9 +32,9 @@
 
 ## 3. Currently Active Work Item
 
-- **Current Phase:** **Phase 10 — Comprehensive Testing, Documentation & Release Installer** (In Progress)
-- **File Currently Being Worked On:** `README.md`, `docs/INSTALLATION.md`, and `installer/BornoKeySetup.iss`
-- **Next Immediate Action:** Complete Phase 10 documentation, installer script, Release publish verification, and end-to-end test suite.
+- **Current Phase:** **All 10 Phases Complete (100%)**
+- **File Currently Being Worked On:** None (All phases coded, tested twice in Debug & Release, published to `publish/win-x64`, and pushed to `origin/feature/bornokey`)
+- **Next Immediate Action:** Ready for final release / merge of `feature/bornokey`.
 
 ---
 
@@ -141,10 +141,12 @@
 - [x] `src/BengaliKeyboard.UI/Windows/SettingsWindow.xaml` (`.cs` — 8-section Windows 11-inspired 2-pane navigation)
 - [x] `src/BengaliKeyboard.UI/ViewModels/SettingsViewModel.cs` (8 sections + Privacy clear/HMAC rotation & 2-step Reset guard; `44/44` total tests passing)
 
-### Phase 10 — Comprehensive Testing, Documentation & Release Installer
-- [ ] `README.md`
-- [ ] `docs/INSTALLATION.md`
-- [ ] `installer/BornoKeySetup.iss`
+### Phase 10 — Comprehensive Testing, Documentation & Release Installer (100% Complete)
+- [x] `README.md`
+- [x] `docs/INSTALLATION.md`
+- [x] `installer/BornoKeySetup.iss`
+- [x] `security/security-checklist.md` (All 20 security domains & CHK-01..CHK-10 verified `[x]`)
+- [x] End-to-End Integration Test & Release Publish Verification (`45/45` total tests passing; `0` vulnerable packages)
 
 ---
 
