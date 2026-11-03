@@ -9,8 +9,8 @@
 
 | Field | Current Status |
 |---|---|
-| **Current Stage** | **Phase 9: Customization, Themes & Settings Panel** (100% Complete — Ready for Phase 10) |
-| **Currently Active File** | None (Phase 9 Completed & Verified; Next up: Phase 10 `README.md`, `INSTALLATION.md` & `BornoKeySetup.iss`) |
+| **Current Stage** | **Phase 10: Comprehensive Testing, Documentation & Release Installer** (In Progress) |
+| **Currently Active File** | `README.md`, `docs/INSTALLATION.md`, `installer/BornoKeySetup.iss` |
 | **Last Completed File** | `src/BengaliKeyboard.Tests/Phase1FoundationTests.cs` |
 | **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln` — 0 Warnings, 0 Errors) |
 | **Automated Test Status** | **PASSING** (`44 / 44` xUnit tests passing across Phases 1 through 9) |
@@ -32,9 +32,9 @@
 
 ## 3. Currently Active Work Item
 
-- **Current Phase:** **Phase 9 Complete** → Ready for **Phase 10 — Comprehensive Testing, Documentation & Release Installer**
-- **File Currently Being Worked On:** None (Phase 9 completed, tested twice, and verified)
-- **Next Immediate Action:** Start Phase 10 (`README.md`, `docs/INSTALLATION.md`, and `installer/BornoKeySetup.iss`).
+- **Current Phase:** **Phase 10 — Comprehensive Testing, Documentation & Release Installer** (In Progress)
+- **File Currently Being Worked On:** `README.md`, `docs/INSTALLATION.md`, and `installer/BornoKeySetup.iss`
+- **Next Immediate Action:** Complete Phase 10 documentation, installer script, Release publish verification, and end-to-end test suite.
 
 ---
 
