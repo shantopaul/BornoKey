@@ -1,0 +1,69 @@
+{
+  "Id": "Bangla.Symbols",
+  "DisplayName": "বাংলা বিশেষ চিহ্ন",
+  "Language": "Bangla",
+  "Layer": "Symbols",
+  "Rows": [
+    {
+      "RowIndex": 0,
+      "HeightRatio": 0.95,
+      "Keys": [
+        { "Id": "bnsym_0", "DisplayLabel": "~", "UnicodeOutput": "~", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 0 },
+        { "Id": "bnsym_1", "DisplayLabel": "`", "UnicodeOutput": "`", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 1 },
+        { "Id": "bnsym_2", "DisplayLabel": "|", "UnicodeOutput": "|", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 2 },
+        { "Id": "bnsym_3", "DisplayLabel": "•", "UnicodeOutput": "•", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 3 },
+        { "Id": "bnsym_4", "DisplayLabel": "√", "UnicodeOutput": "√", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 4 },
+        { "Id": "bnsym_5", "DisplayLabel": "π", "UnicodeOutput": "π", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 5 },
+        { "Id": "bnsym_6", "DisplayLabel": "÷", "UnicodeOutput": "÷", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 6 },
+        { "Id": "bnsym_7", "DisplayLabel": "×", "UnicodeOutput": "×", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 7 },
+        { "Id": "bnsym_8", "DisplayLabel": "¶", "UnicodeOutput": "¶", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 8 },
+        { "Id": "bnsym_9", "DisplayLabel": "∆", "UnicodeOutput": "∆", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 9 }
+      ]
+    },
+    {
+      "RowIndex": 1,
+      "HeightRatio": 1.0,
+      "Keys": [
+        { "Id": "bnsym_r1_0", "DisplayLabel": "$", "UnicodeOutput": "$", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 0 },
+        { "Id": "bnsym_r1_1", "DisplayLabel": "€", "UnicodeOutput": "€", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 1 },
+        { "Id": "bnsym_r1_2", "DisplayLabel": "£", "UnicodeOutput": "£", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 2 },
+        { "Id": "bnsym_r1_3", "DisplayLabel": "¢", "UnicodeOutput": "¢", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 3 },
+        { "Id": "bnsym_r1_4", "DisplayLabel": "^", "UnicodeOutput": "^", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 4 },
+        { "Id": "bnsym_r1_5", "DisplayLabel": "°", "UnicodeOutput": "°", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 5 },
+        { "Id": "bnsym_r1_6", "DisplayLabel": "{", "UnicodeOutput": "{", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 6 },
+        { "Id": "bnsym_r1_7", "DisplayLabel": "}", "UnicodeOutput": "}", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 7 },
+        { "Id": "bnsym_r1_8", "DisplayLabel": "[", "UnicodeOutput": "[", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 8 },
+        { "Id": "bnsym_r1_9", "DisplayLabel": "]", "UnicodeOutput": "]", "KeyType": "Punctuation", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 9 }
+      ]
+    },
+    {
+      "RowIndex": 2,
+      "HeightRatio": 1.0,
+      "Keys": [
+        { "Id": "bnsym_back_num", "DisplayLabel": "১২৩", "UnicodeOutput": "", "KeyType": "LayoutSwitch", "TargetLayer": "Numbers", "WidthRatio": 1.35, "RowIndex": 2, "ColumnIndex": 0 },
+        { "Id": "bnsym_r2_1", "DisplayLabel": "\\", "UnicodeOutput": "\\", "KeyType": "Punctuation", "WidthRatio": 0.92, "RowIndex": 2, "ColumnIndex": 1 },
+        { "Id": "bnsym_r2_2", "DisplayLabel": "<", "UnicodeOutput": "<", "KeyType": "Punctuation", "WidthRatio": 0.92, "RowIndex": 2, "ColumnIndex": 2 },
+        { "Id": "bnsym_r2_3", "DisplayLabel": ">", "UnicodeOutput": ">", "KeyType": "Punctuation", "WidthRatio": 0.92, "RowIndex": 2, "ColumnIndex": 3 },
+        { "Id": "bnsym_r2_4", "DisplayLabel": "©", "UnicodeOutput": "©", "KeyType": "Punctuation", "WidthRatio": 0.92, "RowIndex": 2, "ColumnIndex": 4 },
+        { "Id": "bnsym_r2_5", "DisplayLabel": "®", "UnicodeOutput": "®", "KeyType": "Punctuation", "WidthRatio": 0.92, "RowIndex": 2, "ColumnIndex": 5 },
+        { "Id": "bnsym_r2_6", "DisplayLabel": "™", "UnicodeOutput": "™", "KeyType": "Punctuation", "WidthRatio": 0.92, "RowIndex": 2, "ColumnIndex": 6 },
+        { "Id": "bnsym_r2_7", "DisplayLabel": "✓", "UnicodeOutput": "✓", "KeyType": "Punctuation", "WidthRatio": 0.92, "RowIndex": 2, "ColumnIndex": 7 },
+        { "Id": "bnsym_r2_8", "DisplayLabel": "★", "UnicodeOutput": "★", "KeyType": "Punctuation", "WidthRatio": 0.92, "RowIndex": 2, "ColumnIndex": 8 },
+        { "Id": "bnsym_backspace", "DisplayLabel": "⌫", "UnicodeOutput": "", "KeyType": "Backspace", "WidthRatio": 1.35, "RowIndex": 2, "ColumnIndex": 9 }
+      ]
+    },
+    {
+      "RowIndex": 3,
+      "HeightRatio": 1.05,
+      "Keys": [
+        { "Id": "bnsym_back_primary", "DisplayLabel": "কখগ", "UnicodeOutput": "", "KeyType": "LayoutSwitch", "TargetLayer": "Primary", "WidthRatio": 1.25, "RowIndex": 3, "ColumnIndex": 0 },
+        { "Id": "bnsym_emoji", "DisplayLabel": "😀", "UnicodeOutput": "", "KeyType": "EmojiSwitch", "WidthRatio": 0.95, "RowIndex": 3, "ColumnIndex": 1 },
+        { "Id": "bnsym_comma", "DisplayLabel": ",", "UnicodeOutput": ",", "KeyType": "Punctuation", "WidthRatio": 0.85, "RowIndex": 3, "ColumnIndex": 2 },
+        { "Id": "bnsym_lang_switch", "DisplayLabel": "ENG", "UnicodeOutput": "", "KeyType": "LanguageSwitch", "WidthRatio": 1.25, "RowIndex": 3, "ColumnIndex": 3 },
+        { "Id": "bnsym_space", "DisplayLabel": "বাংলা", "UnicodeOutput": " ", "KeyType": "Space", "WidthRatio": 3.35, "RowIndex": 3, "ColumnIndex": 4 },
+        { "Id": "bnsym_dari", "DisplayLabel": "।", "UnicodeOutput": "।", "KeyType": "Punctuation", "WidthRatio": 0.9, "RowIndex": 3, "ColumnIndex": 5 },
+        { "Id": "bnsym_enter", "DisplayLabel": "⏎", "UnicodeOutput": "\n", "KeyType": "Enter", "WidthRatio": 1.45, "RowIndex": 3, "ColumnIndex": 6 }
+      ]
+    }
+  ]
+}

@@ -21,6 +21,7 @@
     <ProjectReference Include="..\BengaliKeyboard.Core\BengaliKeyboard.Core.csproj" />
     <ProjectReference Include="..\BengaliKeyboard.Storage\BengaliKeyboard.Storage.csproj" />
     <ProjectReference Include="..\BengaliKeyboard.UI\BengaliKeyboard.UI.csproj" />
+    <ProjectReference Include="..\BengaliKeyboard.Layouts\BengaliKeyboard.Layouts.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,83 @@
+{
+  "Id": "English.Qwerty",
+  "DisplayName": "English (QWERTY)",
+  "Language": "English",
+  "Layer": "Primary",
+  "Rows": [
+    {
+      "RowIndex": 0,
+      "HeightRatio": 0.85,
+      "Keys": [
+        { "Id": "en_num_1", "DisplayLabel": "1", "UnicodeOutput": "1", "AlternateOutput": "!", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 0 },
+        { "Id": "en_num_2", "DisplayLabel": "2", "UnicodeOutput": "2", "AlternateOutput": "@", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 1 },
+        { "Id": "en_num_3", "DisplayLabel": "3", "UnicodeOutput": "3", "AlternateOutput": "#", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 2 },
+        { "Id": "en_num_4", "DisplayLabel": "4", "UnicodeOutput": "4", "AlternateOutput": "$", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 3 },
+        { "Id": "en_num_5", "DisplayLabel": "5", "UnicodeOutput": "5", "AlternateOutput": "%", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 4 },
+        { "Id": "en_num_6", "DisplayLabel": "6", "UnicodeOutput": "6", "AlternateOutput": "^", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 5 },
+        { "Id": "en_num_7", "DisplayLabel": "7", "UnicodeOutput": "7", "AlternateOutput": "&", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 6 },
+        { "Id": "en_num_8", "DisplayLabel": "8", "UnicodeOutput": "8", "AlternateOutput": "*", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 7 },
+        { "Id": "en_num_9", "DisplayLabel": "9", "UnicodeOutput": "9", "AlternateOutput": "(", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 8 },
+        { "Id": "en_num_0", "DisplayLabel": "0", "UnicodeOutput": "0", "AlternateOutput": ")", "KeyType": "Number", "WidthRatio": 1.0, "RowIndex": 0, "ColumnIndex": 9 }
+      ]
+    },
+    {
+      "RowIndex": 1,
+      "HeightRatio": 1.0,
+      "Keys": [
+        { "Id": "en_q", "DisplayLabel": "q", "UnicodeOutput": "q", "AlternateOutput": "Q", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 0 },
+        { "Id": "en_w", "DisplayLabel": "w", "UnicodeOutput": "w", "AlternateOutput": "W", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 1 },
+        { "Id": "en_e", "DisplayLabel": "e", "UnicodeOutput": "e", "AlternateOutput": "E", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 2 },
+        { "Id": "en_r", "DisplayLabel": "r", "UnicodeOutput": "r", "AlternateOutput": "R", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 3 },
+        { "Id": "en_t", "DisplayLabel": "t", "UnicodeOutput": "t", "AlternateOutput": "T", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 4 },
+        { "Id": "en_y", "DisplayLabel": "y", "UnicodeOutput": "y", "AlternateOutput": "Y", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 5 },
+        { "Id": "en_u", "DisplayLabel": "u", "UnicodeOutput": "u", "AlternateOutput": "U", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 6 },
+        { "Id": "en_i", "DisplayLabel": "i", "UnicodeOutput": "i", "AlternateOutput": "I", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 7 },
+        { "Id": "en_o", "DisplayLabel": "o", "UnicodeOutput": "o", "AlternateOutput": "O", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 8 },
+        { "Id": "en_p", "DisplayLabel": "p", "UnicodeOutput": "p", "AlternateOutput": "P", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 1, "ColumnIndex": 9 }
+      ]
+    },
+    {
+      "RowIndex": 2,
+      "HeightRatio": 1.0,
+      "Keys": [
+        { "Id": "en_a", "DisplayLabel": "a", "UnicodeOutput": "a", "AlternateOutput": "A", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 0 },
+        { "Id": "en_s", "DisplayLabel": "s", "UnicodeOutput": "s", "AlternateOutput": "S", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 1 },
+        { "Id": "en_d", "DisplayLabel": "d", "UnicodeOutput": "d", "AlternateOutput": "D", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 2 },
+        { "Id": "en_f", "DisplayLabel": "f", "UnicodeOutput": "f", "AlternateOutput": "F", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 3 },
+        { "Id": "en_g", "DisplayLabel": "g", "UnicodeOutput": "g", "AlternateOutput": "G", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 4 },
+        { "Id": "en_h", "DisplayLabel": "h", "UnicodeOutput": "h", "AlternateOutput": "H", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 5 },
+        { "Id": "en_j", "DisplayLabel": "j", "UnicodeOutput": "j", "AlternateOutput": "J", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 6 },
+        { "Id": "en_k", "DisplayLabel": "k", "UnicodeOutput": "k", "AlternateOutput": "K", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 7 },
+        { "Id": "en_l", "DisplayLabel": "l", "UnicodeOutput": "l", "AlternateOutput": "L", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 2, "ColumnIndex": 8 }
+      ]
+    },
+    {
+      "RowIndex": 3,
+      "HeightRatio": 1.0,
+      "Keys": [
+        { "Id": "en_shift", "DisplayLabel": "⇧", "UnicodeOutput": "", "KeyType": "Shift", "TargetLayer": "Shift", "WidthRatio": 1.45, "RowIndex": 3, "ColumnIndex": 0, "Tooltip": "Shift" },
+        { "Id": "en_z", "DisplayLabel": "z", "UnicodeOutput": "z", "AlternateOutput": "Z", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 3, "ColumnIndex": 1 },
+        { "Id": "en_x", "DisplayLabel": "x", "UnicodeOutput": "x", "AlternateOutput": "X", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 3, "ColumnIndex": 2 },
+        { "Id": "en_c", "DisplayLabel": "c", "UnicodeOutput": "c", "AlternateOutput": "C", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 3, "ColumnIndex": 3 },
+        { "Id": "en_v", "DisplayLabel": "v", "UnicodeOutput": "v", "AlternateOutput": "V", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 3, "ColumnIndex": 4 },
+        { "Id": "en_b", "DisplayLabel": "b", "UnicodeOutput": "b", "AlternateOutput": "B", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 3, "ColumnIndex": 5 },
+        { "Id": "en_n", "DisplayLabel": "n", "UnicodeOutput": "n", "AlternateOutput": "N", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 3, "ColumnIndex": 6 },
+        { "Id": "en_m", "DisplayLabel": "m", "UnicodeOutput": "m", "AlternateOutput": "M", "KeyType": "Character", "WidthRatio": 1.0, "RowIndex": 3, "ColumnIndex": 7 },
+        { "Id": "en_backspace", "DisplayLabel": "⌫", "UnicodeOutput": "", "KeyType": "Backspace", "WidthRatio": 1.55, "RowIndex": 3, "ColumnIndex": 8, "Tooltip": "Backspace" }
+      ]
+    },
+    {
+      "RowIndex": 4,
+      "HeightRatio": 1.05,
+      "Keys": [
+        { "Id": "en_sym_switch", "DisplayLabel": "?123", "UnicodeOutput": "", "KeyType": "LayoutSwitch", "TargetLayer": "Symbols", "WidthRatio": 1.25, "RowIndex": 4, "ColumnIndex": 0, "Tooltip": "Numbers & Symbols" },
+        { "Id": "en_emoji", "DisplayLabel": "😀", "UnicodeOutput": "", "KeyType": "EmojiSwitch", "WidthRatio": 0.95, "RowIndex": 4, "ColumnIndex": 1, "Tooltip": "Emoji Keyboard" },
+        { "Id": "en_comma", "DisplayLabel": ",", "UnicodeOutput": ",", "KeyType": "Punctuation", "WidthRatio": 0.85, "RowIndex": 4, "ColumnIndex": 2 },
+        { "Id": "en_lang_switch", "DisplayLabel": "বাংলা", "UnicodeOutput": "", "KeyType": "LanguageSwitch", "WidthRatio": 1.25, "RowIndex": 4, "ColumnIndex": 3, "Tooltip": "Switch to Bangla (Ctrl+Space)" },
+        { "Id": "en_space", "DisplayLabel": "English", "UnicodeOutput": " ", "KeyType": "Space", "WidthRatio": 3.35, "RowIndex": 4, "ColumnIndex": 4, "Tooltip": "Space" },
+        { "Id": "en_period", "DisplayLabel": ".", "UnicodeOutput": ".", "KeyType": "Punctuation", "WidthRatio": 0.9, "RowIndex": 4, "ColumnIndex": 5 },
+        { "Id": "en_enter", "DisplayLabel": "⏎", "UnicodeOutput": "\n", "KeyType": "Enter", "WidthRatio": 1.45, "RowIndex": 4, "ColumnIndex": 6, "Tooltip": "Enter" }
+      ]
+    }
+  ]
+}
