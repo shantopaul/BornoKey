@@ -1,6 +1,7 @@
 using System.IO;
 using BengaliKeyboard.App.Logging;
 using BengaliKeyboard.Core.Interfaces;
+using BengaliKeyboard.Emoji;
 using BengaliKeyboard.Input;
 using BengaliKeyboard.Input.TSF;
 using BengaliKeyboard.Layouts;
@@ -69,10 +70,18 @@ public sealed class Bootstrapper : IDisposable
         services.AddSingleton<SystemTrayService>();
         services.AddSingleton<ISystemTrayService>(sp => sp.GetRequiredService<SystemTrayService>());
 
+        // Offline Emoji Catalog, Search & SQLite Usage History
+        services.AddSingleton<EmojiRepository>();
+        services.AddSingleton<EmojiSearchService>();
+        services.AddSingleton<EmojiUsageService>();
+        services.AddSingleton<IEmojiService>(sp => sp.GetRequiredService<EmojiUsageService>());
+
         // UI ViewModels & Windows
         services.AddSingleton<KeyboardViewModel>();
+        services.AddSingleton<EmojiViewModel>();
         services.AddSingleton<KeyboardWindow>();
         services.AddSingleton<FloatingIconWindow>();
+        services.AddSingleton<EmojiWindow>();
 
         _serviceProvider = services.BuildServiceProvider();
         return _serviceProvider;

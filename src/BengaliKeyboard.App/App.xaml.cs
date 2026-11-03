@@ -46,17 +46,46 @@ public partial class App : Application
             var globalHotkeyService = _bootstrapper.ServiceProvider.GetRequiredService<GlobalHotkeyService>();
             var systemTrayService = _bootstrapper.ServiceProvider.GetRequiredService<SystemTrayService>();
             var keyboardViewModel = _bootstrapper.ServiceProvider.GetRequiredService<KeyboardViewModel>();
+            var emojiViewModel = _bootstrapper.ServiceProvider.GetRequiredService<EmojiViewModel>();
             var keyboardWindow = _bootstrapper.ServiceProvider.GetRequiredService<KeyboardWindow>();
             var floatingIconWindow = _bootstrapper.ServiceProvider.GetRequiredService<FloatingIconWindow>();
+            var emojiWindow = _bootstrapper.ServiceProvider.GetRequiredService<EmojiWindow>();
 
             floatingIconWindow.ActiveLanguage = settingsService.Current.ActiveLanguage;
+
+            async Task ShowEmojiOverlayAsync()
+            {
+                await emojiViewModel.InitializeAsync().ConfigureAwait(true);
+                emojiWindow.SyncBoundsWithKeyboard(keyboardWindow);
+                if (keyboardWindow.IsVisible)
+                {
+                    keyboardWindow.Hide();
+                }
+                if (!emojiWindow.IsVisible)
+                {
+                    emojiWindow.Show();
+                }
+            }
+
+            // Wire Emoji Panel transitions
+            keyboardViewModel.EmojiPanelRequested += async (_, _) => await ShowEmojiOverlayAsync().ConfigureAwait(true);
+            emojiViewModel.BackToKeyboardRequested += (_, _) =>
+            {
+                if (emojiWindow.IsVisible)
+                {
+                    emojiWindow.Hide();
+                }
+                windowPositionService.RestoreLastVisibleMode();
+            };
 
             // Wire Global Hotkeys
             globalHotkeyService.LanguageToggleRequested += async (_, _) => await keyboardViewModel.ToggleLanguageAsync().ConfigureAwait(true);
             globalHotkeyService.VisibilityToggleRequested += (_, _) => windowPositionService.ToggleVisibility();
+            globalHotkeyService.EmojiPanelRequested += async (_, _) => await ShowEmojiOverlayAsync().ConfigureAwait(true);
             globalHotkeyService.Initialize();
 
             // Wire System Tray Icon & 10-Item Context Menu
+            systemTrayService.EmojiPanelRequested += async (_, _) => await ShowEmojiOverlayAsync().ConfigureAwait(true);
             systemTrayService.ExitRequested += async (_, _) =>
             {
                 var currentGeometry = keyboardWindow.CaptureCurrentWindowGeometry();
@@ -85,6 +114,11 @@ public partial class App : Application
             // Wire 4-Mode State Machine Presenter
             windowPositionService.RegisterModePresenter((mode, clampedState) =>
             {
+                if (emojiWindow.IsVisible)
+                {
+                    emojiWindow.Hide();
+                }
+
                 keyboardWindow.ApplySavedWindowGeometry(clampedState);
                 floatingIconWindow.Left = clampedState.IconLeft;
                 floatingIconWindow.Top = clampedState.IconTop;
