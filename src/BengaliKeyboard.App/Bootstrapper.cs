@@ -6,6 +6,7 @@ using BengaliKeyboard.Emoji;
 using BengaliKeyboard.Input;
 using BengaliKeyboard.Input.TSF;
 using BengaliKeyboard.Layouts;
+using BengaliKeyboard.Prediction;
 using BengaliKeyboard.Storage;
 using BengaliKeyboard.Storage.Configuration;
 using BengaliKeyboard.Storage.Database;
@@ -52,6 +53,14 @@ public sealed class Bootstrapper : IDisposable
         services.AddSingleton(new LayoutLoader(customLayoutsDirectory));
         services.AddSingleton<ILayoutManager, LayoutManager>();
 
+        // Smart Offline Bengali Predictive Text Engine
+        services.AddSingleton<DictionaryService>();
+        services.AddSingleton<WordCompletionService>();
+        services.AddSingleton<NGramModel>();
+        services.AddSingleton<NextWordPredictionService>();
+        services.AddSingleton<SuggestionRankingService>();
+        services.AddSingleton<IPredictionService>(sp => sp.GetRequiredService<SuggestionRankingService>());
+
         // Bengali Unicode Input Engine & System-Wide Text Injection
         services.AddSingleton<UnicodeProcessor>();
         services.AddSingleton<Win32SendInputInjector>();
@@ -85,6 +94,7 @@ public sealed class Bootstrapper : IDisposable
 
         // UI ViewModels & Windows
         services.AddSingleton<KeyboardViewModel>();
+        services.AddSingleton<SuggestionBarViewModel>();
         services.AddSingleton<EmojiViewModel>();
         services.AddSingleton<ClipboardViewModel>();
         services.AddSingleton<KeyboardWindow>();
@@ -105,6 +115,9 @@ public sealed class Bootstrapper : IDisposable
 
         var databaseInitializer = provider.GetRequiredService<DatabaseInitializer>();
         await databaseInitializer.InitializeAsync(cancellationToken).ConfigureAwait(false);
+
+        var predictionRankingService = provider.GetRequiredService<SuggestionRankingService>();
+        await predictionRankingService.InitializeAsync(cancellationToken).ConfigureAwait(false);
 
         var layoutManager = provider.GetRequiredService<ILayoutManager>();
         await layoutManager.InitializeAsync(cancellationToken).ConfigureAwait(false);

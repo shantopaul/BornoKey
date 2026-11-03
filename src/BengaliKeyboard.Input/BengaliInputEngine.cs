@@ -293,11 +293,21 @@ public sealed class BengaliInputEngine : IBengaliInputEngine, IDisposable
             }
             else if (string.IsNullOrEmpty(_currentWordBuffer) && nextWordEnabled)
             {
-                var previousWord = _recentWords.Count >= 1 ? _recentWords[^1] : null;
-                var twoWordsAgo = _recentWords.Count >= 2 ? _recentWords[^2] : null;
+                string? word1 = null;
+                string? word2 = null;
+
+                if (_recentWords.Count >= 2)
+                {
+                    word1 = _recentWords[^2];
+                    word2 = _recentWords[^1];
+                }
+                else if (_recentWords.Count == 1)
+                {
+                    word1 = _recentWords[0];
+                }
 
                 candidates = await _predictionService
-                    .GetNextWordPredictionsAsync(previousWord, twoWordsAgo, maxResults, token)
+                    .GetNextWordPredictionsAsync(word1, word2, maxResults, token)
                     .ConfigureAwait(false);
             }
 
