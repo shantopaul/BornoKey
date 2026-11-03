@@ -9,6 +9,7 @@ using BengaliKeyboard.Storage.Configuration;
 using BengaliKeyboard.Storage.Database;
 using BengaliKeyboard.UI.ViewModels;
 using BengaliKeyboard.UI.Windows;
+using BengaliKeyboard.Windows;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,9 +59,15 @@ public sealed class Bootstrapper : IDisposable
         services.AddSingleton<OnScreenInputService>();
         services.AddSingleton<PhysicalKeyboardService>();
 
+        // Windows OS Integration, Multi-Monitor Positioning & 4-Mode State Machine
+        services.AddSingleton<MonitorService>();
+        services.AddSingleton<WindowPositionService>();
+        services.AddSingleton<IWindowManagerService>(sp => sp.GetRequiredService<WindowPositionService>());
+
         // UI ViewModels & Windows
         services.AddSingleton<KeyboardViewModel>();
         services.AddSingleton<KeyboardWindow>();
+        services.AddSingleton<FloatingIconWindow>();
 
         _serviceProvider = services.BuildServiceProvider();
         return _serviceProvider;
@@ -82,6 +89,9 @@ public sealed class Bootstrapper : IDisposable
 
         var inputEngine = provider.GetRequiredService<IBengaliInputEngine>();
         inputEngine.SetLanguage(settings.ActiveLanguage);
+
+        var windowPositionService = provider.GetRequiredService<WindowPositionService>();
+        settings.WindowState = windowPositionService.ValidateAndClampBounds(settings.WindowState);
     }
 
     private static void ConfigureLogging(AppPaths appPaths)

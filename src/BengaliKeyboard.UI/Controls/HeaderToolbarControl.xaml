@@ -49,20 +49,25 @@
                                             Grid.Column="1"
                                             VerticalAlignment="Center" />
 
-            <!-- Right Window & Panel Action Controls -->
+            <!-- Right Window & 4-Mode Action Controls -->
             <StackPanel Grid.Column="3"
                         Orientation="Horizontal"
                         VerticalAlignment="Center">
                 <Button x:Name="CompactModeButton"
                         Content="Compact"
                         Style="{StaticResource Style.Button.HeaderAction}"
-                        ToolTip="Toggle Compact / Expanded Size"
+                        ToolTip="Toggle Compact / Expanded Mode"
                         Click="OnCompactClick" />
+                <Button x:Name="MinimalIconButton"
+                        Content="বাংলা"
+                        Style="{StaticResource Style.Button.HeaderAction}"
+                        ToolTip="Shrink to Minimal Floating [বাংলা] Icon"
+                        Click="OnMinimalIconClick" />
                 <Button x:Name="MinimizeButton"
                         Content="—"
                         Width="26"
                         Style="{StaticResource Style.Button.HeaderAction}"
-                        ToolTip="Hide Keyboard"
+                        ToolTip="Hide Keyboard to System Tray"
                         Click="OnMinimizeClick" />
                 <Button x:Name="CloseButton"
                         Content="✕"

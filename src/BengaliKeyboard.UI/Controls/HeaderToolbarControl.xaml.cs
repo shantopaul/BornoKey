@@ -6,7 +6,7 @@ using BengaliKeyboard.Core.Enums;
 namespace BengaliKeyboard.UI.Controls;
 
 /// <summary>
-/// Top draggable header bar containing the [ বাংলা | ENG ] language toggle and window mode controls.
+/// Top draggable header bar containing the [ বাংলা | ENG ] language toggle and 4-mode window controls.
 /// </summary>
 public partial class HeaderToolbarControl : UserControl
 {
@@ -25,6 +25,8 @@ public partial class HeaderToolbarControl : UserControl
             new PropertyMetadata(null, OnToggleLanguageCommandChanged));
 
     public event EventHandler? CompactModeRequested;
+
+    public event EventHandler? MinimalIconModeRequested;
 
     public event EventHandler? MinimizeRequested;
 
@@ -47,6 +49,11 @@ public partial class HeaderToolbarControl : UserControl
         InitializeComponent();
     }
 
+    public void SetCompactButtonState(bool isCompact)
+    {
+        CompactModeButton.Content = isCompact ? "Expand" : "Compact";
+    }
+
     private static void OnActiveLanguageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is HeaderToolbarControl control && e.NewValue is LanguageMode mode)
@@ -65,6 +72,9 @@ public partial class HeaderToolbarControl : UserControl
 
     private void OnCompactClick(object sender, RoutedEventArgs e) =>
         CompactModeRequested?.Invoke(this, EventArgs.Empty);
+
+    private void OnMinimalIconClick(object sender, RoutedEventArgs e) =>
+        MinimalIconModeRequested?.Invoke(this, EventArgs.Empty);
 
     private void OnMinimizeClick(object sender, RoutedEventArgs e) =>
         MinimizeRequested?.Invoke(this, EventArgs.Empty);

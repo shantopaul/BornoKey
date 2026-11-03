@@ -3,7 +3,9 @@ using System.Windows.Threading;
 using BengaliKeyboard.Core.Enums;
 using BengaliKeyboard.Core.Interfaces;
 using BengaliKeyboard.Input;
+using BengaliKeyboard.UI.ViewModels;
 using BengaliKeyboard.UI.Windows;
+using BengaliKeyboard.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -40,7 +42,75 @@ public partial class App : Application
 
             var settingsService = _bootstrapper.ServiceProvider.GetRequiredService<ISettingsService>();
             var physicalKeyboardService = _bootstrapper.ServiceProvider.GetRequiredService<PhysicalKeyboardService>();
+            var windowPositionService = _bootstrapper.ServiceProvider.GetRequiredService<WindowPositionService>();
+            var keyboardViewModel = _bootstrapper.ServiceProvider.GetRequiredService<KeyboardViewModel>();
             var keyboardWindow = _bootstrapper.ServiceProvider.GetRequiredService<KeyboardWindow>();
+            var floatingIconWindow = _bootstrapper.ServiceProvider.GetRequiredService<FloatingIconWindow>();
+
+            floatingIconWindow.ActiveLanguage = settingsService.Current.ActiveLanguage;
+
+            // Wire FloatingIconWindow events
+            floatingIconWindow.RestoreRequested += (_, _) => windowPositionService.RestoreLastVisibleMode();
+            floatingIconWindow.LanguageToggleRequested += async (_, _) => await keyboardViewModel.ToggleLanguageAsync().ConfigureAwait(true);
+            floatingIconWindow.BadgePositionChanged += (_, coords) =>
+            {
+                var state = settingsService.Current.WindowState;
+                state.IconLeft = coords.Left;
+                state.IconTop = coords.Top;
+                windowPositionService.ScheduleDebouncedSave(state);
+            };
+
+            // Wire KeyboardWindow resize/DPI debounced persistence
+            keyboardWindow.WindowGeometryChanged += (_, updatedState) =>
+            {
+                windowPositionService.ScheduleDebouncedSave(updatedState);
+            };
+
+            // Wire 4-Mode State Machine Presenter
+            windowPositionService.RegisterModePresenter((mode, clampedState) =>
+            {
+                keyboardWindow.ApplySavedWindowGeometry(clampedState);
+                floatingIconWindow.Left = clampedState.IconLeft;
+                floatingIconWindow.Top = clampedState.IconTop;
+                floatingIconWindow.Topmost = clampedState.AlwaysOnTop;
+
+                switch (mode)
+                {
+                    case KeyboardMode.Expanded:
+                    case KeyboardMode.Compact:
+                        if (floatingIconWindow.IsVisible)
+                        {
+                            floatingIconWindow.Hide();
+                        }
+                        if (!keyboardWindow.IsVisible)
+                        {
+                            keyboardWindow.Show();
+                        }
+                        break;
+
+                    case KeyboardMode.MinimalIcon:
+                        if (keyboardWindow.IsVisible)
+                        {
+                            keyboardWindow.Hide();
+                        }
+                        if (!floatingIconWindow.IsVisible)
+                        {
+                            floatingIconWindow.Show();
+                        }
+                        break;
+
+                    case KeyboardMode.HiddenToTray:
+                        if (keyboardWindow.IsVisible)
+                        {
+                            keyboardWindow.Hide();
+                        }
+                        if (floatingIconWindow.IsVisible)
+                        {
+                            floatingIconWindow.Hide();
+                        }
+                        break;
+                }
+            });
 
             if (settingsService.Current.PhysicalKeyboardHookEnabled)
             {
@@ -51,26 +121,17 @@ public partial class App : Application
             {
                 Dispatcher.InvokeAsync(() =>
                 {
-                    if (!keyboardWindow.IsVisible)
-                    {
-                        keyboardWindow.Show();
-                    }
-
-                    if (keyboardWindow.WindowState == WindowState.Minimized)
-                    {
-                        keyboardWindow.WindowState = WindowState.Normal;
-                    }
+                    windowPositionService.RestoreLastVisibleMode();
                 });
             });
 
-            var savedMode = settingsService.Current.WindowState.Mode;
-            if (!settingsService.Current.LaunchMinimized && savedMode != KeyboardMode.HiddenToTray)
-            {
-                keyboardWindow.ApplySavedWindowGeometry(settingsService.Current.WindowState);
-                keyboardWindow.Show();
-            }
+            var initialMode = settingsService.Current.LaunchMinimized
+                ? KeyboardMode.HiddenToTray
+                : settingsService.Current.WindowState.Mode;
 
-            Log.Information("BornoKey started successfully in mode {WindowMode}.", savedMode);
+            windowPositionService.ApplyWindowMode(initialMode);
+
+            Log.Information("BornoKey started successfully in mode {WindowMode}.", initialMode);
         }
         catch (Exception ex)
         {

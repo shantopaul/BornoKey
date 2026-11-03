@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 using BengaliKeyboard.Core.Enums;
 using BengaliKeyboard.Core.Interfaces;
 using BengaliKeyboard.Core.Models;
@@ -16,7 +17,7 @@ namespace BengaliKeyboard.UI.Windows;
 /// Main floating Ridmik-style virtual keyboard window.
 /// Applies Win32 WS_EX_NOACTIVATE and WM_MOUSEACTIVATE (MA_NOACTIVATE) so clicking on-screen keys
 /// never steals focus from the user's active target application (Architecture.md Section 5.1).
-/// Dynamically builds proportional star-sized rows and columns from KeyboardViewModel.CurrentLayout.
+/// Supports proportional Viewbox scaling, 8-edge/corner WM_NCHITTEST resizing, and 4-mode transitions.
 /// </summary>
 public partial class KeyboardWindow : Window
 {
@@ -26,20 +27,39 @@ public partial class KeyboardWindow : Window
     private const int WmMouseActivate = 0x0021;
     private const int MaNoActivate = 3;
 
+    private const int WmNcHitTest = 0x0084;
+    private const int HtLeft = 10;
+    private const int HtRight = 11;
+    private const int HtTop = 12;
+    private const int HtTopLeft = 13;
+    private const int HtTopRight = 14;
+    private const int HtBottom = 15;
+    private const int HtBottomLeft = 16;
+    private const int HtBottomRight = 17;
+    private const double ResizeBorderGripDip = 6.0;
+
     private readonly KeyboardViewModel _viewModel;
     private readonly ISettingsService _settingsService;
+    private readonly IWindowManagerService? _windowManagerService;
     private HwndSource? _hwndSource;
     private bool _allowInteractiveActivation;
+    private bool _isApplyingGeometry;
 
     public KeyboardViewModel ViewModel => _viewModel;
 
-    public KeyboardWindow(KeyboardViewModel viewModel, ISettingsService settingsService)
+    public event EventHandler<WindowStateConfig>? WindowGeometryChanged;
+
+    public KeyboardWindow(
+        KeyboardViewModel viewModel,
+        ISettingsService settingsService,
+        IWindowManagerService? windowManagerService = null)
     {
         ArgumentNullException.ThrowIfNull(viewModel);
         ArgumentNullException.ThrowIfNull(settingsService);
 
         _viewModel = viewModel;
         _settingsService = settingsService;
+        _windowManagerService = windowManagerService;
         DataContext = _viewModel;
 
         InitializeComponent();
@@ -49,6 +69,8 @@ public partial class KeyboardWindow : Window
         Topmost = _settingsService.Current.WindowState.AlwaysOnTop;
 
         _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+        SizeChanged += OnWindowSizeChanged;
+        DpiChanged += OnWindowDpiChanged;
         RebuildKeyboardGrid(_viewModel.CurrentLayout);
     }
 
@@ -70,20 +92,39 @@ public partial class KeyboardWindow : Window
         ArgumentNullException.ThrowIfNull(state);
         state.NormalizeAndClamp();
 
-        if (state.Mode == KeyboardMode.Compact)
+        _isApplyingGeometry = true;
+        try
         {
-            Width = state.CompactWidth;
-            Height = state.CompactHeight;
-        }
-        else
-        {
-            Width = state.Width;
-            Height = state.Height;
-        }
+            var isCompact = state.Mode == KeyboardMode.Compact;
+            HeaderToolbar.SetCompactButtonState(isCompact);
 
-        Left = state.Left;
-        Top = state.Top;
-        Topmost = state.AlwaysOnTop;
+            if (isCompact)
+            {
+                MinWidth = WindowStateConfig.MinCompactWidth;
+                MaxWidth = WindowStateConfig.MaxCompactWidth;
+                MinHeight = WindowStateConfig.MinCompactHeight;
+                MaxHeight = WindowStateConfig.MaxCompactHeight;
+                Width = state.CompactWidth;
+                Height = state.CompactHeight;
+            }
+            else
+            {
+                MinWidth = WindowStateConfig.MinExpandedWidth;
+                MaxWidth = WindowStateConfig.MaxExpandedWidth;
+                MinHeight = WindowStateConfig.MinExpandedHeight;
+                MaxHeight = WindowStateConfig.MaxExpandedHeight;
+                Width = state.Width;
+                Height = state.Height;
+            }
+
+            Left = state.Left;
+            Top = state.Top;
+            Topmost = state.AlwaysOnTop;
+        }
+        finally
+        {
+            _isApplyingGeometry = false;
+        }
     }
 
     public WindowStateConfig CaptureCurrentWindowGeometry()
@@ -172,6 +213,8 @@ public partial class KeyboardWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+        SizeChanged -= OnWindowSizeChanged;
+        DpiChanged -= OnWindowDpiChanged;
 
         if (_hwndSource is not null)
         {
@@ -190,6 +233,29 @@ public partial class KeyboardWindow : Window
         }
     }
 
+    private void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (_isApplyingGeometry || !IsLoaded)
+        {
+            return;
+        }
+
+        var updated = CaptureCurrentWindowGeometry();
+        WindowGeometryChanged?.Invoke(this, updated);
+    }
+
+    private void OnWindowDpiChanged(object sender, DpiChangedEventArgs e)
+    {
+        if (_isApplyingGeometry || !IsLoaded)
+        {
+            return;
+        }
+
+        var updated = CaptureCurrentWindowGeometry();
+        updated.DpiScale = Math.Clamp(e.NewDpi.DpiScaleX, 0.5, 4.0);
+        WindowGeometryChanged?.Invoke(this, updated);
+    }
+
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
         if (msg == WmMouseActivate && !_allowInteractiveActivation)
@@ -198,7 +264,46 @@ public partial class KeyboardWindow : Window
             return new IntPtr(MaNoActivate);
         }
 
+        if (msg == WmNcHitTest)
+        {
+            var hitResult = EvaluateResizeBorderHitTest(lParam);
+            if (hitResult != 0)
+            {
+                handled = true;
+                return new IntPtr(hitResult);
+            }
+        }
+
         return IntPtr.Zero;
+    }
+
+    private int EvaluateResizeBorderHitTest(IntPtr lParam)
+    {
+        if (ActualWidth <= 0 || ActualHeight <= 0)
+        {
+            return 0;
+        }
+
+        var xy = lParam.ToInt64();
+        var screenX = (short)(xy & 0xFFFF);
+        var screenY = (short)((xy >> 16) & 0xFFFF);
+
+        var clientPoint = PointFromScreen(new Point(screenX, screenY));
+        var onLeft = clientPoint.X >= 0 && clientPoint.X <= ResizeBorderGripDip;
+        var onRight = clientPoint.X <= ActualWidth && clientPoint.X >= ActualWidth - ResizeBorderGripDip;
+        var onTop = clientPoint.Y >= 0 && clientPoint.Y <= ResizeBorderGripDip;
+        var onBottom = clientPoint.Y <= ActualHeight && clientPoint.Y >= ActualHeight - ResizeBorderGripDip;
+
+        if (onTop && onLeft) return HtTopLeft;
+        if (onTop && onRight) return HtTopRight;
+        if (onBottom && onLeft) return HtBottomLeft;
+        if (onBottom && onRight) return HtBottomRight;
+        if (onLeft) return HtLeft;
+        if (onRight) return HtRight;
+        if (onTop) return HtTop;
+        if (onBottom) return HtBottom;
+
+        return 0;
     }
 
     private static void ApplyExtendedWindowStyles(IntPtr hwnd, bool enableNoActivate)
@@ -222,33 +327,74 @@ public partial class KeyboardWindow : Window
         {
             DragMove();
             var updatedState = CaptureCurrentWindowGeometry();
-            _settingsService.Current.WindowState = updatedState;
-            await _settingsService.SaveAsync(_settingsService.Current).ConfigureAwait(true);
+            WindowGeometryChanged?.Invoke(this, updatedState);
+
+            if (_windowManagerService is not null)
+            {
+                await _windowManagerService.SaveWindowStateAsync(updatedState).ConfigureAwait(true);
+            }
+            else
+            {
+                _settingsService.Current.WindowState = updatedState;
+                await _settingsService.SaveAsync(_settingsService.Current).ConfigureAwait(true);
+            }
         }
     }
 
     private async void OnHeaderCompactModeRequested(object? sender, EventArgs e)
     {
         var state = _settingsService.Current.WindowState;
-        state.Mode = state.Mode == KeyboardMode.Compact
+        var nextMode = state.Mode == KeyboardMode.Compact
             ? KeyboardMode.Expanded
             : KeyboardMode.Compact;
-        state.LastVisibleMode = state.Mode;
 
+        if (_windowManagerService is not null)
+        {
+            _windowManagerService.ApplyWindowMode(nextMode);
+            return;
+        }
+
+        state.Mode = nextMode;
+        state.LastVisibleMode = nextMode;
         ApplySavedWindowGeometry(state);
         await _settingsService.SaveAsync(_settingsService.Current).ConfigureAwait(true);
     }
 
+    private void OnHeaderMinimalIconModeRequested(object? sender, EventArgs e)
+    {
+        if (_windowManagerService is not null)
+        {
+            _windowManagerService.ApplyWindowMode(KeyboardMode.MinimalIcon);
+            return;
+        }
+
+        Hide();
+    }
+
     private void OnHeaderMinimizeRequested(object? sender, EventArgs e)
     {
+        if (_windowManagerService is not null)
+        {
+            _windowManagerService.ApplyWindowMode(KeyboardMode.HiddenToTray);
+            return;
+        }
+
         Hide();
     }
 
     private async void OnHeaderCloseRequested(object? sender, EventArgs e)
     {
         var updatedState = CaptureCurrentWindowGeometry();
-        _settingsService.Current.WindowState = updatedState;
-        await _settingsService.SaveAsync(_settingsService.Current).ConfigureAwait(true);
+        if (_windowManagerService is not null)
+        {
+            await _windowManagerService.SaveWindowStateAsync(updatedState).ConfigureAwait(true);
+        }
+        else
+        {
+            _settingsService.Current.WindowState = updatedState;
+            await _settingsService.SaveAsync(_settingsService.Current).ConfigureAwait(true);
+        }
+
         Application.Current?.Shutdown();
     }
 
