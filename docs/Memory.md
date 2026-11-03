@@ -9,11 +9,11 @@
 
 | Field | Current Status |
 |---|---|
-| **Current Stage** | **Phase 6: Emoji Keyboard, Keyword Search & Frequently Used History** (In Progress) |
-| **Currently Active File** | `data/Emoji/emoji_catalog.json` & `src/BengaliKeyboard.Emoji/` |
-| **Last Completed File** | `src/BengaliKeyboard.Windows/SystemTrayService.cs` |
+| **Current Stage** | **Phase 6: Emoji Keyboard, Keyword Search & Frequently Used History** (100% Complete — Ready for Phase 7) |
+| **Currently Active File** | None (Phase 6 Completed & Verified; Next up: Phase 7 `BengaliKeyboard.Clipboard`) |
+| **Last Completed File** | `src/BengaliKeyboard.Tests/EmojiUsageTests.cs` |
 | **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln` — 0 Warnings, 0 Errors) |
-| **Automated Test Status** | **PASSING** (`27 / 27` xUnit tests passing across Phase 1, Phase 2, Phase 3, Phase 4 & Phase 5) |
+| **Automated Test Status** | **PASSING** (`33 / 33` xUnit tests passing across Phases 1 through 6) |
 | **Last Updated** | 2026-11-03 |
 
 ---
@@ -32,9 +32,9 @@
 
 ## 3. Currently Active Work Item
 
-- **Current Phase:** **Phase 5 Complete** → Ready for **Phase 6 — Emoji Keyboard, Keyword Search & Frequently Used History**
-- **File Currently Being Worked On:** None (Phase 5 completed, tested twice, and verified)
-- **Next Immediate Action:** Start Phase 6 (`data/Emoji/emoji_catalog.json`, `src/BengaliKeyboard.Emoji/`, `EmojiWindow.xaml`, `EmojiViewModel.cs`, and `EmojiUsageTests.cs`).
+- **Current Phase:** **Phase 6 Complete** → Ready for **Phase 7 — Privacy-First Clipboard History Manager**
+- **File Currently Being Worked On:** None (Phase 6 completed, tested twice, and verified)
+- **Next Immediate Action:** Start Phase 7 (`src/BengaliKeyboard.Clipboard/`, `ClipboardWindow.xaml`, `ClipboardViewModel.cs`, and `ClipboardServiceTests.cs`).
 
 ---
 
@@ -105,15 +105,15 @@
 - [x] `src/BengaliKeyboard.Windows/GlobalHotkeyService.cs` (Win32 `RegisterHotKey` with conflict-safe `Alt+Shift+B` fallback)
 - [x] `assets/Icons/app-icon.ico` & `tray-icon.ico` (`27/27` total tests passing)
 
-### Phase 6 — Emoji Keyboard, Keyword Search & Frequently Used History
-- [ ] `data/Emoji/emoji_catalog.json`
-- [ ] `src/BengaliKeyboard.Emoji/BengaliKeyboard.Emoji.csproj`
-- [ ] `src/BengaliKeyboard.Emoji/EmojiRepository.cs`
-- [ ] `src/BengaliKeyboard.Emoji/EmojiSearchService.cs`
-- [ ] `src/BengaliKeyboard.Emoji/EmojiUsageService.cs`
-- [ ] `src/BengaliKeyboard.UI/Windows/EmojiWindow.xaml` (`.cs`)
-- [ ] `src/BengaliKeyboard.UI/ViewModels/EmojiViewModel.cs`
-- [ ] `src/BengaliKeyboard.Tests/EmojiUsageTests.cs`
+### Phase 6 — Emoji Keyboard, Keyword Search & Frequently Used History (100% Complete)
+- [x] `data/Emoji/emoji_catalog.json` (10 standard categories with English & Bengali keywords)
+- [x] `src/BengaliKeyboard.Emoji/BengaliKeyboard.Emoji.csproj`
+- [x] `src/BengaliKeyboard.Emoji/EmojiRepository.cs` (with 512 KB size cap & embedded fallback)
+- [x] `src/BengaliKeyboard.Emoji/EmojiSearchService.cs`
+- [x] `src/BengaliKeyboard.Emoji/EmojiUsageService.cs` (SQLite `EmojiUsage` frequency + recency ranking & WAL truncate on clear)
+- [x] `src/BengaliKeyboard.UI/Windows/EmojiWindow.xaml` (`.cs` with `WS_EX_NOACTIVATE` & temporary search box focus activation)
+- [x] `src/BengaliKeyboard.UI/ViewModels/EmojiViewModel.cs`
+- [x] `src/BengaliKeyboard.Tests/EmojiUsageTests.cs` (`6/6` passing; `33/33` total passing)
 
 ### Phase 7 — Privacy-First Clipboard History Manager
 - [ ] `src/BengaliKeyboard.Clipboard/BengaliKeyboard.Clipboard.csproj`

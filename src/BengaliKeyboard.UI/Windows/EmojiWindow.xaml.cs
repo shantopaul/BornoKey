@@ -27,6 +27,8 @@ public partial class EmojiWindow : Window
 
     public EmojiViewModel ViewModel => _viewModel;
 
+    public event EventHandler<(double Left, double Top)>? PositionChanged;
+
     public EmojiWindow(EmojiViewModel viewModel, ISettingsService settingsService)
     {
         ArgumentNullException.ThrowIfNull(viewModel);
@@ -130,6 +132,7 @@ public partial class EmojiWindow : Window
         if (e.ButtonState == MouseButtonState.Pressed && e.OriginalSource is not System.Windows.Controls.TextBox)
         {
             DragMove();
+            PositionChanged?.Invoke(this, (Left, Top));
         }
     }
 

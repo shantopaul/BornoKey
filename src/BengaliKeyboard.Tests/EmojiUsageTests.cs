@@ -172,6 +172,15 @@ public sealed class EmojiUsageTests : IDisposable
         Assert.Single(restartedViewModel.DisplayedEmojis);
         Assert.Equal("❤️‍🔥", restartedViewModel.DisplayedEmojis[0].Emoji);
         Assert.Equal(1, restartedViewModel.DisplayedEmojis[0].UsageCount);
+
+        // Switching to "Symbols" and executing ClearHistoryCommand resets UsageCount on displayed items as well
+        await restartedViewModel.SelectCategoryCommand.ExecuteAsync("Symbols");
+        var symbolFire = restartedViewModel.DisplayedEmojis.First(x => x.Emoji == "❤️‍🔥");
+        Assert.Equal(1, symbolFire.UsageCount);
+
+        await restartedViewModel.ClearHistoryCommand.ExecuteAsync(null);
+        Assert.Equal(0, symbolFire.UsageCount);
+        Assert.Null(symbolFire.LastUsedUtc);
     }
 
     [Fact]

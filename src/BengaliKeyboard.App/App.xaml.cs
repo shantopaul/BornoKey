@@ -69,8 +69,16 @@ public partial class App : Application
 
             // Wire Emoji Panel transitions
             keyboardViewModel.EmojiPanelRequested += async (_, _) => await ShowEmojiOverlayAsync().ConfigureAwait(true);
+            emojiWindow.PositionChanged += (_, coords) =>
+            {
+                keyboardWindow.Left = coords.Left;
+                keyboardWindow.Top = coords.Top;
+                var updatedState = keyboardWindow.CaptureCurrentWindowGeometry();
+                windowPositionService.ScheduleDebouncedSave(updatedState);
+            };
             emojiViewModel.BackToKeyboardRequested += (_, _) =>
             {
+                emojiWindow.SetInteractiveFocusAllowed(false);
                 if (emojiWindow.IsVisible)
                 {
                     emojiWindow.Hide();

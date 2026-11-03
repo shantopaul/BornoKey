@@ -17,6 +17,7 @@ public sealed partial class EmojiViewModel : ObservableObject
 
     private readonly IEmojiService _emojiService;
     private readonly ITextInjector? _textInjector;
+    private CancellationTokenSource? _searchCts;
     private bool _suppressSearchReload;
 
     public ObservableCollection<string> Categories { get; } = [];
@@ -144,10 +145,18 @@ public sealed partial class EmojiViewModel : ObservableObject
     public async Task ClearHistoryAsync(CancellationToken cancellationToken = default)
     {
         await _emojiService.ClearHistoryAsync(cancellationToken).ConfigureAwait(true);
+
         if (IsFrequentlyUsedSelected && string.IsNullOrWhiteSpace(SearchQuery))
         {
             DisplayedEmojis.Clear();
             StatusMessage = "No frequently used emojis yet.";
+            return;
+        }
+
+        foreach (var item in DisplayedEmojis)
+        {
+            item.UsageCount = 0;
+            item.LastUsedUtc = null;
         }
     }
 
@@ -164,7 +173,24 @@ public sealed partial class EmojiViewModel : ObservableObject
             return;
         }
 
-        _ = SearchEmojisAsync(value);
+        _searchCts?.Cancel();
+        _searchCts?.Dispose();
+        _searchCts = new CancellationTokenSource();
+        var token = _searchCts.Token;
+
+        _ = RunLatestSearchAsync(value, token);
+    }
+
+    private async Task RunLatestSearchAsync(string query, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await SearchEmojisAsync(query, cancellationToken).ConfigureAwait(true);
+        }
+        catch (OperationCanceledException)
+        {
+            // Superseded by a newer search query
+        }
     }
 
     private void ApplyDisplayedEmojis(IReadOnlyList<EmojiItem> items)
