@@ -45,6 +45,11 @@ public sealed class NGramModel
             updateValueFactory: (_, existing) => Math.Min(existing + 350, 5000));
     }
 
+    public void ClearUserBigrams()
+    {
+        _userBigrams.Clear();
+    }
+
     public async Task<IReadOnlyList<(string Word, int Frequency)>> QueryTrigramsAsync(
         string word1,
         string word2,

@@ -84,6 +84,48 @@ public sealed class DatabaseInitializer
             cancellationToken).ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Purges all user-generated data tables (<c>EmojiUsage</c>, <c>ClipboardHistory</c>, <c>UserDictionary</c>),
+    /// rotates the DPAPI-protected HMAC key in <c>ApplicationSettings</c> (secrets.md SEC-02),
+    /// and truncates the SQLite WAL journal (CHK-01).
+    /// </summary>
+    public async Task<string> ClearAllUserDataAsync(CancellationToken cancellationToken = default)
+    {
+        return await SqliteConnectionFactory.ExecuteWithRetryAsync(
+            async ct =>
+            {
+                await using var connection = await _connectionFactory
+                    .CreateUserDatabaseConnectionAsync(ct)
+                    .ConfigureAwait(false);
+
+                var newProtectedKey = LocalDataProtector.GenerateProtectedHmacKey();
+
+                await using (var clearCmd = connection.CreateCommand())
+                {
+                    clearCmd.CommandText = """
+                        DELETE FROM EmojiUsage;
+                        DELETE FROM ClipboardHistory;
+                        DELETE FROM UserDictionary;
+                        INSERT INTO ApplicationSettings (Key, Value)
+                        VALUES (@key, @value)
+                        ON CONFLICT(Key) DO UPDATE SET Value = excluded.Value;
+                        """;
+                    clearCmd.Parameters.AddWithValue("@key", ClipboardHmacSettingKey);
+                    clearCmd.Parameters.AddWithValue("@value", newProtectedKey);
+                    await clearCmd.ExecuteNonQueryAsync(ct).ConfigureAwait(false);
+                }
+
+                await using (var checkpointCmd = connection.CreateCommand())
+                {
+                    checkpointCmd.CommandText = "PRAGMA wal_checkpoint(TRUNCATE);";
+                    await checkpointCmd.ExecuteNonQueryAsync(ct).ConfigureAwait(false);
+                }
+
+                return newProtectedKey;
+            },
+            cancellationToken).ConfigureAwait(false);
+    }
+
     private async Task InitializeUserDatabaseCoreAsync(CancellationToken cancellationToken)
     {
         await using var connection = await _connectionFactory

@@ -69,9 +69,35 @@ public partial class KeyboardWindow : Window
         Topmost = _settingsService.Current.WindowState.AlwaysOnTop;
 
         _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+        _settingsService.SettingsChanged += OnSettingsChanged;
         SizeChanged += OnWindowSizeChanged;
         DpiChanged += OnWindowDpiChanged;
         RebuildKeyboardGrid(_viewModel.CurrentLayout);
+    }
+
+    public void ApplyAppearanceFromSettings()
+    {
+        var settings = _settingsService.Current;
+        Opacity = Math.Clamp(settings.Opacity, AppSettings.MinOpacity, AppSettings.MaxOpacity);
+        Topmost = settings.WindowState.AlwaysOnTop;
+
+        foreach (var child in KeyboardGridHost.Children)
+        {
+            if (child is Grid rowGrid)
+            {
+                foreach (var keyElement in rowGrid.Children)
+                {
+                    if (keyElement is KeyboardKeyControl keyControl)
+                    {
+                        keyControl.ApplyKeyAppearance(
+                            settings.KeyCornerRadius,
+                            settings.KeySpacing,
+                            settings.KeyRepeatDelayMs,
+                            settings.KeyRepeatIntervalMs);
+                    }
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -188,6 +214,12 @@ public partial class KeyboardWindow : Window
                     KeyModel = keyDef,
                     KeyCommand = _viewModel.PressKeyCommand
                 };
+                var currentSettings = _settingsService.Current;
+                keyControl.ApplyKeyAppearance(
+                    currentSettings.KeyCornerRadius,
+                    currentSettings.KeySpacing,
+                    currentSettings.KeyRepeatDelayMs,
+                    currentSettings.KeyRepeatIntervalMs);
 
                 Grid.SetColumn(keyControl, c);
                 rowGrid.Children.Add(keyControl);
@@ -213,6 +245,7 @@ public partial class KeyboardWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+        _settingsService.SettingsChanged -= OnSettingsChanged;
         SizeChanged -= OnWindowSizeChanged;
         DpiChanged -= OnWindowDpiChanged;
 
@@ -223,6 +256,18 @@ public partial class KeyboardWindow : Window
         }
 
         base.OnClosed(e);
+    }
+
+    private void OnSettingsChanged(object? sender, AppSettings e)
+    {
+        if (Dispatcher.CheckAccess())
+        {
+            ApplyAppearanceFromSettings();
+        }
+        else
+        {
+            _ = Dispatcher.InvokeAsync(ApplyAppearanceFromSettings);
+        }
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

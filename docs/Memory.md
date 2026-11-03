@@ -9,8 +9,8 @@
 
 | Field | Current Status |
 |---|---|
-| **Current Stage** | **Phase 8: Smart Offline Bengali Predictive Text Engine** (100% Complete — Ready for Phase 9) |
-| **Currently Active File** | None (Phase 8 Completed & Verified; Next up: Phase 9 `SettingsWindow` & Themes) |
+| **Current Stage** | **Phase 9: Customization, Themes & Settings Panel** (In Progress) |
+| **Currently Active File** | `src/BengaliKeyboard.UI/Themes/Colors.Light.xaml` |
 | **Last Completed File** | `src/BengaliKeyboard.Tests/PredictionEngineTests.cs` |
 | **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln` — 0 Warnings, 0 Errors) |
 | **Automated Test Status** | **PASSING** (`42 / 42` xUnit tests passing across Phases 1 through 8) |

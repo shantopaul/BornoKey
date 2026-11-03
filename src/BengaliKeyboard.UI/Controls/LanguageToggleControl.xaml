@@ -6,7 +6,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/BengaliKeyboard.UI;component/Themes/Colors.Dark.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/BengaliKeyboard.UI;component/Themes/Typography.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

@@ -54,10 +54,16 @@ public partial class LanguageToggleControl : UserControl
     private void UpdatePillVisuals()
     {
         var isBangla = ActiveLanguage == LanguageMode.Bangla;
-        var accentBrush = TryFindResource("Brush.Accent.Primary") as Brush ?? Brushes.RoyalBlue;
-
-        BanglaPillBorder.Background = isBangla ? accentBrush : Brushes.Transparent;
-        EnglishPillBorder.Background = !isBangla ? accentBrush : Brushes.Transparent;
+        if (isBangla)
+        {
+            BanglaPillBorder.SetResourceReference(Border.BackgroundProperty, "Brush.Accent.Primary");
+            EnglishPillBorder.Background = Brushes.Transparent;
+        }
+        else
+        {
+            BanglaPillBorder.Background = Brushes.Transparent;
+            EnglishPillBorder.SetResourceReference(Border.BackgroundProperty, "Brush.Accent.Primary");
+        }
     }
 
     private void OnToggleMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

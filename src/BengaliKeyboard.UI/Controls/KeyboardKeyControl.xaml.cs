@@ -31,6 +31,8 @@ public partial class KeyboardKeyControl : UserControl
     private DispatcherTimer? _repeatTimer;
     private bool _isPressed;
     private bool _isHovered;
+    private int _repeatDelayMs = 400;
+    private int _repeatIntervalMs = 45;
 
     public KeyDefinition? KeyModel
     {
@@ -48,6 +50,26 @@ public partial class KeyboardKeyControl : UserControl
     {
         InitializeComponent();
         Unloaded += OnControlUnloaded;
+    }
+
+    /// <summary>
+    /// Applies customizable key corner radius, inter-key spacing, and key-repeat timing from <see cref="AppSettings"/>.
+    /// </summary>
+    public void ApplyKeyAppearance(
+        double cornerRadius = 6.0,
+        double keySpacing = 4.0,
+        int repeatDelayMs = 400,
+        int repeatIntervalMs = 45)
+    {
+        var clampedRadius = Math.Clamp(cornerRadius, 2.0, 14.0);
+        var halfSpacing = Math.Clamp(keySpacing, 2.0, 8.0) / 2.0;
+
+        ShadowBorder.CornerRadius = new CornerRadius(clampedRadius);
+        KeySurfaceBorder.CornerRadius = new CornerRadius(clampedRadius);
+        ShadowBorder.Margin = new Thickness(halfSpacing);
+
+        _repeatDelayMs = Math.Clamp(repeatDelayMs, 150, 1000);
+        _repeatIntervalMs = Math.Clamp(repeatIntervalMs, 15, 250);
     }
 
     private static void OnKeyModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -147,10 +169,7 @@ public partial class KeyboardKeyControl : UserControl
                     : "Brush.Key.Regular.Background";
         }
 
-        if (TryFindResource(resourceKey) is Brush brush)
-        {
-            KeySurfaceBorder.Background = brush;
-        }
+        KeySurfaceBorder.SetResourceReference(Border.BackgroundProperty, resourceKey);
     }
 
     private static bool IsSpecialKey(KeyType keyType) =>
@@ -237,7 +256,7 @@ public partial class KeyboardKeyControl : UserControl
         StopRepeatTimer();
         _repeatTimer = new DispatcherTimer(DispatcherPriority.Input)
         {
-            Interval = TimeSpan.FromMilliseconds(380)
+            Interval = TimeSpan.FromMilliseconds(_repeatDelayMs)
         };
         _repeatTimer.Tick += OnRepeatTimerTick;
         _repeatTimer.Start();
@@ -253,7 +272,7 @@ public partial class KeyboardKeyControl : UserControl
 
         if (_repeatTimer is not null)
         {
-            _repeatTimer.Interval = TimeSpan.FromMilliseconds(50);
+            _repeatTimer.Interval = TimeSpan.FromMilliseconds(_repeatIntervalMs);
         }
 
         ExecuteKeyCommand();

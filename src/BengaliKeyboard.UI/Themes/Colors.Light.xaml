@@ -1,0 +1,45 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Light Theme Semantic Color Palette (Design.md Section 2.2 - Clean Modern Light) -->
+    <Color x:Key="Color.Window.Background">#ECEEF2</Color>
+    <Color x:Key="Color.Header.Background">#F7F8FA</Color>
+    <Color x:Key="Color.Window.Border">#D0D5DD</Color>
+    <Color x:Key="Color.Key.Regular.Background">#FFFFFF</Color>
+    <Color x:Key="Color.Key.Regular.Hover">#F3F4F6</Color>
+    <Color x:Key="Color.Key.Regular.Pressed">#E5E7EB</Color>
+    <Color x:Key="Color.Key.Special.Background">#D8DCE3</Color>
+    <Color x:Key="Color.Key.Special.Hover">#C8CDD6</Color>
+    <Color x:Key="Color.Key.Special.Pressed">#B8BEC9</Color>
+    <Color x:Key="Color.Key.Shadow">#B0B7C3</Color>
+    <Color x:Key="Color.Accent.Primary">#2563EB</Color>
+    <Color x:Key="Color.Accent.Hover">#1D4ED8</Color>
+    <Color x:Key="Color.Accent.Subtle">#DBEAFE</Color>
+    <Color x:Key="Color.Text.Primary">#111827</Color>
+    <Color x:Key="Color.Text.Secondary">#4B5563</Color>
+    <Color x:Key="Color.Text.Muted">#9CA3AF</Color>
+    <Color x:Key="Color.Status.Success">#10B981</Color>
+    <Color x:Key="Color.Status.Warning">#F59E0B</Color>
+    <Color x:Key="Color.Status.Danger">#EF4444</Color>
+
+    <SolidColorBrush x:Key="Brush.Window.Background" Color="{StaticResource Color.Window.Background}" />
+    <SolidColorBrush x:Key="Brush.Header.Background" Color="{StaticResource Color.Header.Background}" />
+    <SolidColorBrush x:Key="Brush.Window.Border" Color="{StaticResource Color.Window.Border}" />
+    <SolidColorBrush x:Key="Brush.Key.Regular.Background" Color="{StaticResource Color.Key.Regular.Background}" />
+    <SolidColorBrush x:Key="Brush.Key.Regular.Hover" Color="{StaticResource Color.Key.Regular.Hover}" />
+    <SolidColorBrush x:Key="Brush.Key.Regular.Pressed" Color="{StaticResource Color.Key.Regular.Pressed}" />
+    <SolidColorBrush x:Key="Brush.Key.Special.Background" Color="{StaticResource Color.Key.Special.Background}" />
+    <SolidColorBrush x:Key="Brush.Key.Special.Hover" Color="{StaticResource Color.Key.Special.Hover}" />
+    <SolidColorBrush x:Key="Brush.Key.Special.Pressed" Color="{StaticResource Color.Key.Special.Pressed}" />
+    <SolidColorBrush x:Key="Brush.Key.Shadow" Color="{StaticResource Color.Key.Shadow}" />
+    <SolidColorBrush x:Key="Brush.Accent.Primary" Color="{StaticResource Color.Accent.Primary}" />
+    <SolidColorBrush x:Key="Brush.Accent.Hover" Color="{StaticResource Color.Accent.Hover}" />
+    <SolidColorBrush x:Key="Brush.Accent.Subtle" Color="{StaticResource Color.Accent.Subtle}" />
+    <SolidColorBrush x:Key="Brush.Text.Primary" Color="{StaticResource Color.Text.Primary}" />
+    <SolidColorBrush x:Key="Brush.Text.Secondary" Color="{StaticResource Color.Text.Secondary}" />
+    <SolidColorBrush x:Key="Brush.Text.Muted" Color="{StaticResource Color.Text.Muted}" />
+    <SolidColorBrush x:Key="Brush.Status.Success" Color="{StaticResource Color.Status.Success}" />
+    <SolidColorBrush x:Key="Brush.Status.Warning" Color="{StaticResource Color.Status.Warning}" />
+    <SolidColorBrush x:Key="Brush.Status.Danger" Color="{StaticResource Color.Status.Danger}" />
+
+</ResourceDictionary>
