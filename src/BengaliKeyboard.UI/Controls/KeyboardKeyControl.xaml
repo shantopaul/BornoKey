@@ -1,0 +1,44 @@
+<UserControl x:Class="BengaliKeyboard.UI.Controls.KeyboardKeyControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Focusable="False">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/BengaliKeyboard.UI;component/Themes/Colors.Dark.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/BengaliKeyboard.UI;component/Themes/Typography.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <!-- Outer Shadow Edge Container (1.5px bottom keycap elevation per Design.md Section 5.2) -->
+    <Border x:Name="ShadowBorder"
+            Background="{DynamicResource Brush.Key.Shadow}"
+            CornerRadius="6"
+            Margin="2"
+            Focusable="False">
+        <Border x:Name="KeySurfaceBorder"
+                Background="{DynamicResource Brush.Key.Regular.Background}"
+                CornerRadius="6"
+                Margin="0,0,0,1.5"
+                Cursor="Hand"
+                Focusable="False"
+                MouseEnter="OnKeyMouseEnter"
+                MouseLeave="OnKeyMouseLeave"
+                PreviewMouseLeftButtonDown="OnKeyMouseLeftButtonDown"
+                PreviewMouseLeftButtonUp="OnKeyMouseLeftButtonUp">
+            <Grid>
+                <!-- Secondary / Shift Hint Glyph in Top-Right Corner -->
+                <TextBlock x:Name="SecondaryGlyphText"
+                           Style="{StaticResource Style.Text.KeySecondary}"
+                           IsHitTestVisible="False" />
+
+                <!-- Primary Centered Glyph -->
+                <TextBlock x:Name="PrimaryGlyphText"
+                           Style="{StaticResource Style.Text.KeyPrimary}"
+                           IsHitTestVisible="False" />
+            </Grid>
+        </Border>
+    </Border>
+</UserControl>
