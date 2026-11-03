@@ -1,9 +1,14 @@
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using BengaliKeyboard.Core.Enums;
 using BengaliKeyboard.Core.Interfaces;
 using BengaliKeyboard.Core.Models;
+using BengaliKeyboard.UI.Controls;
+using BengaliKeyboard.UI.ViewModels;
 
 namespace BengaliKeyboard.UI.Windows;
 
@@ -11,6 +16,7 @@ namespace BengaliKeyboard.UI.Windows;
 /// Main floating Ridmik-style virtual keyboard window.
 /// Applies Win32 WS_EX_NOACTIVATE and WM_MOUSEACTIVATE (MA_NOACTIVATE) so clicking on-screen keys
 /// never steals focus from the user's active target application (Architecture.md Section 5.1).
+/// Dynamically builds proportional star-sized rows and columns from KeyboardViewModel.CurrentLayout.
 /// </summary>
 public partial class KeyboardWindow : Window
 {
@@ -20,19 +26,30 @@ public partial class KeyboardWindow : Window
     private const int WmMouseActivate = 0x0021;
     private const int MaNoActivate = 3;
 
+    private readonly KeyboardViewModel _viewModel;
     private readonly ISettingsService _settingsService;
     private HwndSource? _hwndSource;
     private bool _allowInteractiveActivation;
 
-    public KeyboardWindow(ISettingsService settingsService)
+    public KeyboardViewModel ViewModel => _viewModel;
+
+    public KeyboardWindow(KeyboardViewModel viewModel, ISettingsService settingsService)
     {
+        ArgumentNullException.ThrowIfNull(viewModel);
         ArgumentNullException.ThrowIfNull(settingsService);
+
+        _viewModel = viewModel;
         _settingsService = settingsService;
+        DataContext = _viewModel;
 
         InitializeComponent();
+
         ApplySavedWindowGeometry(_settingsService.Current.WindowState);
         Opacity = _settingsService.Current.Opacity;
         Topmost = _settingsService.Current.WindowState.AlwaysOnTop;
+
+        _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+        RebuildKeyboardGrid(_viewModel.CurrentLayout);
     }
 
     /// <summary>
@@ -53,8 +70,17 @@ public partial class KeyboardWindow : Window
         ArgumentNullException.ThrowIfNull(state);
         state.NormalizeAndClamp();
 
-        Width = state.Width;
-        Height = state.Height;
+        if (state.Mode == KeyboardMode.Compact)
+        {
+            Width = state.CompactWidth;
+            Height = state.CompactHeight;
+        }
+        else
+        {
+            Width = state.Width;
+            Height = state.Height;
+        }
+
         Left = state.Left;
         Top = state.Top;
         Topmost = state.AlwaysOnTop;
@@ -63,13 +89,72 @@ public partial class KeyboardWindow : Window
     public WindowStateConfig CaptureCurrentWindowGeometry()
     {
         var current = _settingsService.Current.WindowState;
-        current.Width = ActualWidth > 0 ? ActualWidth : Width;
-        current.Height = ActualHeight > 0 ? ActualHeight : Height;
+        var activeWidth = ActualWidth > 0 ? ActualWidth : Width;
+        var activeHeight = ActualHeight > 0 ? ActualHeight : Height;
+
+        if (current.Mode == KeyboardMode.Compact)
+        {
+            current.CompactWidth = activeWidth;
+            current.CompactHeight = activeHeight;
+        }
+        else
+        {
+            current.Width = activeWidth;
+            current.Height = activeHeight;
+        }
+
         current.Left = Left;
         current.Top = Top;
         current.AlwaysOnTop = Topmost;
         current.NormalizeAndClamp();
         return current;
+    }
+
+    /// <summary>
+    /// Dynamically constructs proportional star-weighted rows and columns from the active KeyboardLayoutModel.
+    /// </summary>
+    public void RebuildKeyboardGrid(KeyboardLayoutModel? layout)
+    {
+        KeyboardGridHost.Children.Clear();
+        KeyboardGridHost.RowDefinitions.Clear();
+
+        if (layout?.Rows is null || layout.Rows.Count == 0)
+        {
+            return;
+        }
+
+        for (var r = 0; r < layout.Rows.Count; r++)
+        {
+            var rowModel = layout.Rows[r];
+            var heightRatio = rowModel.HeightRatio > 0 ? rowModel.HeightRatio : 1.0;
+            KeyboardGridHost.RowDefinitions.Add(new RowDefinition
+            {
+                Height = new GridLength(heightRatio, GridUnitType.Star)
+            });
+
+            var rowGrid = new Grid();
+            for (var c = 0; c < rowModel.Keys.Count; c++)
+            {
+                var keyDef = rowModel.Keys[c];
+                var widthRatio = keyDef.WidthRatio > 0 ? keyDef.WidthRatio : 1.0;
+                rowGrid.ColumnDefinitions.Add(new ColumnDefinition
+                {
+                    Width = new GridLength(widthRatio, GridUnitType.Star)
+                });
+
+                var keyControl = new KeyboardKeyControl
+                {
+                    KeyModel = keyDef,
+                    KeyCommand = _viewModel.PressKeyCommand
+                };
+
+                Grid.SetColumn(keyControl, c);
+                rowGrid.Children.Add(keyControl);
+            }
+
+            Grid.SetRow(rowGrid, r);
+            KeyboardGridHost.Children.Add(rowGrid);
+        }
     }
 
     protected override void OnSourceInitialized(EventArgs e)
@@ -86,6 +171,8 @@ public partial class KeyboardWindow : Window
 
     protected override void OnClosed(EventArgs e)
     {
+        _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+
         if (_hwndSource is not null)
         {
             _hwndSource.RemoveHook(WndProc);
@@ -93,6 +180,14 @@ public partial class KeyboardWindow : Window
         }
 
         base.OnClosed(e);
+    }
+
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (string.Equals(e.PropertyName, nameof(KeyboardViewModel.CurrentLayout), StringComparison.Ordinal))
+        {
+            RebuildKeyboardGrid(_viewModel.CurrentLayout);
+        }
     }
 
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -132,12 +227,24 @@ public partial class KeyboardWindow : Window
         }
     }
 
-    private void OnMinimizeClick(object sender, RoutedEventArgs e)
+    private async void OnHeaderCompactModeRequested(object? sender, EventArgs e)
+    {
+        var state = _settingsService.Current.WindowState;
+        state.Mode = state.Mode == KeyboardMode.Compact
+            ? KeyboardMode.Expanded
+            : KeyboardMode.Compact;
+        state.LastVisibleMode = state.Mode;
+
+        ApplySavedWindowGeometry(state);
+        await _settingsService.SaveAsync(_settingsService.Current).ConfigureAwait(true);
+    }
+
+    private void OnHeaderMinimizeRequested(object? sender, EventArgs e)
     {
         Hide();
     }
 
-    private async void OnCloseClick(object sender, RoutedEventArgs e)
+    private async void OnHeaderCloseRequested(object? sender, EventArgs e)
     {
         var updatedState = CaptureCurrentWindowGeometry();
         _settingsService.Current.WindowState = updatedState;

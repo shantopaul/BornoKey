@@ -1,9 +1,11 @@
 using System.IO;
 using BengaliKeyboard.App.Logging;
 using BengaliKeyboard.Core.Interfaces;
+using BengaliKeyboard.Layouts;
 using BengaliKeyboard.Storage;
 using BengaliKeyboard.Storage.Configuration;
 using BengaliKeyboard.Storage.Database;
+using BengaliKeyboard.UI.ViewModels;
 using BengaliKeyboard.UI.Windows;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Data.Sqlite;
@@ -13,7 +15,7 @@ using Serilog;
 namespace BengaliKeyboard.App;
 
 /// <summary>
-/// Configures Dependency Injection, privacy-redacted Serilog logging, and initial storage/database startup.
+/// Configures Dependency Injection, privacy-redacted Serilog logging, layout initialization, and database startup.
 /// </summary>
 public sealed class Bootstrapper : IDisposable
 {
@@ -23,7 +25,7 @@ public sealed class Bootstrapper : IDisposable
     public IServiceProvider ServiceProvider =>
         _serviceProvider ?? throw new InvalidOperationException("Bootstrapper has not been initialized.");
 
-    public IServiceProvider ConfigureServices(string? customDataDirectory = null)
+    public IServiceProvider ConfigureServices(string? customDataDirectory = null, string? customLayoutsDirectory = null)
     {
         var appPaths = new AppPaths(customDataDirectory);
         appPaths.EnsureDirectoriesCreated();
@@ -41,7 +43,12 @@ public sealed class Bootstrapper : IDisposable
         services.AddSingleton<DatabaseInitializer>();
         services.AddSingleton<ISettingsService, JsonSettingsService>();
 
-        // UI Windows
+        // Configurable Keyboard Layouts
+        services.AddSingleton(new LayoutLoader(customLayoutsDirectory));
+        services.AddSingleton<ILayoutManager, LayoutManager>();
+
+        // UI ViewModels & Windows
+        services.AddSingleton<KeyboardViewModel>();
         services.AddSingleton<KeyboardWindow>();
 
         _serviceProvider = services.BuildServiceProvider();
@@ -53,10 +60,14 @@ public sealed class Bootstrapper : IDisposable
         var provider = ServiceProvider;
 
         var settingsService = provider.GetRequiredService<ISettingsService>();
-        await settingsService.LoadAsync(cancellationToken).ConfigureAwait(false);
+        var settings = await settingsService.LoadAsync(cancellationToken).ConfigureAwait(false);
 
         var databaseInitializer = provider.GetRequiredService<DatabaseInitializer>();
         await databaseInitializer.InitializeAsync(cancellationToken).ConfigureAwait(false);
+
+        var layoutManager = provider.GetRequiredService<ILayoutManager>();
+        await layoutManager.InitializeAsync(cancellationToken).ConfigureAwait(false);
+        layoutManager.SetLanguage(settings.ActiveLanguage);
     }
 
     private static void ConfigureLogging(AppPaths appPaths)
