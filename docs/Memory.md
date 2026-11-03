@@ -9,8 +9,8 @@
 
 | Field | Current Status |
 |---|---|
-| **Current Stage** | **Phase 5: Windows System Tray, Auto-Startup & State Restoration** (100% Complete — Ready for Phase 6) |
-| **Currently Active File** | None (Phase 5 Completed & Verified; Next up: Phase 6 `BengaliKeyboard.Emoji`) |
+| **Current Stage** | **Phase 6: Emoji Keyboard, Keyword Search & Frequently Used History** (In Progress) |
+| **Currently Active File** | `data/Emoji/emoji_catalog.json` & `src/BengaliKeyboard.Emoji/` |
 | **Last Completed File** | `src/BengaliKeyboard.Windows/SystemTrayService.cs` |
 | **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln` — 0 Warnings, 0 Errors) |
 | **Automated Test Status** | **PASSING** (`27 / 27` xUnit tests passing across Phase 1, Phase 2, Phase 3, Phase 4 & Phase 5) |

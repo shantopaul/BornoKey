@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>BengaliKeyboard.Emoji</RootNamespace>
+    <AssemblyName>BengaliKeyboard.Emoji</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BengaliKeyboard.Core\BengaliKeyboard.Core.csproj" />
+    <ProjectReference Include="..\BengaliKeyboard.Storage\BengaliKeyboard.Storage.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\data\Emoji\emoji_catalog.json" Link="data\Emoji\emoji_catalog.json" CopyToOutputDirectory="PreserveNewest" />
+    <EmbeddedResource Include="..\..\data\Emoji\emoji_catalog.json" LogicalName="BengaliKeyboard.Emoji.data.Emoji.emoji_catalog.json" />
+  </ItemGroup>
+
+</Project>
