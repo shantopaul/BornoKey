@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Threading;
 using BengaliKeyboard.Core.Enums;
 using BengaliKeyboard.Core.Interfaces;
+using BengaliKeyboard.Input;
 using BengaliKeyboard.UI.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -38,7 +39,13 @@ public partial class App : Application
             await _bootstrapper.InitializeCoreServicesAsync().ConfigureAwait(true);
 
             var settingsService = _bootstrapper.ServiceProvider.GetRequiredService<ISettingsService>();
+            var physicalKeyboardService = _bootstrapper.ServiceProvider.GetRequiredService<PhysicalKeyboardService>();
             var keyboardWindow = _bootstrapper.ServiceProvider.GetRequiredService<KeyboardWindow>();
+
+            if (settingsService.Current.PhysicalKeyboardHookEnabled)
+            {
+                physicalKeyboardService.Start();
+            }
 
             _singleInstanceManager.StartWakeupListener(() =>
             {

@@ -141,8 +141,20 @@ public sealed partial class KeyboardViewModel : ObservableObject, IRecipient<Sug
 
     public void Receive(SuggestionsUpdatedMessage message)
     {
+        var dispatcher = System.Windows.Application.Current?.Dispatcher;
+        if (dispatcher is not null && !dispatcher.CheckAccess())
+        {
+            dispatcher.Invoke(() => ApplySuggestions(message.Candidates));
+            return;
+        }
+
+        ApplySuggestions(message.Candidates);
+    }
+
+    private void ApplySuggestions(IReadOnlyList<SuggestionCandidate> candidates)
+    {
         Suggestions.Clear();
-        foreach (var candidate in message.Candidates)
+        foreach (var candidate in candidates)
         {
             Suggestions.Add(candidate);
         }

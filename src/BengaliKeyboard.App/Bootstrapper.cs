@@ -1,6 +1,8 @@
 using System.IO;
 using BengaliKeyboard.App.Logging;
 using BengaliKeyboard.Core.Interfaces;
+using BengaliKeyboard.Input;
+using BengaliKeyboard.Input.TSF;
 using BengaliKeyboard.Layouts;
 using BengaliKeyboard.Storage;
 using BengaliKeyboard.Storage.Configuration;
@@ -47,6 +49,15 @@ public sealed class Bootstrapper : IDisposable
         services.AddSingleton(new LayoutLoader(customLayoutsDirectory));
         services.AddSingleton<ILayoutManager, LayoutManager>();
 
+        // Bengali Unicode Input Engine & System-Wide Text Injection
+        services.AddSingleton<UnicodeProcessor>();
+        services.AddSingleton<Win32SendInputInjector>();
+        services.AddSingleton<TsfBridgeService>(sp => new TsfBridgeService(sp.GetRequiredService<Win32SendInputInjector>()));
+        services.AddSingleton<ITextInjector>(sp => sp.GetRequiredService<TsfBridgeService>());
+        services.AddSingleton<IBengaliInputEngine, BengaliInputEngine>();
+        services.AddSingleton<OnScreenInputService>();
+        services.AddSingleton<PhysicalKeyboardService>();
+
         // UI ViewModels & Windows
         services.AddSingleton<KeyboardViewModel>();
         services.AddSingleton<KeyboardWindow>();
@@ -68,6 +79,9 @@ public sealed class Bootstrapper : IDisposable
         var layoutManager = provider.GetRequiredService<ILayoutManager>();
         await layoutManager.InitializeAsync(cancellationToken).ConfigureAwait(false);
         layoutManager.SetLanguage(settings.ActiveLanguage);
+
+        var inputEngine = provider.GetRequiredService<IBengaliInputEngine>();
+        inputEngine.SetLanguage(settings.ActiveLanguage);
     }
 
     private static void ConfigureLogging(AppPaths appPaths)
