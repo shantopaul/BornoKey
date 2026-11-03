@@ -137,8 +137,12 @@ public sealed class WindowPositionService : IWindowManagerService, IDisposable
         state.CompactWidth = Math.Clamp(state.CompactWidth, WindowStateConfig.MinCompactWidth, maxAllowedCompactWidth);
         state.CompactHeight = Math.Clamp(state.CompactHeight, WindowStateConfig.MinCompactHeight, maxAllowedCompactHeight);
 
-        var activeWidth = state.Mode == KeyboardMode.Compact ? state.CompactWidth : state.Width;
-        var activeHeight = state.Mode == KeyboardMode.Compact ? state.CompactHeight : state.Height;
+        var useCompactDimensions = state.Mode == KeyboardMode.Compact
+            || (state.Mode is KeyboardMode.MinimalIcon or KeyboardMode.HiddenToTray
+                && state.LastVisibleMode == KeyboardMode.Compact);
+
+        var activeWidth = useCompactDimensions ? state.CompactWidth : state.Width;
+        var activeHeight = useCompactDimensions ? state.CompactHeight : state.Height;
 
         var candidateRect = new Rect(state.Left, state.Top, activeWidth, activeHeight);
         var validMonitor = _monitorService.FindValidMonitorForWindow(candidateRect, state.MonitorDeviceId);
@@ -148,16 +152,24 @@ public sealed class WindowPositionService : IWindowManagerService, IDisposable
             state.MonitorDeviceId = validMonitor.DeviceName;
             state.DpiScale = validMonitor.DpiScale;
 
-            // Clamp slightly overflowing edges onto the matched monitor's working area if needed
             var work = validMonitor.WorkingArea;
-            if (activeWidth <= work.Width)
+            if (useCompactDimensions)
             {
-                state.Left = Math.Clamp(state.Left, work.Left, work.Right - activeWidth);
+                state.CompactWidth = Math.Clamp(state.CompactWidth, WindowStateConfig.MinCompactWidth, Math.Max(WindowStateConfig.MinCompactWidth, Math.Min(WindowStateConfig.MaxCompactWidth, work.Width)));
+                state.CompactHeight = Math.Clamp(state.CompactHeight, WindowStateConfig.MinCompactHeight, Math.Max(WindowStateConfig.MinCompactHeight, Math.Min(WindowStateConfig.MaxCompactHeight, work.Height)));
+                activeWidth = state.CompactWidth;
+                activeHeight = state.CompactHeight;
             }
-            if (activeHeight <= work.Height)
+            else
             {
-                state.Top = Math.Clamp(state.Top, work.Top, work.Bottom - activeHeight);
+                state.Width = Math.Clamp(state.Width, WindowStateConfig.MinExpandedWidth, Math.Max(WindowStateConfig.MinExpandedWidth, Math.Min(WindowStateConfig.MaxExpandedWidth, work.Width)));
+                state.Height = Math.Clamp(state.Height, WindowStateConfig.MinExpandedHeight, Math.Max(WindowStateConfig.MinExpandedHeight, Math.Min(WindowStateConfig.MaxExpandedHeight, work.Height)));
+                activeWidth = state.Width;
+                activeHeight = state.Height;
             }
+
+            state.Left = Math.Clamp(state.Left, work.Left, Math.Max(work.Left, work.Right - activeWidth));
+            state.Top = Math.Clamp(state.Top, work.Top, Math.Max(work.Top, work.Bottom - activeHeight));
         }
         else
         {

@@ -61,11 +61,11 @@ public partial class FloatingIconWindow : Window, IRecipient<LanguageChangedMess
     {
         if (!Dispatcher.CheckAccess())
         {
-            Dispatcher.Invoke(() => ActiveLanguage = message.NewLanguage);
+            Dispatcher.Invoke(() => ActiveLanguage = message.Language);
             return;
         }
 
-        ActiveLanguage = message.NewLanguage;
+        ActiveLanguage = message.Language;
     }
 
     protected override void OnSourceInitialized(EventArgs e)
