@@ -26,6 +26,8 @@ public sealed class AppSettings
     // 2. Keyboard & Window State
     public WindowStateConfig WindowState { get; set; } = new();
 
+    public bool PhysicalKeyboardHookEnabled { get; set; } = true;
+
     public double KeySpacing { get; set; } = 4.0;
 
     public int KeyRepeatDelayMs { get; set; } = 400;

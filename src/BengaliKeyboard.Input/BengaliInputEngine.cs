@@ -159,12 +159,13 @@ public sealed class BengaliInputEngine : IBengaliInputEngine, IDisposable
 
         _textInjector.ReplaceText(backspacesToSend, normalizedWord + " ");
 
+        var previousWordBeforeCommit = _recentWords.Count >= 1 ? _recentWords[^1] : null;
         _currentWordBuffer = string.Empty;
         PushRecentWord(normalizedWord);
 
         if (_predictionService is not null)
         {
-            await _predictionService.RecordWordUsageAsync(normalizedWord, cancellationToken).ConfigureAwait(false);
+            await _predictionService.RecordAcceptedWordAsync(normalizedWord, previousWordBeforeCommit, cancellationToken).ConfigureAwait(false);
         }
 
         await UpdatePredictionsAsync(cancellationToken).ConfigureAwait(false);
@@ -193,12 +194,13 @@ public sealed class BengaliInputEngine : IBengaliInputEngine, IDisposable
 
     private async Task HandleSpaceAsync(CancellationToken cancellationToken)
     {
+        var previousWordBeforeCommit = _recentWords.Count >= 1 ? _recentWords[^1] : null;
         var completedWord = CommitCurrentWordToContext();
         _textInjector.SendSpace();
 
         if (!string.IsNullOrWhiteSpace(completedWord) && _predictionService is not null)
         {
-            await _predictionService.RecordWordUsageAsync(completedWord, cancellationToken).ConfigureAwait(false);
+            await _predictionService.RecordAcceptedWordAsync(completedWord, previousWordBeforeCommit, cancellationToken).ConfigureAwait(false);
         }
 
         await UpdatePredictionsAsync(cancellationToken).ConfigureAwait(false);
@@ -270,8 +272,8 @@ public sealed class BengaliInputEngine : IBengaliInputEngine, IDisposable
         var token = _predictionCts.Token;
 
         var maxResults = Math.Clamp(_settingsService?.Current.SuggestionCount ?? 4, 3, 5);
-        var wordCompletionEnabled = _settingsService?.Current.WordCompletionEnabled ?? true;
-        var nextWordEnabled = _settingsService?.Current.NextWordPredictionEnabled ?? true;
+        var wordCompletionEnabled = _settingsService?.Current.EnableWordCompletion ?? true;
+        var nextWordEnabled = _settingsService?.Current.EnableNextWordPrediction ?? true;
 
         try
         {
@@ -286,7 +288,7 @@ public sealed class BengaliInputEngine : IBengaliInputEngine, IDisposable
             if (!string.IsNullOrEmpty(_currentWordBuffer) && wordCompletionEnabled)
             {
                 candidates = await _predictionService
-                    .GetCompletionsAsync(_currentWordBuffer, maxResults, token)
+                    .GetWordCompletionsAsync(_currentWordBuffer, maxResults, token)
                     .ConfigureAwait(false);
             }
             else if (string.IsNullOrEmpty(_currentWordBuffer) && nextWordEnabled)
@@ -322,7 +324,7 @@ public sealed class BengaliInputEngine : IBengaliInputEngine, IDisposable
                     Word = c.Word,
                     Score = c.Score,
                     ReplacePrefixLength = prefixScalarCount,
-                    IsCompletion = true
+                    IsNextWordPrediction = false
                 })
                 .ToList();
 
@@ -333,7 +335,7 @@ public sealed class BengaliInputEngine : IBengaliInputEngine, IDisposable
                     Word = _currentWordBuffer,
                     Score = 1.0,
                     ReplacePrefixLength = prefixScalarCount,
-                    IsCompletion = true
+                    IsNextWordPrediction = false
                 });
             }
 

@@ -84,8 +84,8 @@ public sealed class UnicodeProcessor
     }
 
     /// <summary>
-    /// Removes the last full Unicode grapheme cluster (e.g., an entire consonant + kar or conjunct cluster)
-    /// using <see cref="StringInfo"/>.
+    /// Removes the last full Bengali orthographic grapheme cluster (Akshara), including multi-consonant
+    /// Hasanta conjuncts (e.g., <c>ক্ষ</c>, <c>জ্ঞ</c>, <c>ত্র</c>, <c>স্ত্র</c>) and attached vowel signs.
     /// </summary>
     public static string RemoveLastGraphemeCluster(string text)
     {
@@ -94,8 +94,8 @@ public sealed class UnicodeProcessor
             return string.Empty;
         }
 
-        var clusterIndices = StringInfo.ParseCombiningCharacters(text);
-        if (clusterIndices.Length <= 1)
+        var clusterIndices = ParseBengaliGraphemeClusterIndices(text);
+        if (clusterIndices.Count <= 1)
         {
             return string.Empty;
         }
@@ -106,8 +106,8 @@ public sealed class UnicodeProcessor
 
     /// <summary>
     /// Removes the trailing Unicode scalar value (or decomposing modifier such as a trailing Kar/Hasanta)
-    /// so users can fix a mistyped Kar (`কা` -> `ক`) with a single Backspace, or remove a trailing
-    /// conjunct consonant (`ক্ষ` -> `ক্` or `ক`).
+    /// so users can fix a mistyped Kar (<c>কা</c> -&gt; <c>ক</c>) with a single Backspace, or step back
+    /// through a conjunct (<c>ক্ষ</c> -&gt; <c>ক্</c> -&gt; <c>ক</c>).
     /// </summary>
     public static string RemoveLastCodePointOrModifier(string text)
     {
@@ -126,7 +126,8 @@ public sealed class UnicodeProcessor
     }
 
     /// <summary>
-    /// Counts the number of user-perceived grapheme clusters in the specified text.
+    /// Counts the number of user-perceived Bengali grapheme clusters (Aksharas) in the specified text,
+    /// linking <c>Consonant + Hasanta + Consonant</c> sequences into single conjunct clusters.
     /// </summary>
     public static int CountGraphemeClusters(string text)
     {
@@ -135,7 +136,45 @@ public sealed class UnicodeProcessor
             return 0;
         }
 
-        return StringInfo.ParseCombiningCharacters(text).Length;
+        return ParseBengaliGraphemeClusterIndices(text).Count;
+    }
+
+    /// <summary>
+    /// Computes the start UTF-16 indices of each Bengali grapheme cluster (Akshara) in <paramref name="text"/>,
+    /// extending <see cref="StringInfo.ParseCombiningCharacters(string)"/> with Indic Conjunct Linking (<c>্</c> + Consonant).
+    /// </summary>
+    public static IReadOnlyList<int> ParseBengaliGraphemeClusterIndices(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return [];
+        }
+
+        var baseIndices = StringInfo.ParseCombiningCharacters(text);
+        if (baseIndices.Length <= 1)
+        {
+            return baseIndices;
+        }
+
+        var mergedIndices = new List<int>(baseIndices.Length) { baseIndices[0] };
+
+        for (var i = 1; i < baseIndices.Length; i++)
+        {
+            var currentStart = baseIndices[i];
+            var previousEndChar = text[currentStart - 1];
+            var currentFirstChar = text[currentStart];
+
+            // If the previous text element ended with Hasanta (্) and the current element begins with
+            // a Bengali consonant (or Ya/Ra phala), link them into the same Bengali conjunct cluster.
+            if (previousEndChar == Hasanta && (IsBengaliConsonant(currentFirstChar) || currentFirstChar == Hasanta))
+            {
+                continue;
+            }
+
+            mergedIndices.Add(currentStart);
+        }
+
+        return mergedIndices;
     }
 
     /// <summary>
