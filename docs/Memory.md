@@ -9,11 +9,11 @@
 
 | Field | Current Status |
 |---|---|
-| **Current Stage** | **Phase 1: Project Foundation, DI & Storage Infrastructure** (100% Complete — Ready for Phase 2) |
-| **Currently Active File** | None (Phase 1 Completed & Verified; Next up: Phase 2 `BengaliKeyboard.Layouts`) |
-| **Last Completed File** | `src/BengaliKeyboard.Tests/Phase1FoundationTests.cs` |
-| **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln` — 0 Warnings, 0 Errors, 0 Vulnerable Packages) |
-| **Automated Test Status** | **PASSING** (`8 / 8` xUnit tests passing in `Phase1FoundationTests.cs`) |
+| **Current Stage** | **Phase 2: Ridmik-Style Keyboard UI & Configurable Layout Engine** (100% Complete — Ready for Phase 3) |
+| **Currently Active File** | None (Phase 2 Completed & Verified; Next up: Phase 3 `BengaliKeyboard.Input`) |
+| **Last Completed File** | `src/BengaliKeyboard.Tests/LayoutLoaderTests.cs` |
+| **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln` — 0 Warnings, 0 Errors) |
+| **Automated Test Status** | **PASSING** (`14 / 14` xUnit tests passing across Phase 1 & Phase 2) |
 | **Last Updated** | 2026-11-03 |
 
 ---
@@ -32,9 +32,9 @@
 
 ## 3. Currently Active Work Item
 
-- **Current Phase:** **Phase 1 Complete** → Ready for **Phase 2 — Ridmik-Style Keyboard UI & Configurable Layout Engine**
-- **File Currently Being Worked On:** None (Phase 1 completed, tested twice, and verified)
-- **Next Immediate Action:** Start Phase 2 (`src/BengaliKeyboard.Layouts/BengaliKeyboard.Layouts.csproj`, JSON layout definitions for Bangla & English, `LayoutLoader.cs`, `LayoutManager.cs`, and reusable WPF key/suggestion/toolbar controls).
+- **Current Phase:** **Phase 2 Complete** → Ready for **Phase 3 — Bengali Unicode Input Engine & System-Wide Text Injection**
+- **File Currently Being Worked On:** None (Phase 2 completed, tested twice, and verified)
+- **Next Immediate Action:** Start Phase 3 (`src/BengaliKeyboard.Input/`, `UnicodeProcessor.cs`, `BengaliInputEngine.cs`, `OnScreenInputService.cs`, `PhysicalKeyboardService.cs`, `Win32SendInputInjector.cs`, `TsfBridgeService.cs`, and `native/BengaliKeyboard.TSF/`).
 
 ---
 
@@ -60,25 +60,25 @@
 - [x] `src/BengaliKeyboard.App/App.xaml` & `App.xaml.cs`
 - [x] `src/BengaliKeyboard.Tests/BengaliKeyboard.Tests.csproj` & `Phase1FoundationTests.cs` (`8/8` passing)
 
-### Phase 2 — Ridmik-Style Keyboard UI & Configurable Layout Engine
-- [ ] `src/BengaliKeyboard.Layouts/BengaliKeyboard.Layouts.csproj`
-- [ ] `src/BengaliKeyboard.Layouts/Definitions/Bangla/PrimaryLayout.json`
-- [ ] `src/BengaliKeyboard.Layouts/Definitions/Bangla/ShiftLayout.json`
-- [ ] `src/BengaliKeyboard.Layouts/Definitions/Bangla/NumberLayout.json`
-- [ ] `src/BengaliKeyboard.Layouts/Definitions/Bangla/SymbolLayout.json`
-- [ ] `src/BengaliKeyboard.Layouts/Definitions/English/QwertyLayout.json`
-- [ ] `src/BengaliKeyboard.Layouts/Definitions/English/SymbolLayout.json`
-- [ ] `src/BengaliKeyboard.Layouts/LayoutLoader.cs`
-- [ ] `src/BengaliKeyboard.Layouts/LayoutManager.cs`
-- [ ] `src/BengaliKeyboard.UI/BengaliKeyboard.UI.csproj`
-- [ ] `src/BengaliKeyboard.UI/Themes/Colors.Dark.xaml`, `Typography.xaml`, `KeyStyles.xaml`
-- [ ] `src/BengaliKeyboard.UI/Controls/KeyboardKeyControl.xaml` (`.cs`)
-- [ ] `src/BengaliKeyboard.UI/Controls/SuggestionBarControl.xaml` (`.cs`)
-- [ ] `src/BengaliKeyboard.UI/Controls/LanguageToggleControl.xaml` (`.cs`)
-- [ ] `src/BengaliKeyboard.UI/Controls/HeaderToolbarControl.xaml` (`.cs`)
-- [ ] `src/BengaliKeyboard.UI/Windows/KeyboardWindow.xaml` (`.cs`)
-- [ ] `src/BengaliKeyboard.UI/ViewModels/KeyboardViewModel.cs`
-- [ ] `src/BengaliKeyboard.Tests/LayoutLoaderTests.cs`
+### Phase 2 — Ridmik-Style Keyboard UI & Configurable Layout Engine (100% Complete)
+- [x] `src/BengaliKeyboard.Layouts/BengaliKeyboard.Layouts.csproj`
+- [x] `src/BengaliKeyboard.Layouts/Definitions/Bangla/PrimaryLayout.json`
+- [x] `src/BengaliKeyboard.Layouts/Definitions/Bangla/ShiftLayout.json`
+- [x] `src/BengaliKeyboard.Layouts/Definitions/Bangla/NumberLayout.json`
+- [x] `src/BengaliKeyboard.Layouts/Definitions/Bangla/SymbolLayout.json`
+- [x] `src/BengaliKeyboard.Layouts/Definitions/English/QwertyLayout.json`
+- [x] `src/BengaliKeyboard.Layouts/Definitions/English/SymbolLayout.json`
+- [x] `src/BengaliKeyboard.Layouts/LayoutLoader.cs` (with path-traversal protection, duplicate ID check, and embedded resource fallback)
+- [x] `src/BengaliKeyboard.Layouts/LayoutManager.cs`
+- [x] `src/BengaliKeyboard.UI/BengaliKeyboard.UI.csproj`
+- [x] `src/BengaliKeyboard.UI/Themes/Colors.Dark.xaml`, `Typography.xaml`, `KeyStyles.xaml`
+- [x] `src/BengaliKeyboard.UI/Controls/KeyboardKeyControl.xaml` (`.cs` with dotted-circle combining glyph formatting & right-click alternate output)
+- [x] `src/BengaliKeyboard.UI/Controls/SuggestionBarControl.xaml` (`.cs`)
+- [x] `src/BengaliKeyboard.UI/Controls/LanguageToggleControl.xaml` (`.cs`)
+- [x] `src/BengaliKeyboard.UI/Controls/HeaderToolbarControl.xaml` (`.cs`)
+- [x] `src/BengaliKeyboard.UI/Windows/KeyboardWindow.xaml` (`.cs` with dynamic proportional star-sized grid)
+- [x] `src/BengaliKeyboard.UI/ViewModels/KeyboardViewModel.cs`
+- [x] `src/BengaliKeyboard.Tests/LayoutLoaderTests.cs` (`6/6` passing; `14/14` total passing)
 
 ### Phase 3 — Bengali Unicode Input Engine & System-Wide Text Injection
 - [ ] `src/BengaliKeyboard.Input/BengaliKeyboard.Input.csproj`
