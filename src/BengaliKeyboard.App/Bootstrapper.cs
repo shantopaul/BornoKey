@@ -63,6 +63,11 @@ public sealed class Bootstrapper : IDisposable
         services.AddSingleton<MonitorService>();
         services.AddSingleton<WindowPositionService>();
         services.AddSingleton<IWindowManagerService>(sp => sp.GetRequiredService<WindowPositionService>());
+        services.AddSingleton<StartupService>();
+        services.AddSingleton<IStartupService>(sp => sp.GetRequiredService<StartupService>());
+        services.AddSingleton<GlobalHotkeyService>();
+        services.AddSingleton<SystemTrayService>();
+        services.AddSingleton<ISystemTrayService>(sp => sp.GetRequiredService<SystemTrayService>());
 
         // UI ViewModels & Windows
         services.AddSingleton<KeyboardViewModel>();

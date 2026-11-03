@@ -7,8 +7,13 @@
     <UseWPF>true</UseWPF>
     <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\..\assets\Icons\app-icon.ico</ApplicationIcon>
     <StartupObject>BengaliKeyboard.App.Program</StartupObject>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\assets\Icons\*.ico" Link="assets\Icons\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />

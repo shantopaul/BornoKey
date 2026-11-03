@@ -388,14 +388,13 @@ public partial class KeyboardWindow : Window
         if (_windowManagerService is not null)
         {
             await _windowManagerService.SaveWindowStateAsync(updatedState).ConfigureAwait(true);
-        }
-        else
-        {
-            _settingsService.Current.WindowState = updatedState;
-            await _settingsService.SaveAsync(_settingsService.Current).ConfigureAwait(true);
+            _windowManagerService.ApplyWindowMode(KeyboardMode.HiddenToTray);
+            return;
         }
 
-        Application.Current?.Shutdown();
+        _settingsService.Current.WindowState = updatedState;
+        await _settingsService.SaveAsync(_settingsService.Current).ConfigureAwait(true);
+        Hide();
     }
 
     [DllImport("user32.dll", EntryPoint = "GetWindowLongPtrW", SetLastError = true)]

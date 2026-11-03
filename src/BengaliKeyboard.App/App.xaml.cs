@@ -43,11 +43,27 @@ public partial class App : Application
             var settingsService = _bootstrapper.ServiceProvider.GetRequiredService<ISettingsService>();
             var physicalKeyboardService = _bootstrapper.ServiceProvider.GetRequiredService<PhysicalKeyboardService>();
             var windowPositionService = _bootstrapper.ServiceProvider.GetRequiredService<WindowPositionService>();
+            var globalHotkeyService = _bootstrapper.ServiceProvider.GetRequiredService<GlobalHotkeyService>();
+            var systemTrayService = _bootstrapper.ServiceProvider.GetRequiredService<SystemTrayService>();
             var keyboardViewModel = _bootstrapper.ServiceProvider.GetRequiredService<KeyboardViewModel>();
             var keyboardWindow = _bootstrapper.ServiceProvider.GetRequiredService<KeyboardWindow>();
             var floatingIconWindow = _bootstrapper.ServiceProvider.GetRequiredService<FloatingIconWindow>();
 
             floatingIconWindow.ActiveLanguage = settingsService.Current.ActiveLanguage;
+
+            // Wire Global Hotkeys
+            globalHotkeyService.LanguageToggleRequested += async (_, _) => await keyboardViewModel.ToggleLanguageAsync().ConfigureAwait(true);
+            globalHotkeyService.VisibilityToggleRequested += (_, _) => windowPositionService.ToggleVisibility();
+            globalHotkeyService.Initialize();
+
+            // Wire System Tray Icon & 10-Item Context Menu
+            systemTrayService.ExitRequested += async (_, _) =>
+            {
+                var currentGeometry = keyboardWindow.CaptureCurrentWindowGeometry();
+                await windowPositionService.SaveWindowStateAsync(currentGeometry).ConfigureAwait(true);
+                Shutdown(0);
+            };
+            systemTrayService.Initialize();
 
             // Wire FloatingIconWindow events
             floatingIconWindow.RestoreRequested += (_, _) => windowPositionService.RestoreLastVisibleMode();
