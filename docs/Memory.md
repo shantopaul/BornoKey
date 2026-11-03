@@ -9,11 +9,11 @@
 
 | Field | Current Status |
 |---|---|
-| **Current Stage** | Pre-Coding Specification Complete → Ready for **Phase 1: Project Foundation** |
-| **Currently Active File** | `Memory.md` (Pre-coding documentation finalized; next up: `BengaliKeyboard.sln`) |
-| **Last Completed File** | `Design.md` & `Memory.md` |
-| **Solution Build Status** | Not yet initialized (Starts in Phase 1) |
-| **Automated Test Status** | Not yet initialized (Starts in Phase 1) |
+| **Current Stage** | **Phase 1: Project Foundation, DI & Storage Infrastructure** (100% Complete — Ready for Phase 2) |
+| **Currently Active File** | None (Phase 1 Completed & Verified; Next up: Phase 2 `BengaliKeyboard.Layouts`) |
+| **Last Completed File** | `src/BengaliKeyboard.Tests/Phase1FoundationTests.cs` |
+| **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln` — 0 Warnings, 0 Errors, 0 Vulnerable Packages) |
+| **Automated Test Status** | **PASSING** (`8 / 8` xUnit tests passing in `Phase1FoundationTests.cs`) |
 | **Last Updated** | 2026-11-03 |
 
 ---
@@ -32,31 +32,33 @@
 
 ## 3. Currently Active Work Item
 
-- **Current Phase:** Transitioning from Pre-Coding Setup to **Phase 1 — Project Foundation, DI & Storage Infrastructure**
-- **File Currently Being Worked On:** None (Awaiting start of Phase 1 coding: `BengaliKeyboard.sln` and `src/BengaliKeyboard.Core/`)
-- **Next Immediate Action:** Create `.NET 10` solution (`BengaliKeyboard.sln`), core interfaces/models (`BengaliKeyboard.Core`), storage layer (`BengaliKeyboard.Storage`), and application bootstrapper (`BengaliKeyboard.App`).
+- **Current Phase:** **Phase 1 Complete** → Ready for **Phase 2 — Ridmik-Style Keyboard UI & Configurable Layout Engine**
+- **File Currently Being Worked On:** None (Phase 1 completed, tested twice, and verified)
+- **Next Immediate Action:** Start Phase 2 (`src/BengaliKeyboard.Layouts/BengaliKeyboard.Layouts.csproj`, JSON layout definitions for Bangla & English, `LayoutLoader.cs`, `LayoutManager.cs`, and reusable WPF key/suggestion/toolbar controls).
 
 ---
 
 ## 4. Phase-by-Phase File Completion Checklist
 
-### Phase 1 — Project Foundation, DI & Storage Infrastructure
-- [ ] `BengaliKeyboard.sln`
-- [ ] `src/BengaliKeyboard.Core/BengaliKeyboard.Core.csproj`
-- [ ] `src/BengaliKeyboard.Core/Enums/` (`KeyboardMode.cs`, `LanguageMode.cs`, `LayoutLayer.cs`, `KeyType.cs`, `AppTheme.cs`)
-- [ ] `src/BengaliKeyboard.Core/Models/` (`KeyDefinition.cs`, `KeyboardLayoutModel.cs`, `SuggestionCandidate.cs`, `EmojiItem.cs`, `ClipboardEntry.cs`, `WindowStateConfig.cs`, `AppSettings.cs`)
-- [ ] `src/BengaliKeyboard.Core/Interfaces/` (`IBengaliInputEngine.cs`, `ITextInjector.cs`, `ILayoutManager.cs`, `IPredictionService.cs`, `IEmojiService.cs`, `IClipboardService.cs`, `IWindowManagerService.cs`, `ISystemTrayService.cs`, `IStartupService.cs`, `ISettingsService.cs`)
-- [ ] `src/BengaliKeyboard.Core/Events/` (`LanguageChangedMessage.cs`, `SuggestionsUpdatedMessage.cs`, `WindowModeChangedMessage.cs`, `ThemeChangedMessage.cs`)
-- [ ] `src/BengaliKeyboard.Storage/BengaliKeyboard.Storage.csproj`
-- [ ] `src/BengaliKeyboard.Storage/AppPaths.cs`
-- [ ] `src/BengaliKeyboard.Storage/Database/SqliteConnectionFactory.cs`
-- [ ] `src/BengaliKeyboard.Storage/Database/DatabaseInitializer.cs`
-- [ ] `src/BengaliKeyboard.Storage/Configuration/JsonSettingsService.cs`
-- [ ] `src/BengaliKeyboard.App/BengaliKeyboard.App.csproj`
-- [ ] `src/BengaliKeyboard.App/Program.cs`
-- [ ] `src/BengaliKeyboard.App/Bootstrapper.cs`
-- [ ] `src/BengaliKeyboard.App/App.xaml` & `App.xaml.cs`
-- [ ] `src/BengaliKeyboard.Tests/BengaliKeyboard.Tests.csproj`
+### Phase 1 — Project Foundation, DI & Storage Infrastructure (100% Complete)
+- [x] `BengaliKeyboard.sln`, `global.json`, `Directory.Build.props`
+- [x] `src/BengaliKeyboard.Core/BengaliKeyboard.Core.csproj`
+- [x] `src/BengaliKeyboard.Core/Enums/` (`KeyboardMode.cs`, `LanguageMode.cs`, `LayoutLayer.cs`, `KeyType.cs`, `AppTheme.cs`)
+- [x] `src/BengaliKeyboard.Core/Models/` (`KeyDefinition.cs`, `KeyboardLayoutModel.cs`, `SuggestionCandidate.cs`, `EmojiItem.cs`, `ClipboardEntry.cs`, `WindowStateConfig.cs`, `AppSettings.cs`)
+- [x] `src/BengaliKeyboard.Core/Interfaces/` (`IBengaliInputEngine.cs`, `ITextInjector.cs`, `ILayoutManager.cs`, `IPredictionService.cs`, `IEmojiService.cs`, `IClipboardService.cs`, `IWindowManagerService.cs`, `ISystemTrayService.cs`, `IStartupService.cs`, `ISettingsService.cs`)
+- [x] `src/BengaliKeyboard.Core/Events/` (`LanguageChangedMessage.cs`, `SuggestionsUpdatedMessage.cs`, `WindowModeChangedMessage.cs`, `ThemeChangedMessage.cs`)
+- [x] `src/BengaliKeyboard.Storage/BengaliKeyboard.Storage.csproj`
+- [x] `src/BengaliKeyboard.Storage/AppPaths.cs` (with current-user NTFS ACL hardening)
+- [x] `src/BengaliKeyboard.Storage/Security/LocalDataProtector.cs` (Windows DPAPI + keyed `HMACSHA256`)
+- [x] `src/BengaliKeyboard.Storage/Database/SqliteConnectionFactory.cs` (WAL + `secure_delete` + `ReadOnly` dictionary mode + lock retry)
+- [x] `src/BengaliKeyboard.Storage/Database/DatabaseInitializer.cs` (Full schemas + automatic `.corrupt.bak` recovery)
+- [x] `src/BengaliKeyboard.Storage/Configuration/JsonSettingsService.cs` (Atomic `.tmp` write + clamping + `.corrupt.bak` recovery)
+- [x] `src/BengaliKeyboard.UI/BengaliKeyboard.UI.csproj`, `Themes/Colors.Dark.xaml`, `Windows/KeyboardWindow.xaml` (`.cs` with `WS_EX_NOACTIVATE`)
+- [x] `src/BengaliKeyboard.App/BengaliKeyboard.App.csproj` & `app.manifest` (`asInvoker`, `PerMonitorV2` DPI)
+- [x] `src/BengaliKeyboard.App/Program.cs` & `SingleInstanceManager.cs` (`Local\` SID-scoped Mutex + `CurrentUserOnly` Named Pipe)
+- [x] `src/BengaliKeyboard.App/Bootstrapper.cs` & `Logging/PrivacyDestructuringPolicy.cs`
+- [x] `src/BengaliKeyboard.App/App.xaml` & `App.xaml.cs`
+- [x] `src/BengaliKeyboard.Tests/BengaliKeyboard.Tests.csproj` & `Phase1FoundationTests.cs` (`8/8` passing)
 
 ### Phase 2 — Ridmik-Style Keyboard UI & Configurable Layout Engine
 - [ ] `src/BengaliKeyboard.Layouts/BengaliKeyboard.Layouts.csproj`
