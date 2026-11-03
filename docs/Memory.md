@@ -1,0 +1,153 @@
+# Project Memory & Live Progress Tracker
+## BornoKey — Ridmik-Style Bengali Virtual Keyboard for Windows
+
+> **Maintenance Rule:** Update this file (`Memory.md`) regularly—before starting a new file/phase and immediately after completing, building, and testing any file or phase.
+
+---
+
+## 1. Current Project Snapshot
+
+| Field | Current Status |
+|---|---|
+| **Current Stage** | Pre-Coding Specification Complete → Ready for **Phase 1: Project Foundation** |
+| **Currently Active File** | `Memory.md` (Pre-coding documentation finalized; next up: `BengaliKeyboard.sln`) |
+| **Last Completed File** | `Design.md` & `Memory.md` |
+| **Solution Build Status** | Not yet initialized (Starts in Phase 1) |
+| **Automated Test Status** | Not yet initialized (Starts in Phase 1) |
+| **Last Updated** | 2026-11-03 |
+
+---
+
+## 2. What Has Been Completed
+
+### Pre-Coding Specification & Architecture Documents (100% Complete)
+- [x] [`docs/PRD.md`](./PRD.md) — Complete Product Requirements Document (Product Vision, Target Users & Personas, 9 Core Feature Modules, Non-Functional Targets, Compatibility Matrix, Definition of Done).
+- [x] [`docs/Architecture.md`](./Architecture.md) — Complete System Architecture (Component & Sequence Diagrams, State Machine, Full Solution & `%LOCALAPPDATA%` File Tree, Tech Stack, `WS_EX_NOACTIVATE` Interop, SQLite Schema, Multi-Monitor DPI Algorithm).
+- [x] [`docs/Rules.md`](./Rules.md) — Engineering Rules & AI Boundaries (Approved Libraries, Prohibited Anti-Patterns, 10-Scenario Error Handling Matrix, Security & Privacy Guarantees, AI Agent Operating Rules).
+- [x] [`docs/Phases.md`](./Phases.md) — 10-Phase Implementation Roadmap with exact file lists, deliverables, and verification criteria per phase.
+- [x] [`docs/Design.md`](./Design.md) — Complete UI/UX Design System (Dark & Light Semantic Color Tokens, `Noto Sans Bengali` + `Segoe UI Variable` Font Stack, Typography Scale, Keycap & Floating Window Anatomy).
+- [x] [`docs/Memory.md`](./Memory.md) — Live session memory and file-by-file progress tracker initialized (moved to `docs/`).
+
+---
+
+## 3. Currently Active Work Item
+
+- **Current Phase:** Transitioning from Pre-Coding Setup to **Phase 1 — Project Foundation, DI & Storage Infrastructure**
+- **File Currently Being Worked On:** None (Awaiting start of Phase 1 coding: `BengaliKeyboard.sln` and `src/BengaliKeyboard.Core/`)
+- **Next Immediate Action:** Create `.NET 10` solution (`BengaliKeyboard.sln`), core interfaces/models (`BengaliKeyboard.Core`), storage layer (`BengaliKeyboard.Storage`), and application bootstrapper (`BengaliKeyboard.App`).
+
+---
+
+## 4. Phase-by-Phase File Completion Checklist
+
+### Phase 1 — Project Foundation, DI & Storage Infrastructure
+- [ ] `BengaliKeyboard.sln`
+- [ ] `src/BengaliKeyboard.Core/BengaliKeyboard.Core.csproj`
+- [ ] `src/BengaliKeyboard.Core/Enums/` (`KeyboardMode.cs`, `LanguageMode.cs`, `LayoutLayer.cs`, `KeyType.cs`, `AppTheme.cs`)
+- [ ] `src/BengaliKeyboard.Core/Models/` (`KeyDefinition.cs`, `KeyboardLayoutModel.cs`, `SuggestionCandidate.cs`, `EmojiItem.cs`, `ClipboardEntry.cs`, `WindowStateConfig.cs`, `AppSettings.cs`)
+- [ ] `src/BengaliKeyboard.Core/Interfaces/` (`IBengaliInputEngine.cs`, `ITextInjector.cs`, `ILayoutManager.cs`, `IPredictionService.cs`, `IEmojiService.cs`, `IClipboardService.cs`, `IWindowManagerService.cs`, `ISystemTrayService.cs`, `IStartupService.cs`, `ISettingsService.cs`)
+- [ ] `src/BengaliKeyboard.Core/Events/` (`LanguageChangedMessage.cs`, `SuggestionsUpdatedMessage.cs`, `WindowModeChangedMessage.cs`, `ThemeChangedMessage.cs`)
+- [ ] `src/BengaliKeyboard.Storage/BengaliKeyboard.Storage.csproj`
+- [ ] `src/BengaliKeyboard.Storage/AppPaths.cs`
+- [ ] `src/BengaliKeyboard.Storage/Database/SqliteConnectionFactory.cs`
+- [ ] `src/BengaliKeyboard.Storage/Database/DatabaseInitializer.cs`
+- [ ] `src/BengaliKeyboard.Storage/Configuration/JsonSettingsService.cs`
+- [ ] `src/BengaliKeyboard.App/BengaliKeyboard.App.csproj`
+- [ ] `src/BengaliKeyboard.App/Program.cs`
+- [ ] `src/BengaliKeyboard.App/Bootstrapper.cs`
+- [ ] `src/BengaliKeyboard.App/App.xaml` & `App.xaml.cs`
+- [ ] `src/BengaliKeyboard.Tests/BengaliKeyboard.Tests.csproj`
+
+### Phase 2 — Ridmik-Style Keyboard UI & Configurable Layout Engine
+- [ ] `src/BengaliKeyboard.Layouts/BengaliKeyboard.Layouts.csproj`
+- [ ] `src/BengaliKeyboard.Layouts/Definitions/Bangla/PrimaryLayout.json`
+- [ ] `src/BengaliKeyboard.Layouts/Definitions/Bangla/ShiftLayout.json`
+- [ ] `src/BengaliKeyboard.Layouts/Definitions/Bangla/NumberLayout.json`
+- [ ] `src/BengaliKeyboard.Layouts/Definitions/Bangla/SymbolLayout.json`
+- [ ] `src/BengaliKeyboard.Layouts/Definitions/English/QwertyLayout.json`
+- [ ] `src/BengaliKeyboard.Layouts/Definitions/English/SymbolLayout.json`
+- [ ] `src/BengaliKeyboard.Layouts/LayoutLoader.cs`
+- [ ] `src/BengaliKeyboard.Layouts/LayoutManager.cs`
+- [ ] `src/BengaliKeyboard.UI/BengaliKeyboard.UI.csproj`
+- [ ] `src/BengaliKeyboard.UI/Themes/Colors.Dark.xaml`, `Typography.xaml`, `KeyStyles.xaml`
+- [ ] `src/BengaliKeyboard.UI/Controls/KeyboardKeyControl.xaml` (`.cs`)
+- [ ] `src/BengaliKeyboard.UI/Controls/SuggestionBarControl.xaml` (`.cs`)
+- [ ] `src/BengaliKeyboard.UI/Controls/LanguageToggleControl.xaml` (`.cs`)
+- [ ] `src/BengaliKeyboard.UI/Controls/HeaderToolbarControl.xaml` (`.cs`)
+- [ ] `src/BengaliKeyboard.UI/Windows/KeyboardWindow.xaml` (`.cs`)
+- [ ] `src/BengaliKeyboard.UI/ViewModels/KeyboardViewModel.cs`
+- [ ] `src/BengaliKeyboard.Tests/LayoutLoaderTests.cs`
+
+### Phase 3 — Bengali Unicode Input Engine & System-Wide Text Injection
+- [ ] `src/BengaliKeyboard.Input/BengaliKeyboard.Input.csproj`
+- [ ] `src/BengaliKeyboard.Input/UnicodeProcessor.cs`
+- [ ] `src/BengaliKeyboard.Input/BengaliInputEngine.cs`
+- [ ] `src/BengaliKeyboard.Input/OnScreenInputService.cs`
+- [ ] `src/BengaliKeyboard.Input/PhysicalKeyboardService.cs`
+- [ ] `src/BengaliKeyboard.Input/TSF/Win32SendInputInjector.cs`
+- [ ] `src/BengaliKeyboard.Input/TSF/TsfBridgeService.cs`
+- [ ] `native/BengaliKeyboard.TSF/` (`BengaliKeyboard.TSF.vcxproj`, `DllMain.cpp`, `Register.cpp`, `TextService.h`, `TextService.cpp`, `CompositionManager.cpp`)
+- [ ] `src/BengaliKeyboard.Tests/UnicodeProcessorTests.cs`
+
+### Phase 4 — Adaptive Floating Keyboard & 4-Mode Window Management
+- [ ] `src/BengaliKeyboard.UI/Windows/FloatingIconWindow.xaml` (`.cs`)
+- [ ] `src/BengaliKeyboard.Windows/BengaliKeyboard.Windows.csproj`
+- [ ] `src/BengaliKeyboard.Windows/NativeMethods.cs`
+- [ ] `src/BengaliKeyboard.Windows/MonitorService.cs`
+- [ ] `src/BengaliKeyboard.Windows/WindowPositionService.cs`
+- [ ] `src/BengaliKeyboard.Tests/WindowPositionRestoreTests.cs`
+
+### Phase 5 — Windows System Tray, Auto-Startup & State Restoration
+- [ ] `src/BengaliKeyboard.Windows/SystemTrayService.cs`
+- [ ] `src/BengaliKeyboard.Windows/StartupService.cs`
+- [ ] `src/BengaliKeyboard.Windows/GlobalHotkeyService.cs`
+- [ ] `assets/Icons/app-icon.ico` & `tray-icon.ico`
+
+### Phase 6 — Emoji Keyboard, Keyword Search & Frequently Used History
+- [ ] `data/Emoji/emoji_catalog.json`
+- [ ] `src/BengaliKeyboard.Emoji/BengaliKeyboard.Emoji.csproj`
+- [ ] `src/BengaliKeyboard.Emoji/EmojiRepository.cs`
+- [ ] `src/BengaliKeyboard.Emoji/EmojiSearchService.cs`
+- [ ] `src/BengaliKeyboard.Emoji/EmojiUsageService.cs`
+- [ ] `src/BengaliKeyboard.UI/Windows/EmojiWindow.xaml` (`.cs`)
+- [ ] `src/BengaliKeyboard.UI/ViewModels/EmojiViewModel.cs`
+- [ ] `src/BengaliKeyboard.Tests/EmojiUsageTests.cs`
+
+### Phase 7 — Privacy-First Clipboard History Manager
+- [ ] `src/BengaliKeyboard.Clipboard/BengaliKeyboard.Clipboard.csproj`
+- [ ] `src/BengaliKeyboard.Clipboard/ClipboardMonitor.cs`
+- [ ] `src/BengaliKeyboard.Clipboard/ClipboardRepository.cs`
+- [ ] `src/BengaliKeyboard.Clipboard/ClipboardHistoryService.cs`
+- [ ] `src/BengaliKeyboard.UI/Windows/ClipboardWindow.xaml` (`.cs`)
+- [ ] `src/BengaliKeyboard.UI/ViewModels/ClipboardViewModel.cs`
+- [ ] `src/BengaliKeyboard.Tests/ClipboardServiceTests.cs`
+
+### Phase 8 — Smart Offline Bengali Predictive Text Engine
+- [ ] `data/Dictionary/bn_dictionary_seed.json`
+- [ ] `src/BengaliKeyboard.Prediction/BengaliKeyboard.Prediction.csproj`
+- [ ] `src/BengaliKeyboard.Prediction/DictionaryService.cs`
+- [ ] `src/BengaliKeyboard.Prediction/WordCompletionService.cs`
+- [ ] `src/BengaliKeyboard.Prediction/NGramModel.cs`
+- [ ] `src/BengaliKeyboard.Prediction/NextWordPredictionService.cs`
+- [ ] `src/BengaliKeyboard.Prediction/SuggestionRankingService.cs`
+- [ ] `src/BengaliKeyboard.UI/ViewModels/SuggestionBarViewModel.cs`
+- [ ] `src/BengaliKeyboard.Tests/PredictionEngineTests.cs`
+
+### Phase 9 — Customization, Themes & Settings Panel
+- [ ] `src/BengaliKeyboard.UI/Themes/Colors.Light.xaml`
+- [ ] `src/BengaliKeyboard.UI/Windows/SettingsWindow.xaml` (`.cs`)
+- [ ] `src/BengaliKeyboard.UI/ViewModels/SettingsViewModel.cs`
+
+### Phase 10 — Comprehensive Testing, Documentation & Release Installer
+- [ ] `README.md`
+- [ ] `docs/INSTALLATION.md`
+- [ ] `installer/BornoKeySetup.iss`
+
+---
+
+## 5. Key Architectural Decisions Log
+
+1. **Direct Bengali Typing Only:** No Romanized English-to-Bengali phonetic transliteration is used as the primary input method; keys output direct Bengali Unicode characters mapped to the Ridmik layout.
+2. **Focus Preservation (`WS_EX_NOACTIVATE`):** All floating keyboard overlays use Win32 `WS_EX_NOACTIVATE` + `WM_MOUSEACTIVATE` (`MA_NOACTIVATE`) so clicking virtual keys never steals focus from external Windows applications.
+3. **Dual Input Injection (`TSF` + `SendInput`):** Native C++ TSF component (`native/BengaliKeyboard.TSF`) is paired with a managed `Win32SendInputInjector` (`KEYEVENTF_UNICODE`) so typing works immediately both with and without COM registration.
+4. **100% Offline & Privacy-First:** Word completion, bigram/trigram next-word prediction, emoji search, and clipboard history run strictly locally against `%LOCALAPPDATA%\BengaliKeyboard\` SQLite databases with zero telemetry or keystroke logging.
