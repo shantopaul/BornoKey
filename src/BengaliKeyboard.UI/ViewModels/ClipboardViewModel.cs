@@ -17,6 +17,7 @@ public sealed partial class ClipboardViewModel : ObservableObject, IDisposable
     private readonly ISettingsService _settingsService;
     private readonly ITextInjector? _textInjector;
     private CancellationTokenSource? _searchCts;
+    private bool _suppressHistoryChangedReload;
     private bool _disposed;
 
     public ObservableCollection<ClipboardEntry> Entries { get; } = [];
@@ -31,6 +32,8 @@ public sealed partial class ClipboardViewModel : ObservableObject, IDisposable
     private string _statusMessage = string.Empty;
 
     public event EventHandler<ClipboardEntry>? EntryInserted;
+
+    public event EventHandler<ClipboardEntry>? EntryCopied;
 
     public event EventHandler? BackToKeyboardRequested;
 
@@ -75,6 +78,26 @@ public sealed partial class ClipboardViewModel : ObservableObject, IDisposable
     }
 
     [RelayCommand]
+    public void CopyEntry(ClipboardEntry? entry)
+    {
+        if (entry is null || string.IsNullOrEmpty(entry.Content))
+        {
+            return;
+        }
+
+        try
+        {
+            System.Windows.Clipboard.SetText(entry.Content, System.Windows.TextDataFormat.UnicodeText);
+        }
+        catch
+        {
+            // Ignore clipboard lock in headless test environments
+        }
+
+        EntryCopied?.Invoke(this, entry);
+    }
+
+    [RelayCommand]
     public async Task TogglePinAsync(ClipboardEntry? entry, CancellationToken cancellationToken = default)
     {
         if (entry is null)
@@ -83,7 +106,16 @@ public sealed partial class ClipboardViewModel : ObservableObject, IDisposable
         }
 
         var nextPinned = !entry.IsPinned;
-        await _clipboardService.SetPinnedAsync(entry.Id, nextPinned, cancellationToken).ConfigureAwait(true);
+        _suppressHistoryChangedReload = true;
+        try
+        {
+            await _clipboardService.SetPinnedAsync(entry.Id, nextPinned, cancellationToken).ConfigureAwait(true);
+        }
+        finally
+        {
+            _suppressHistoryChangedReload = false;
+        }
+
         await ReloadEntriesAsync(SearchQuery, cancellationToken).ConfigureAwait(true);
     }
 
@@ -95,21 +127,48 @@ public sealed partial class ClipboardViewModel : ObservableObject, IDisposable
             return;
         }
 
-        await _clipboardService.DeleteEntryAsync(entry.Id, cancellationToken).ConfigureAwait(true);
+        _suppressHistoryChangedReload = true;
+        try
+        {
+            await _clipboardService.DeleteEntryAsync(entry.Id, cancellationToken).ConfigureAwait(true);
+        }
+        finally
+        {
+            _suppressHistoryChangedReload = false;
+        }
+
         await ReloadEntriesAsync(SearchQuery, cancellationToken).ConfigureAwait(true);
     }
 
     [RelayCommand]
     public async Task ClearUnpinnedAsync(CancellationToken cancellationToken = default)
     {
-        await _clipboardService.ClearUnpinnedHistoryAsync(cancellationToken).ConfigureAwait(true);
+        _suppressHistoryChangedReload = true;
+        try
+        {
+            await _clipboardService.ClearUnpinnedHistoryAsync(cancellationToken).ConfigureAwait(true);
+        }
+        finally
+        {
+            _suppressHistoryChangedReload = false;
+        }
+
         await ReloadEntriesAsync(SearchQuery, cancellationToken).ConfigureAwait(true);
     }
 
     [RelayCommand]
     public async Task ClearAllAsync(CancellationToken cancellationToken = default)
     {
-        await _clipboardService.ClearAllHistoryAsync(cancellationToken).ConfigureAwait(true);
+        _suppressHistoryChangedReload = true;
+        try
+        {
+            await _clipboardService.ClearAllHistoryAsync(cancellationToken).ConfigureAwait(true);
+        }
+        finally
+        {
+            _suppressHistoryChangedReload = false;
+        }
+
         await ReloadEntriesAsync(SearchQuery, cancellationToken).ConfigureAwait(true);
     }
 
@@ -193,6 +252,11 @@ public sealed partial class ClipboardViewModel : ObservableObject, IDisposable
 
     private void OnClipboardServiceHistoryChanged(object? sender, EventArgs e)
     {
+        if (_suppressHistoryChangedReload)
+        {
+            return;
+        }
+
         var dispatcher = System.Windows.Application.Current?.Dispatcher;
         if (dispatcher is not null && !dispatcher.CheckAccess())
         {

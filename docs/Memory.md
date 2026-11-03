@@ -9,11 +9,11 @@
 
 | Field | Current Status |
 |---|---|
-| **Current Stage** | **Phase 7: Privacy-First Clipboard History Manager** (In Progress) |
-| **Currently Active File** | `src/BengaliKeyboard.Clipboard/` |
-| **Last Completed File** | `src/BengaliKeyboard.Tests/EmojiUsageTests.cs` |
+| **Current Stage** | **Phase 7: Privacy-First Clipboard History Manager** (100% Complete — Ready for Phase 8) |
+| **Currently Active File** | None (Phase 7 Completed & Verified; Next up: Phase 8 `BengaliKeyboard.Prediction`) |
+| **Last Completed File** | `src/BengaliKeyboard.Tests/ClipboardServiceTests.cs` |
 | **Solution Build Status** | **PASSING** (`dotnet build BengaliKeyboard.sln` — 0 Warnings, 0 Errors) |
-| **Automated Test Status** | **PASSING** (`33 / 33` xUnit tests passing across Phases 1 through 6) |
+| **Automated Test Status** | **PASSING** (`38 / 38` xUnit tests passing across Phases 1 through 7) |
 | **Last Updated** | 2026-11-03 |
 
 ---
@@ -32,9 +32,9 @@
 
 ## 3. Currently Active Work Item
 
-- **Current Phase:** **Phase 6 Complete** → Ready for **Phase 7 — Privacy-First Clipboard History Manager**
-- **File Currently Being Worked On:** None (Phase 6 completed, tested twice, and verified)
-- **Next Immediate Action:** Start Phase 7 (`src/BengaliKeyboard.Clipboard/`, `ClipboardWindow.xaml`, `ClipboardViewModel.cs`, and `ClipboardServiceTests.cs`).
+- **Current Phase:** **Phase 7 Complete** → Ready for **Phase 8 — Smart Offline Bengali Predictive Text Engine**
+- **File Currently Being Worked On:** None (Phase 7 completed, tested twice, and verified)
+- **Next Immediate Action:** Start Phase 8 (`data/Dictionary/bn_dictionary_seed.json`, `src/BengaliKeyboard.Prediction/`, `SuggestionBarViewModel.cs`, and `PredictionEngineTests.cs`).
 
 ---
 
@@ -115,14 +115,14 @@
 - [x] `src/BengaliKeyboard.UI/ViewModels/EmojiViewModel.cs`
 - [x] `src/BengaliKeyboard.Tests/EmojiUsageTests.cs` (`6/6` passing; `33/33` total passing)
 
-### Phase 7 — Privacy-First Clipboard History Manager
-- [ ] `src/BengaliKeyboard.Clipboard/BengaliKeyboard.Clipboard.csproj`
-- [ ] `src/BengaliKeyboard.Clipboard/ClipboardMonitor.cs`
-- [ ] `src/BengaliKeyboard.Clipboard/ClipboardRepository.cs`
-- [ ] `src/BengaliKeyboard.Clipboard/ClipboardHistoryService.cs`
-- [ ] `src/BengaliKeyboard.UI/Windows/ClipboardWindow.xaml` (`.cs`)
-- [ ] `src/BengaliKeyboard.UI/ViewModels/ClipboardViewModel.cs`
-- [ ] `src/BengaliKeyboard.Tests/ClipboardServiceTests.cs`
+### Phase 7 — Privacy-First Clipboard History Manager (100% Complete)
+- [x] `src/BengaliKeyboard.Clipboard/BengaliKeyboard.Clipboard.csproj`
+- [x] `src/BengaliKeyboard.Clipboard/ClipboardMonitor.cs` (`WM_CLIPBOARDUPDATE` + 4 password-manager exclusion formats + session lock pause)
+- [x] `src/BengaliKeyboard.Clipboard/ClipboardRepository.cs` (DPAPI encrypted `Content` + per-user `HMACSHA256` `ContentHash` + WAL truncate)
+- [x] `src/BengaliKeyboard.Clipboard/ClipboardHistoryService.cs`
+- [x] `src/BengaliKeyboard.UI/Windows/ClipboardWindow.xaml` (`.cs` with `WS_EX_NOACTIVATE` & temporary search box focus activation)
+- [x] `src/BengaliKeyboard.UI/ViewModels/ClipboardViewModel.cs`
+- [x] `src/BengaliKeyboard.Tests/ClipboardServiceTests.cs` (`5/5` passing; `38/38` total passing)
 
 ### Phase 8 — Smart Offline Bengali Predictive Text Engine
 - [ ] `data/Dictionary/bn_dictionary_seed.json`

@@ -182,6 +182,34 @@ public sealed class ClipboardServiceTests : IDisposable
         Assert.Single(await service.GetHistoryAsync());
     }
 
+    [Fact]
+    public async Task CapacityEnforcement_PrunesOldestUnpinnedItems_WhileRetainingAllPinnedItems()
+    {
+        await _databaseInitializer.InitializeAsync();
+        await _settingsService.LoadAsync();
+        _settingsService.Current.ClipboardHistoryLimit = 10;
+
+        var service = CreateClipboardService();
+
+        var pinnedEarly = await service.CaptureTextAsync("Pinned item #1");
+        Assert.NotNull(pinnedEarly);
+        await service.SetPinnedAsync(pinnedEarly.Id, isPinned: true);
+
+        for (var i = 1; i <= 12; i++)
+        {
+            await service.CaptureTextAsync($"Unpinned clip #{i}");
+        }
+
+        // Request up to 50 items; 1 pinned + 10 newest unpinned = 11 total should remain
+        var all = await service.GetHistoryAsync(limit: 50);
+        Assert.Equal(11, all.Count);
+        Assert.True(all[0].IsPinned);
+        Assert.Equal("Pinned item #1", all[0].Content);
+        Assert.DoesNotContain(all, x => x.Content == "Unpinned clip #1");
+        Assert.DoesNotContain(all, x => x.Content == "Unpinned clip #2");
+        Assert.Contains(all, x => x.Content == "Unpinned clip #12");
+    }
+
     private ClipboardHistoryService CreateClipboardService()
     {
         var repository = new ClipboardRepository(_connectionFactory, _databaseInitializer);
