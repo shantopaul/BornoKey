@@ -27,7 +27,8 @@
                 MouseEnter="OnKeyMouseEnter"
                 MouseLeave="OnKeyMouseLeave"
                 PreviewMouseLeftButtonDown="OnKeyMouseLeftButtonDown"
-                PreviewMouseLeftButtonUp="OnKeyMouseLeftButtonUp">
+                PreviewMouseLeftButtonUp="OnKeyMouseLeftButtonUp"
+                PreviewMouseRightButtonDown="OnKeyMouseRightButtonDown">
             <Grid>
                 <!-- Secondary / Shift Hint Glyph in Top-Right Corner -->
                 <TextBlock x:Name="SecondaryGlyphText"

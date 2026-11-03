@@ -69,8 +69,8 @@ public partial class KeyboardKeyControl : UserControl
             return;
         }
 
-        PrimaryGlyphText.Text = key.DisplayLabel;
-        SecondaryGlyphText.Text = key.AlternateOutput ?? string.Empty;
+        PrimaryGlyphText.Text = FormatCombiningGlyphForDisplay(key.DisplayLabel);
+        SecondaryGlyphText.Text = FormatCombiningGlyphForDisplay(key.AlternateOutput ?? string.Empty);
         SecondaryGlyphText.Visibility = string.IsNullOrEmpty(key.AlternateOutput)
             ? Visibility.Collapsed
             : Visibility.Visible;
@@ -88,12 +88,41 @@ public partial class KeyboardKeyControl : UserControl
         ApplyCurrentSurfaceBrush();
     }
 
+    /// <summary>
+    /// Formats standalone Bengali combining vowel signs (kars) and hasanta with a dotted circle (◌)
+    /// for clean keycap rendering while keeping KeyDefinition.UnicodeOutput untouched (Design.md Section 3.2).
+    /// </summary>
+    public static string FormatCombiningGlyphForDisplay(string label)
+    {
+        if (string.IsNullOrEmpty(label))
+        {
+            return string.Empty;
+        }
+
+        var firstChar = label[0];
+        if (IsBengaliCombiningMark(firstChar))
+        {
+            return "\u25CC" + label;
+        }
+
+        return label;
+    }
+
+    private static bool IsBengaliCombiningMark(char c) =>
+        c is (>= '\u0981' and <= '\u0983')
+            or '\u09BC'
+            or (>= '\u09BE' and <= '\u09CD')
+            or '\u09D7'
+            or (>= '\u09E2' and <= '\u09E3');
+
     private void ApplyCurrentSurfaceBrush()
     {
-        var keyType = KeyModel?.KeyType ?? KeyType.Character;
+        var key = KeyModel;
+        var keyType = key?.KeyType ?? KeyType.Character;
+        var isShiftActive = keyType == KeyType.Shift && key?.TargetLayer == LayoutLayer.Primary;
 
         string resourceKey;
-        if (keyType == KeyType.Enter)
+        if (keyType == KeyType.Enter || isShiftActive)
         {
             resourceKey = _isPressed
                 ? "Brush.Accent.Hover"
@@ -167,6 +196,30 @@ public partial class KeyboardKeyControl : UserControl
         StopRepeatTimer();
         ApplyCurrentSurfaceBrush();
         e.Handled = true;
+    }
+
+    private void OnKeyMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        var key = KeyModel;
+        if (key is not null && !string.IsNullOrEmpty(key.AlternateOutput))
+        {
+            var alternateKey = new KeyDefinition
+            {
+                Id = key.Id + "_alt",
+                DisplayLabel = key.AlternateOutput,
+                UnicodeOutput = key.AlternateOutput,
+                KeyType = key.KeyType,
+                WidthRatio = key.WidthRatio,
+                RowIndex = key.RowIndex,
+                ColumnIndex = key.ColumnIndex
+            };
+
+            if (KeyCommand?.CanExecute(alternateKey) == true)
+            {
+                KeyCommand.Execute(alternateKey);
+                e.Handled = true;
+            }
+        }
     }
 
     private void ExecuteKeyCommand()

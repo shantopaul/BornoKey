@@ -203,6 +203,8 @@ public sealed class LayoutLoader
             throw new InvalidDataException($"Layout '{layout.Id}' in '{sourceIdentifier}' contains zero rows.");
         }
 
+        var seenKeyIds = new HashSet<string>(StringComparer.Ordinal);
+
         foreach (var row in layout.Rows)
         {
             if (double.IsNaN(row.HeightRatio) || double.IsInfinity(row.HeightRatio) ||
@@ -223,6 +225,12 @@ public sealed class LayoutLoader
                 {
                     throw new InvalidDataException(
                         $"Invalid key definition '{key.Id}' in layout '{layout.Id}' (Row {row.RowIndex}).");
+                }
+
+                if (!seenKeyIds.Add(key.Id))
+                {
+                    throw new InvalidDataException(
+                        $"Duplicate key Id '{key.Id}' detected in layout '{layout.Id}'.");
                 }
             }
         }
