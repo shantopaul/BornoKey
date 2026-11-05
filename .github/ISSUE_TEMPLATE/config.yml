@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "💬 Ask a Question or Discuss Ideas"
+    url: "https://github.com/shantopaul/BornoKey/discussions"
+    about: "Join the community discussions to ask questions, share layout ideas, or suggest words."
+  - name: "🚨 Report a Security Vulnerability"
+    url: "https://github.com/shantopaul/BornoKey/security/advisories/new"
+    about: "Privately disclose a security or privacy vulnerability to the maintainers."

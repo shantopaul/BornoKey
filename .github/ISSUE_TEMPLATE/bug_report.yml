@@ -1,0 +1,84 @@
+name: "🐛 Bug Report"
+description: "File an issue to help us fix a bug in BornoKey"
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue with BornoKey!
+        Please fill in the details below to help us reproduce and resolve the problem.
+  - type: input
+    id: version
+    attributes:
+      label: "BornoKey Version"
+      description: "Which version of BornoKey are you running? (e.g. 1.0.0)"
+      placeholder: "v1.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: "Windows Version & Edition"
+      description: "Which Windows operating system are you using?"
+      options:
+        - "Windows 11 (24H2 / 23H2 / 22H2)"
+        - "Windows 10 (22H2 / 21H2)"
+        - "Windows Server"
+        - "Other"
+    validations:
+      required: true
+  - type: dropdown
+    id: installation_type
+    attributes:
+      label: "Installation Method"
+      description: "How was BornoKey installed?"
+      options:
+        - "Official Windows Installer (BornoKey-Setup-v1.0.0-win-x64.exe)"
+        - "Portable ZIP Archive (BornoKey-v1.0.0-win-x64-portable.zip)"
+        - "Built from source"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: "Bug Description"
+      description: "A clear and concise description of what the bug is."
+      placeholder: "When typing on layer X in application Y, the character Z does not appear..."
+    validations:
+      required: true
+  - type: textarea
+    id: target_apps
+    attributes:
+      label: "Affected Target Applications"
+      description: "Which Windows apps does this occur in? (e.g. Google Chrome, MS Word, Notepad, VS Code)"
+      placeholder: "e.g. Google Chrome 122, Microsoft Word 365"
+    validations:
+      required: false
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Steps to Reproduce"
+      description: "Step-by-step instructions to reproduce the behavior."
+      placeholder: |
+        1. Open BornoKey and switch to 'বাংলা' mode.
+        2. Focus into Notepad.
+        3. Press keys '...'
+        4. See incorrect behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Expected Behavior"
+      description: "What did you expect to happen instead?"
+      placeholder: "The composite Bengali character '...' should be inserted."
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: "Screenshots or Error Logs"
+      description: "Drag and drop any screenshots or paste relevant logs if available."
+    validations:
+      required: false

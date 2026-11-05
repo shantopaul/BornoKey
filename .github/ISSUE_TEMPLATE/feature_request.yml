@@ -1,0 +1,54 @@
+name: "💡 Feature Request"
+description: "Suggest an idea or enhancement for BornoKey"
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting an improvement for BornoKey!
+  - type: dropdown
+    id: category
+    attributes:
+      label: "Feature Category"
+      description: "Which part of BornoKey does this feature relate to?"
+      options:
+        - "Bengali / English Layout Mapping"
+        - "Predictive Text & Word Completion"
+        - "Emoji Keyboard & Flags"
+        - "Clipboard Manager"
+        - "UI / UX / Themes / Scaling"
+        - "Installer / Windows Integration"
+        - "Other"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: "Problem or Missing Capability"
+      description: "Is your feature request related to a problem or limitation? Please describe."
+      placeholder: "I'm always frustrated when I try to type..."
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: "Proposed Solution / Enhancement"
+      description: "Describe the solution you'd like to see implemented."
+      placeholder: "Add a new key or shortcut for..."
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: "Alternative Solutions Considered"
+      description: "Describe any alternative solutions or workarounds you've considered."
+    validations:
+      required: false
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: "Additional Context"
+      description: "Add any other context, mockup screenshots, or layout examples here."
+    validations:
+      required: false

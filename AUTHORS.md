@@ -2,7 +2,7 @@
 
 ## Creator & Lead Maintainer
 
-- **Shanto Paul** ([@shantopaul](https://github.com/shantopaul))  
+- **Shanto Paul** ([@shantopaul](https://github.com/shantopaul) • <shanto@shantopaul.com>)  
   *Architecture, Bengali/English Unicode Input Engine, Direct2D Color Emoji Renderer, Predictive Text Engine, WPF UI/UX & Windows Installer*
 
 ---
