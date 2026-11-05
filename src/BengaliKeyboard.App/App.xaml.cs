@@ -290,9 +290,20 @@ public partial class App : Application
                 });
             });
 
-            var initialMode = settingsService.Current.LaunchMinimized
-                ? KeyboardMode.HiddenToTray
-                : settingsService.Current.WindowState.Mode;
+            var cmdArgs = Environment.GetCommandLineArgs();
+            var isAutoStartupLaunch = cmdArgs.Any(a => string.Equals(a, "--startup", StringComparison.OrdinalIgnoreCase));
+            var isPostInstallLaunch = cmdArgs.Any(a => string.Equals(a, "--postinstall", StringComparison.OrdinalIgnoreCase));
+            var savedMode = settingsService.Current.WindowState.Mode;
+            var fallbackVisibleMode = settingsService.Current.WindowState.LastVisibleMode is KeyboardMode.Expanded or KeyboardMode.Compact
+                ? settingsService.Current.WindowState.LastVisibleMode
+                : KeyboardMode.Expanded;
+            var initialMode = isPostInstallLaunch
+                ? KeyboardMode.Expanded
+                : (isAutoStartupLaunch && settingsService.Current.LaunchMinimized)
+                    ? KeyboardMode.HiddenToTray
+                    : (savedMode is KeyboardMode.Expanded or KeyboardMode.Compact ? savedMode : fallbackVisibleMode);
+
+
 
             windowPositionService.ApplyWindowMode(initialMode);
 
