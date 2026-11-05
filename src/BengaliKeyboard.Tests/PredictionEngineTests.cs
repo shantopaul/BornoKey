@@ -204,12 +204,20 @@ public sealed class PredictionEngineTests : IDisposable
         var upperCompletions = await rankingService.GetWordCompletionsAsync("HEL", maxResults: 4);
         Assert.Contains(upperCompletions, c => c.Word == "HELLO");
 
-        // 4. Contractions: "dont" -> "don't", "im" -> "I'm"
+        // 4. Contractions & shorthands: "dont" -> "don't", "im" -> "I'm", "plz" -> "please", and repeated "hhhh" -> 4 English 'h' words
         var dontCompletions = await rankingService.GetWordCompletionsAsync("dont", maxResults: 4);
         Assert.Equal("don't", dontCompletions[0].Word);
 
         var imCompletions = await rankingService.GetWordCompletionsAsync("im", maxResults: 4);
         Assert.Equal("I'm", imCompletions[0].Word);
+
+        var plzCompletions = await rankingService.GetWordCompletionsAsync("plz", maxResults: 4);
+        Assert.Equal("please", plzCompletions[0].Word);
+
+        var repeatedHCompletions = await rankingService.GetWordCompletionsAsync("hhhh", maxResults: 4);
+        Assert.Equal(4, repeatedHCompletions.Count);
+        Assert.Contains(repeatedHCompletions, c => c.Word == "hello");
+        Assert.All(repeatedHCompletions, c => Assert.Equal(4, c.ReplacePrefixLength));
 
         // 5. Type "T", "h", "a" in English mode and select "Thank"
         await inputEngine.ProcessKeyAsync(new KeyDefinition { Id = "T", UnicodeOutput = "t", AlternateOutput = "T", KeyType = KeyType.Character }, isShifted: true);

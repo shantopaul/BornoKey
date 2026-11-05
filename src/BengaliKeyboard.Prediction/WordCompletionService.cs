@@ -37,7 +37,25 @@ public sealed class WordCompletionService
             ["youre"] = "you're",
             ["theyre"] = "they're",
             ["were"] = "we're",
-            ["weve"] = "we've"
+            ["weve"] = "we've",
+            ["u"] = "you",
+            ["ur"] = "your",
+            ["r"] = "are",
+            ["plz"] = "please",
+            ["pls"] = "please",
+            ["thx"] = "thank",
+            ["tnx"] = "thank",
+            ["hlo"] = "hello",
+            ["hlw"] = "hello",
+            ["helo"] = "hello",
+            ["msg"] = "message",
+            ["ok"] = "okay",
+            ["btw"] = "between",
+            ["gud"] = "good",
+            ["bcz"] = "because",
+            ["wht"] = "what",
+            ["knw"] = "know",
+            ["tmr"] = "tomorrow"
         };
 
     private readonly DictionaryService _dictionaryService;
@@ -154,6 +172,50 @@ public sealed class WordCompletionService
             }
         }
 
+        // 4. Repeated-character deduplication & progressive prefix backoff (e.g., "hhhh" -> "h", "helllo" -> "helo" -> "hel")
+        // Guarantees the suggestion bar remains populated with up to clampedMax helpful candidates even on key-repeat or typos.
+        if (candidates.Count < clampedMax && normalizedPrefix.Length >= 2)
+        {
+            var backoffPrefixes = BuildBackoffPrefixes(normalizedPrefix);
+            foreach (var backoffPrefix in backoffPrefixes)
+            {
+                if (candidates.Count >= clampedMax)
+                {
+                    break;
+                }
+
+                var backoffMatches = await _dictionaryService
+                    .QueryPrefixMatchesAsync(backoffPrefix, clampedMax * 2, cancellationToken)
+                    .ConfigureAwait(false);
+
+                foreach (var (word, frequency, _) in backoffMatches)
+                {
+                    if (candidates.Count >= clampedMax)
+                    {
+                        break;
+                    }
+
+                    var formattedWord = isEnglishPrefix
+                        ? FormatEnglishCompletionCasing(normalizedPrefix, word)
+                        : word;
+
+                    if (!seenFormattedWords.Add(formattedWord))
+                    {
+                        continue;
+                    }
+
+                    var score = Math.Round(Math.Clamp((frequency / 1000.0) * 0.75, 0.05, 0.79), 4);
+                    candidates.Add(new SuggestionCandidate
+                    {
+                        Word = formattedWord,
+                        Score = score,
+                        IsNextWordPrediction = false,
+                        ReplacePrefixLength = replaceScalarLength
+                    });
+                }
+            }
+        }
+
         if (candidates.Count == 0)
         {
             // Always surface at least the literal prefix so the user can commit their custom word with 1 click
@@ -240,6 +302,66 @@ public sealed class WordCompletionService
         }
 
         return true;
+    }
+
+    private static List<string> BuildBackoffPrefixes(string normalizedPrefix)
+    {
+        var result = new List<string>(4);
+        var collapsed = CollapseRepeatedCharacters(normalizedPrefix);
+        if (!string.Equals(collapsed, normalizedPrefix, StringComparison.Ordinal) && collapsed.Length >= 1)
+        {
+            result.Add(collapsed);
+        }
+
+        if (normalizedPrefix.Length >= 4)
+        {
+            var p3 = normalizedPrefix[..3];
+            if (!result.Contains(p3, StringComparer.Ordinal))
+            {
+                result.Add(p3);
+            }
+        }
+
+        if (normalizedPrefix.Length >= 3)
+        {
+            var p2 = normalizedPrefix[..2];
+            if (!result.Contains(p2, StringComparer.Ordinal))
+            {
+                result.Add(p2);
+            }
+        }
+
+        var p1 = normalizedPrefix[..1];
+        if (!result.Contains(p1, StringComparer.Ordinal))
+        {
+            result.Add(p1);
+        }
+
+        return result;
+    }
+
+    public static string CollapseRepeatedCharacters(string input)
+    {
+        if (string.IsNullOrEmpty(input) || input.Length <= 1)
+        {
+            return input;
+        }
+
+        var sb = new StringBuilder(input.Length);
+        var prev = input[0];
+        sb.Append(prev);
+
+        for (var i = 1; i < input.Length; i++)
+        {
+            var current = input[i];
+            if (char.ToLowerInvariant(current) != char.ToLowerInvariant(prev))
+            {
+                sb.Append(current);
+                prev = current;
+            }
+        }
+
+        return sb.ToString();
     }
 
     private static int CountUnicodeScalars(string text)

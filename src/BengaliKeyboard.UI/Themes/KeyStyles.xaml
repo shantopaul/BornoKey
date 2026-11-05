@@ -199,14 +199,23 @@
                             Margin="1">
                         <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <ContentPresenter Grid.Column="0"
+                            <TextBlock x:Name="CheckMark"
+                                       Grid.Column="0"
+                                       Text="✓"
+                                       Foreground="{DynamicResource Brush.Accent.Primary}"
+                                       FontWeight="Bold"
+                                       Margin="0,0,6,0"
+                                       VerticalAlignment="Center"
+                                       Visibility="Collapsed" />
+                            <ContentPresenter Grid.Column="1"
                                               ContentSource="Header"
                                               RecognizesAccessKey="True"
                                               VerticalAlignment="Center" />
-                            <TextBlock Grid.Column="1"
+                            <TextBlock Grid.Column="2"
                                        Text="{TemplateBinding InputGestureText}"
                                        Foreground="{DynamicResource Brush.Text.Muted}"
                                        FontSize="10.5"
@@ -215,6 +224,9 @@
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
+                        </Trigger>
                         <Trigger Property="IsHighlighted" Value="True">
                             <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource Brush.Key.Special.Hover}" />
                             <Setter Property="Foreground" Value="#FFFFFF" />
@@ -305,31 +317,37 @@
     </Style>
 
     <!-- ========================================================================= -->
-    <!-- Suggestion Bar Candidate Button Style                                     -->
+    <!-- Suggestion Bar Candidate Button Style (Sleek Dark Pill Cards)             -->
     <!-- ========================================================================= -->
     <Style x:Key="Style.Button.SuggestionCandidate" TargetType="Button">
-        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Background" Value="{DynamicResource Brush.Window.Background}" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
-        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Window.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Focusable" Value="False" />
+        <Setter Property="ToolTip" Value="Click to Insert Suggested Word" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="CandidateBorder"
                             Background="{TemplateBinding Background}"
-                            CornerRadius="5"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6"
                             Margin="3,2"
-                            Padding="8,2">
+                            Padding="10,2">
                         <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="CandidateBorder" Property="Background" Value="{DynamicResource Brush.Key.Regular.Hover}" />
+                            <Setter TargetName="CandidateBorder" Property="BorderBrush" Value="{DynamicResource Brush.Accent.Primary}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="CandidateBorder" Property="Background" Value="{DynamicResource Brush.Accent.Subtle}" />
+                            <Setter TargetName="CandidateBorder" Property="BorderBrush" Value="{DynamicResource Brush.Accent.Hover}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
