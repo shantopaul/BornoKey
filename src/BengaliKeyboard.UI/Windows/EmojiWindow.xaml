@@ -154,10 +154,11 @@
                                    Width="13"
                                    Height="13"
                                    RenderOptions.BitmapScalingMode="HighQuality"
-                                   VerticalAlignment="Center"
-                                   Margin="0,0,5,0" />
-                            <TextBlock Text="Clear Recent"
-                                       VerticalAlignment="Center" />
+                                   VerticalAlignment="Center" />
+                            <TextBlock x:Name="ClearRecentTextBlock"
+                                       Text="Clear Recent"
+                                       VerticalAlignment="Center"
+                                       Margin="5,0,0,0" />
                         </StackPanel>
                     </Button>
 
@@ -221,12 +222,13 @@
                                            Width="15"
                                            Height="15"
                                            RenderOptions.BitmapScalingMode="HighQuality"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,4,0" />
+                                           VerticalAlignment="Center" />
                                     <TextBlock Text="{Binding ShortTitle}"
+                                               Visibility="{Binding ShowTitle, Converter={StaticResource BoolToVis}}"
                                                FontSize="11"
                                                FontWeight="SemiBold"
                                                VerticalAlignment="Center"
+                                               Margin="4,0,0,0"
                                                TextTrimming="CharacterEllipsis" />
                                 </StackPanel>
                             </Button>

@@ -46,10 +46,37 @@ public partial class EmojiWindow : Window
 
         _windowResizer = new NonActivatingWindowResizer(
             this,
-            onResizeCompleted: NotifyBoundsChanged);
+            onResizeCompleted: NotifyBoundsChanged,
+            onSizeChangedLive: (w, _) => ApplyResponsiveEmojiLayout(w));
+
+        SizeChanged += OnEmojiWindowSizeChanged;
 
         Opacity = _settingsService.Current.Opacity;
         Topmost = _settingsService.Current.WindowState.AlwaysOnTop;
+        ApplyResponsiveEmojiLayout(Width);
+    }
+
+    private void OnEmojiWindowSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        ApplyResponsiveEmojiLayout(e.NewSize.Width);
+    }
+
+    private void ApplyResponsiveEmojiLayout(double width)
+    {
+        if (width <= 0 || double.IsNaN(width))
+        {
+            return;
+        }
+
+        var showTabTitles = width >= 640.0;
+        foreach (var tab in _viewModel.CategoryTabs)
+        {
+            tab.ShowTitle = showTabTitles;
+        }
+
+        ClearRecentTextBlock.Visibility = width >= 620.0
+            ? Visibility.Visible
+            : Visibility.Collapsed;
     }
 
     /// <summary>
@@ -69,6 +96,7 @@ public partial class EmojiWindow : Window
         Height = keyboardWindow.ActualHeight > 0 ? keyboardWindow.ActualHeight : keyboardWindow.Height;
         Topmost = keyboardWindow.Topmost;
         Opacity = keyboardWindow.Opacity;
+        ApplyResponsiveEmojiLayout(Width);
     }
 
     /// <summary>

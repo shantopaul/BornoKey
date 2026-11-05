@@ -45,10 +45,29 @@ public partial class ClipboardWindow : Window
 
         _windowResizer = new NonActivatingWindowResizer(
             this,
-            onResizeCompleted: NotifyBoundsChanged);
+            onResizeCompleted: NotifyBoundsChanged,
+            onSizeChangedLive: (w, _) => ApplyResponsiveClipboardLayout(w));
+
+        SizeChanged += OnClipboardWindowSizeChanged;
 
         Opacity = _settingsService.Current.Opacity;
         Topmost = _settingsService.Current.WindowState.AlwaysOnTop;
+        ApplyResponsiveClipboardLayout(Width);
+    }
+
+    private void OnClipboardWindowSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        ApplyResponsiveClipboardLayout(e.NewSize.Width);
+    }
+
+    private void ApplyResponsiveClipboardLayout(double width)
+    {
+        if (width <= 0 || double.IsNaN(width))
+        {
+            return;
+        }
+
+        ClearUnpinnedButton.Content = width < 620.0 ? "🗑️" : "🗑️ Clear Unpinned";
     }
 
     public void SyncBoundsWithKeyboard(Window keyboardWindow)
@@ -65,6 +84,7 @@ public partial class ClipboardWindow : Window
         Height = keyboardWindow.ActualHeight > 0 ? keyboardWindow.ActualHeight : keyboardWindow.Height;
         Topmost = keyboardWindow.Topmost;
         Opacity = keyboardWindow.Opacity;
+        ApplyResponsiveClipboardLayout(Width);
     }
 
     public void SetInteractiveFocusAllowed(bool allowActivation)

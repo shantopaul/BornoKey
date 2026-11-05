@@ -101,6 +101,9 @@ public partial class KeyboardKeyControl : UserControl
 
         PrimaryGlyphText.FontSize = Math.Clamp(Math.Round(basePrimarySize * _uniformScale, 1), 10.0, 30.0);
         SecondaryGlyphText.FontSize = Math.Clamp(Math.Round(10.5 * _uniformScale, 1), 7.5, 16.5);
+        SecondaryGlyphText.Margin = _uniformScale < 0.8
+            ? new Thickness(0, 1, 3, 0)
+            : new Thickness(0, 2, 5, 0);
 
         var iconSize = Math.Clamp(Math.Round(22.0 * _uniformScale), 14.0, 34.0);
         PrimaryEmojiImage.Width = iconSize;

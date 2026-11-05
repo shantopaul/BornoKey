@@ -332,7 +332,7 @@ public partial class KeyboardWindow : Window
         _ = SetWindowLongPtr(hwnd, GwlExStyle, new IntPtr(updatedStyle));
     }
 
-    private static double ComputeUniformScale(double width, double height)
+    public static double ComputeUniformScale(double width, double height)
     {
         var w = width > 0 ? width : WindowStateConfig.DefaultExpandedWidth;
         var h = height > 0 ? height : WindowStateConfig.DefaultExpandedHeight;

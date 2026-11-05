@@ -19,6 +19,9 @@ public sealed partial class EmojiCategoryTab : ObservableObject
     [ObservableProperty]
     private bool _isSelected;
 
+    [ObservableProperty]
+    private bool _showTitle = true;
+
     public EmojiCategoryTab(string categoryName, string icon, string shortTitle, bool isSelected = false)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(categoryName);

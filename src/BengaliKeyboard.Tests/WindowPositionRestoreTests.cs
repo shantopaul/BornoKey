@@ -314,6 +314,28 @@ public sealed class WindowPositionRestoreTests : IDisposable
     }
 
     [Fact]
+    public void ComputeUniformScale_ShouldMaintainAspectRatioFreeScaling_AcrossAllWindowSizes()
+    {
+        // Default 850x310 -> 1.0 uniform scale
+        Assert.Equal(1.0, KeyboardWindow.ComputeUniformScale(850, 310), precision: 3);
+
+        // Wide-short 1600x310 (188% width, 100% height) -> must stay 1.0 so glyphs never stretch horizontally
+        Assert.Equal(1.0, KeyboardWindow.ComputeUniformScale(1600, 310), precision: 3);
+
+        // Narrow-tall 518x310 (61% width, 100% height) -> scales uniformly by 518/850 (~0.609) without squishing
+        var narrowScale = KeyboardWindow.ComputeUniformScale(518, 310);
+        Assert.InRange(narrowScale, 0.60, 0.62);
+
+        // Compact 440x180 -> bounded safely above 0.55
+        var minScale = KeyboardWindow.ComputeUniformScale(440, 180);
+        Assert.InRange(minScale, 0.55, 0.60);
+
+        // Ultrawide tall 1600x600 -> bounded safely at <= 1.85
+        var maxScale = KeyboardWindow.ComputeUniformScale(1600, 600);
+        Assert.InRange(maxScale, 1.80, 1.85);
+    }
+
+    [Fact]
     public async Task SystemTrayService_ShouldExposeTenContextMenuItems_AndSyncModeLanguageAndStartupStates()
     {
         Assert.Equal(10, SystemTrayService.OrderedMenuKeys.Count);
