@@ -57,6 +57,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Back to Keyboard Button -->
@@ -149,8 +150,33 @@
                             Margin="6,0,0,0"
                             ToolTip="Delete all unpinned clipboard items (pinned items are kept)" />
 
+                    <!-- Size Decrease [ − ] & Increase [ + ] Pill Buttons -->
+                    <StackPanel Grid.Column="4"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                Margin="6,0,0,0">
+                        <Button Content="−"
+                                Width="24"
+                                Height="24"
+                                Padding="0"
+                                FontSize="13"
+                                FontWeight="Bold"
+                                Style="{StaticResource Style.Button.HeaderAction}"
+                                ToolTip="Decrease Clipboard Panel Size (−8% or Drag Edge)"
+                                Click="OnDecreaseSizeClick" />
+                        <Button Content="+"
+                                Width="24"
+                                Height="24"
+                                Padding="0"
+                                FontSize="13"
+                                FontWeight="Bold"
+                                Style="{StaticResource Style.Button.HeaderAction}"
+                                ToolTip="Increase Clipboard Panel Size (+8% or Drag Edge)"
+                                Click="OnIncreaseSizeClick" />
+                    </StackPanel>
+
                     <!-- Close Panel Button -->
-                    <Button Grid.Column="4"
+                    <Button Grid.Column="5"
                             Content="✕"
                             Command="{Binding BackToKeyboardCommand}"
                             Click="OnNonSearchActionClick"
@@ -261,8 +287,28 @@
                                Foreground="{DynamicResource Brush.Text.Secondary}"
                                FontSize="11"
                                HorizontalAlignment="Right"
-                               VerticalAlignment="Center" />
+                               VerticalAlignment="Center"
+                               Margin="0,0,14,0" />
                 </DockPanel>
+            </Border>
+
+            <!-- Bottom-Right Corner Interactive Drag-Resize Grip (◢) -->
+            <Border Grid.Row="2"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Width="16"
+                    Height="16"
+                    Background="Transparent"
+                    Cursor="SizeNWSE"
+                    ToolTip="Drag Corner or Any Window Edge to Resize Panel"
+                    MouseLeftButtonDown="OnCornerResizeGripMouseLeftButtonDown">
+                <TextBlock Text="◢"
+                           FontSize="10"
+                           Foreground="{DynamicResource Brush.Text.Muted}"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Bottom"
+                           Margin="0,0,2,1"
+                           IsHitTestVisible="False" />
             </Border>
         </Grid>
     </Border>

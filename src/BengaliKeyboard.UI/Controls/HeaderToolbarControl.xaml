@@ -29,10 +29,13 @@
             <StackPanel Grid.Column="0"
                         Orientation="Horizontal"
                         VerticalAlignment="Center"
-                        Margin="0,0,12,0">
-                <TextBlock Text="≡"
-                           Foreground="{DynamicResource Brush.Text.Secondary}"
-                           FontSize="15"
+                        Margin="0,0,12,0"
+                        Cursor="SizeAll"
+                        ToolTip="Drag anywhere on the header bar to move BornoKey">
+                <TextBlock Text="⠿"
+                           Foreground="{DynamicResource Brush.Accent.Primary}"
+                           FontSize="14"
+                           FontWeight="Bold"
                            Margin="0,0,6,0"
                            VerticalAlignment="Center" />
                 <TextBlock Text="BornoKey"
@@ -48,31 +51,103 @@
                                             Grid.Column="1"
                                             VerticalAlignment="Center" />
 
-            <!-- Right Window & 4-Mode Action Controls -->
+            <!-- Right Window, Zoom/Drag-Scale & 4-Mode Action Controls -->
             <StackPanel Grid.Column="3"
                         Orientation="Horizontal"
                         VerticalAlignment="Center">
+
+                <!-- Size Decrease [ − ] / Interactive Drag-Zoom [ 100% ] / Size Increase [ + ] Pill Group -->
+                <Border Background="{DynamicResource Brush.Window.Background}"
+                        BorderBrush="{DynamicResource Brush.Window.Border}"
+                        BorderThickness="1"
+                        CornerRadius="5"
+                        Padding="2,1"
+                        Margin="0,0,5,0"
+                        VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="DecreaseSizeButton"
+                                Content="−"
+                                Width="22"
+                                Height="20"
+                                Margin="0"
+                                Padding="0"
+                                FontSize="13"
+                                FontWeight="Bold"
+                                Style="{StaticResource Style.Button.HeaderAction}"
+                                BorderThickness="0"
+                                ToolTip="Decrease Keyboard Size (−8% or Ctrl + Scroll Down)"
+                                Click="OnDecreaseSizeClick" />
+
+                        <Border x:Name="ScaleDragBadge"
+                                Background="Transparent"
+                                Padding="6,2"
+                                Cursor="SizeWE"
+                                ToolTip="Drag Left/Right to Resize Smoothly • Click to Reset to 100%"
+                                MouseLeftButtonDown="OnScaleBadgeMouseLeftButtonDown"
+                                MouseMove="OnScaleBadgeMouseMove"
+                                MouseLeftButtonUp="OnScaleBadgeMouseLeftButtonUp"
+                                LostMouseCapture="OnScaleBadgeLostMouseCapture">
+                            <TextBlock x:Name="ScalePercentTextBlock"
+                                       Text="100%"
+                                       Foreground="{DynamicResource Brush.Text.Secondary}"
+                                       FontFamily="{StaticResource FontFamily.Mono}"
+                                       FontSize="10.5"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center" />
+                        </Border>
+
+                        <Button x:Name="IncreaseSizeButton"
+                                Content="+"
+                                Width="22"
+                                Height="20"
+                                Margin="0"
+                                Padding="0"
+                                FontSize="13"
+                                FontWeight="Bold"
+                                Style="{StaticResource Style.Button.HeaderAction}"
+                                BorderThickness="0"
+                                ToolTip="Increase Keyboard Size (+8% or Ctrl + Scroll Up)"
+                                Click="OnIncreaseSizeClick" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Toggle Compact / Expanded Mode -->
                 <Button x:Name="CompactModeButton"
-                        Content="Compact"
+                        Content="⤢ Compact"
                         Style="{StaticResource Style.Button.HeaderAction}"
-                        ToolTip="Toggle Compact / Expanded Mode"
+                        ToolTip="Toggle Compact (620×230) / Expanded (850×310) Mode"
                         Click="OnCompactClick" />
+
+                <!-- Shrink to Minimal Floating [বাংলা] Icon -->
                 <Button x:Name="MinimalIconButton"
                         Content="বাংলা"
+                        FontFamily="{StaticResource FontFamily.Bengali}"
+                        FontWeight="SemiBold"
                         Style="{StaticResource Style.Button.HeaderAction}"
-                        ToolTip="Shrink to Minimal Floating [বাংলা] Icon"
+                        ToolTip="Shrink to Minimal Floating [বাংলা] Desktop Badge"
                         Click="OnMinimalIconClick" />
+
+                <!-- Open Settings & Customization Dialog -->
+                <Button x:Name="SettingsButton"
+                        Content="⚙"
+                        Width="26"
+                        Style="{StaticResource Style.Button.HeaderAction}"
+                        ToolTip="Open Settings &amp; Customization"
+                        Click="OnSettingsClick" />
+
+                <!-- Hide to System Tray -->
                 <Button x:Name="MinimizeButton"
                         Content="—"
                         Width="26"
                         Style="{StaticResource Style.Button.HeaderAction}"
-                        ToolTip="Hide Keyboard to System Tray"
+                        ToolTip="Hide Keyboard to System Tray (Ctrl+Shift+K)"
                         Click="OnMinimizeClick" />
+
+                <!-- Close Application / Hide -->
                 <Button x:Name="CloseButton"
                         Content="✕"
-                        Width="26"
-                        Style="{StaticResource Style.Button.HeaderAction}"
-                        ToolTip="Close BornoKey"
+                        Style="{StaticResource Style.Button.HeaderClose}"
+                        ToolTip="Close Keyboard Window"
                         Click="OnCloseClick" />
             </StackPanel>
         </Grid>

@@ -23,12 +23,15 @@ public partial class EmojiWindow : Window
 
     private readonly EmojiViewModel _viewModel;
     private readonly ISettingsService _settingsService;
+    private readonly NonActivatingWindowResizer _windowResizer;
     private HwndSource? _hwndSource;
     private bool _allowInteractiveActivation;
 
     public EmojiViewModel ViewModel => _viewModel;
 
     public event EventHandler<(double Left, double Top)>? PositionChanged;
+
+    public event EventHandler<Rect>? BoundsChanged;
 
     public EmojiWindow(EmojiViewModel viewModel, ISettingsService settingsService)
     {
@@ -40,6 +43,10 @@ public partial class EmojiWindow : Window
         DataContext = _viewModel;
 
         InitializeComponent();
+
+        _windowResizer = new NonActivatingWindowResizer(
+            this,
+            onResizeCompleted: NotifyBoundsChanged);
 
         Opacity = _settingsService.Current.Opacity;
         Topmost = _settingsService.Current.WindowState.AlwaysOnTop;
@@ -87,6 +94,7 @@ public partial class EmojiWindow : Window
 
     protected override void OnClosed(EventArgs e)
     {
+        _windowResizer.Detach();
         if (_hwndSource is not null)
         {
             _hwndSource.RemoveHook(WndProc);
@@ -136,12 +144,42 @@ public partial class EmojiWindow : Window
         }
     }
 
+    private void OnDecreaseSizeClick(object sender, RoutedEventArgs e)
+    {
+        OnNonSearchActionClick(sender, e);
+        _windowResizer.AdjustScaleByStep(-NonActivatingWindowResizer.StepScaleFactor);
+    }
+
+    private void OnIncreaseSizeClick(object sender, RoutedEventArgs e)
+    {
+        OnNonSearchActionClick(sender, e);
+        _windowResizer.AdjustScaleByStep(NonActivatingWindowResizer.StepScaleFactor);
+    }
+
+    private void OnCornerResizeGripMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        _windowResizer.BeginBottomRightGripDrag(e);
+    }
+
+    private void NotifyBoundsChanged()
+    {
+        var w = ActualWidth > 0 ? ActualWidth : Width;
+        var h = ActualHeight > 0 ? ActualHeight : Height;
+        BoundsChanged?.Invoke(this, new Rect(Left, Top, w, h));
+    }
+
     private void OnHeaderMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
+        if (_windowResizer.IsDragging || e.Handled)
+        {
+            return;
+        }
+
         if (e.ButtonState == MouseButtonState.Pressed && e.OriginalSource is not System.Windows.Controls.TextBox)
         {
             DragMove();
             PositionChanged?.Invoke(this, (Left, Top));
+            NotifyBoundsChanged();
         }
     }
 
