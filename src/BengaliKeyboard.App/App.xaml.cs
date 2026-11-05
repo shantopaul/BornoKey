@@ -114,10 +114,28 @@ public partial class App : Application
                 var updatedState = keyboardWindow.CaptureCurrentWindowGeometry();
                 windowPositionService.ScheduleDebouncedSave(updatedState);
             };
+            emojiWindow.BoundsChanged += (_, bounds) =>
+            {
+                keyboardWindow.Left = bounds.Left;
+                keyboardWindow.Top = bounds.Top;
+                keyboardWindow.Width = bounds.Width;
+                keyboardWindow.Height = bounds.Height;
+                var updatedState = keyboardWindow.CaptureCurrentWindowGeometry();
+                windowPositionService.ScheduleDebouncedSave(updatedState);
+            };
             clipboardWindow.PositionChanged += (_, coords) =>
             {
                 keyboardWindow.Left = coords.Left;
                 keyboardWindow.Top = coords.Top;
+                var updatedState = keyboardWindow.CaptureCurrentWindowGeometry();
+                windowPositionService.ScheduleDebouncedSave(updatedState);
+            };
+            clipboardWindow.BoundsChanged += (_, bounds) =>
+            {
+                keyboardWindow.Left = bounds.Left;
+                keyboardWindow.Top = bounds.Top;
+                keyboardWindow.Width = bounds.Width;
+                keyboardWindow.Height = bounds.Height;
                 var updatedState = keyboardWindow.CaptureCurrentWindowGeometry();
                 windowPositionService.ScheduleDebouncedSave(updatedState);
             };
@@ -147,10 +165,7 @@ public partial class App : Application
             globalHotkeyService.ClipboardPanelRequested += async (_, _) => await ShowClipboardOverlayAsync().ConfigureAwait(true);
             globalHotkeyService.Initialize();
 
-            // Wire System Tray Icon & 10-Item Context Menu
-            systemTrayService.EmojiPanelRequested += async (_, _) => await ShowEmojiOverlayAsync().ConfigureAwait(true);
-            systemTrayService.ClipboardPanelRequested += async (_, _) => await ShowClipboardOverlayAsync().ConfigureAwait(true);
-            systemTrayService.SettingsWindowRequested += (_, _) =>
+            void ShowSettingsDialog()
             {
                 settingsViewModel.ReloadFromCurrentSettings();
                 if (!settingsWindow.IsVisible)
@@ -158,7 +173,13 @@ public partial class App : Application
                     settingsWindow.Show();
                 }
                 settingsWindow.Activate();
-            };
+            }
+
+            // Wire System Tray Icon & 10-Item Context Menu + Header Settings Button
+            keyboardWindow.SettingsWindowRequested += (_, _) => ShowSettingsDialog();
+            systemTrayService.EmojiPanelRequested += async (_, _) => await ShowEmojiOverlayAsync().ConfigureAwait(true);
+            systemTrayService.ClipboardPanelRequested += async (_, _) => await ShowClipboardOverlayAsync().ConfigureAwait(true);
+            systemTrayService.SettingsWindowRequested += (_, _) => ShowSettingsDialog();
             systemTrayService.ExitRequested += async (_, _) =>
             {
                 settingsWindow.PrepareForShutdown();

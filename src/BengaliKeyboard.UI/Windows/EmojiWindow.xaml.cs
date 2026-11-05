@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 using BengaliKeyboard.Core.Interfaces;
+using BengaliKeyboard.Core.Models;
 using BengaliKeyboard.UI.ViewModels;
 
 namespace BengaliKeyboard.UI.Windows;
@@ -22,12 +23,15 @@ public partial class EmojiWindow : Window
 
     private readonly EmojiViewModel _viewModel;
     private readonly ISettingsService _settingsService;
+    private readonly NonActivatingWindowResizer _windowResizer;
     private HwndSource? _hwndSource;
     private bool _allowInteractiveActivation;
 
     public EmojiViewModel ViewModel => _viewModel;
 
     public event EventHandler<(double Left, double Top)>? PositionChanged;
+
+    public event EventHandler<Rect>? BoundsChanged;
 
     public EmojiWindow(EmojiViewModel viewModel, ISettingsService settingsService)
     {
@@ -40,8 +44,39 @@ public partial class EmojiWindow : Window
 
         InitializeComponent();
 
+        _windowResizer = new NonActivatingWindowResizer(
+            this,
+            onResizeCompleted: NotifyBoundsChanged,
+            onSizeChangedLive: (w, _) => ApplyResponsiveEmojiLayout(w));
+
+        SizeChanged += OnEmojiWindowSizeChanged;
+
         Opacity = _settingsService.Current.Opacity;
         Topmost = _settingsService.Current.WindowState.AlwaysOnTop;
+        ApplyResponsiveEmojiLayout(Width);
+    }
+
+    private void OnEmojiWindowSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        ApplyResponsiveEmojiLayout(e.NewSize.Width);
+    }
+
+    private void ApplyResponsiveEmojiLayout(double width)
+    {
+        if (width <= 0 || double.IsNaN(width))
+        {
+            return;
+        }
+
+        var showTabTitles = width >= 640.0;
+        foreach (var tab in _viewModel.CategoryTabs)
+        {
+            tab.ShowTitle = showTabTitles;
+        }
+
+        ClearRecentTextBlock.Visibility = width >= 620.0
+            ? Visibility.Visible
+            : Visibility.Collapsed;
     }
 
     /// <summary>
@@ -51,12 +86,17 @@ public partial class EmojiWindow : Window
     {
         ArgumentNullException.ThrowIfNull(keyboardWindow);
 
+        MinWidth = keyboardWindow.MinWidth;
+        MaxWidth = keyboardWindow.MaxWidth;
+        MinHeight = keyboardWindow.MinHeight;
+        MaxHeight = keyboardWindow.MaxHeight;
         Left = keyboardWindow.Left;
         Top = keyboardWindow.Top;
         Width = keyboardWindow.ActualWidth > 0 ? keyboardWindow.ActualWidth : keyboardWindow.Width;
         Height = keyboardWindow.ActualHeight > 0 ? keyboardWindow.ActualHeight : keyboardWindow.Height;
         Topmost = keyboardWindow.Topmost;
         Opacity = keyboardWindow.Opacity;
+        ApplyResponsiveEmojiLayout(Width);
     }
 
     /// <summary>
@@ -86,6 +126,7 @@ public partial class EmojiWindow : Window
 
     protected override void OnClosed(EventArgs e)
     {
+        _windowResizer.Detach();
         if (_hwndSource is not null)
         {
             _hwndSource.RemoveHook(WndProc);
@@ -127,12 +168,50 @@ public partial class EmojiWindow : Window
         }
     }
 
+    private void OnEmojiTileMouseEnter(object sender, MouseEventArgs e)
+    {
+        if (sender is FrameworkElement { DataContext: EmojiItem hoveredItem })
+        {
+            _viewModel.SetHoveredEmoji(hoveredItem);
+        }
+    }
+
+    private void OnDecreaseSizeClick(object sender, RoutedEventArgs e)
+    {
+        OnNonSearchActionClick(sender, e);
+        _windowResizer.AdjustScaleByStep(-NonActivatingWindowResizer.StepScaleFactor);
+    }
+
+    private void OnIncreaseSizeClick(object sender, RoutedEventArgs e)
+    {
+        OnNonSearchActionClick(sender, e);
+        _windowResizer.AdjustScaleByStep(NonActivatingWindowResizer.StepScaleFactor);
+    }
+
+    private void OnCornerResizeGripMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        _windowResizer.BeginBottomRightGripDrag(e);
+    }
+
+    private void NotifyBoundsChanged()
+    {
+        var w = ActualWidth > 0 ? ActualWidth : Width;
+        var h = ActualHeight > 0 ? ActualHeight : Height;
+        BoundsChanged?.Invoke(this, new Rect(Left, Top, w, h));
+    }
+
     private void OnHeaderMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
+        if (_windowResizer.IsDragging || e.Handled)
+        {
+            return;
+        }
+
         if (e.ButtonState == MouseButtonState.Pressed && e.OriginalSource is not System.Windows.Controls.TextBox)
         {
             DragMove();
             PositionChanged?.Invoke(this, (Left, Top));
+            NotifyBoundsChanged();
         }
     }
 

@@ -10,7 +10,7 @@ public sealed class AppSettings
 {
     public const double MinOpacity = 0.60;
     public const double MaxOpacity = 1.00;
-    public const double DefaultOpacity = 0.98;
+    public const double DefaultOpacity = 1.00;
 
     // 1. General
     public bool StartWithWindows { get; set; }

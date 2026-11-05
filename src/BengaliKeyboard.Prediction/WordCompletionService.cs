@@ -4,11 +4,60 @@ using BengaliKeyboard.Core.Models;
 namespace BengaliKeyboard.Prediction;
 
 /// <summary>
-/// Provides real-time partial Bengali word completion in ≤ 50 ms off the UI thread (PRD.md Section 3.4 Capability 1).
-/// Example: Typing <c>আমা</c> surfaces <c>[আমার] [আমাকে] [আমাদের] [আমায়]</c>.
+/// Provides real-time partial Bengali and English word completion in ≤ 50 ms off the UI thread (PRD.md Section 3.4 Capability 1).
+/// Supports smart English capitalization (Title Case / ALL CAPS preservation) and common English contraction expansion.
 /// </summary>
 public sealed class WordCompletionService
 {
+    private static readonly IReadOnlyDictionary<string, string> EnglishContractions =
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["im"] = "I'm",
+            ["ive"] = "I've",
+            ["ill"] = "I'll",
+            ["id"] = "I'd",
+            ["dont"] = "don't",
+            ["cant"] = "can't",
+            ["wont"] = "won't",
+            ["didnt"] = "didn't",
+            ["doesnt"] = "doesn't",
+            ["isnt"] = "isn't",
+            ["arent"] = "aren't",
+            ["wasnt"] = "wasn't",
+            ["werent"] = "weren't",
+            ["havent"] = "haven't",
+            ["hasnt"] = "hasn't",
+            ["wouldnt"] = "wouldn't",
+            ["couldnt"] = "couldn't",
+            ["shouldnt"] = "shouldn't",
+            ["its"] = "it's",
+            ["thats"] = "that's",
+            ["whats"] = "what's",
+            ["lets"] = "let's",
+            ["youre"] = "you're",
+            ["theyre"] = "they're",
+            ["were"] = "we're",
+            ["weve"] = "we've",
+            ["u"] = "you",
+            ["ur"] = "your",
+            ["r"] = "are",
+            ["plz"] = "please",
+            ["pls"] = "please",
+            ["thx"] = "thank",
+            ["tnx"] = "thank",
+            ["hlo"] = "hello",
+            ["hlw"] = "hello",
+            ["helo"] = "hello",
+            ["msg"] = "message",
+            ["ok"] = "okay",
+            ["btw"] = "between",
+            ["gud"] = "good",
+            ["bcz"] = "because",
+            ["wht"] = "what",
+            ["knw"] = "know",
+            ["tmr"] = "tomorrow"
+        };
+
     private readonly DictionaryService _dictionaryService;
 
     public WordCompletionService(DictionaryService dictionaryService)
@@ -30,19 +79,155 @@ public sealed class WordCompletionService
         var normalizedPrefix = prefix.Trim().Normalize(NormalizationForm.FormC);
         var clampedMax = Math.Clamp(maxResults, 1, 10);
         var replaceScalarLength = CountUnicodeScalars(normalizedPrefix);
+        var isEnglishPrefix = IsAsciiWord(normalizedPrefix);
 
         var matches = await _dictionaryService
             .QueryPrefixMatchesAsync(normalizedPrefix, clampedMax * 2, cancellationToken)
             .ConfigureAwait(false);
 
-        if (matches.Count == 0)
+        var seenFormattedWords = new HashSet<string>(StringComparer.Ordinal);
+        var candidates = new List<SuggestionCandidate>(clampedMax);
+
+        // 1. Check for exact English contraction match (e.g., "dont" or "don't" -> "don't", "im" or "i'm" -> "I'm")
+        var strippedContractionKey = isEnglishPrefix
+            ? normalizedPrefix.Replace("'", string.Empty, StringComparison.Ordinal)
+            : normalizedPrefix;
+
+        if (isEnglishPrefix && EnglishContractions.TryGetValue(strippedContractionKey, out var contraction))
+        {
+            var formattedContraction = FormatEnglishCompletionCasing(normalizedPrefix, contraction);
+            if (seenFormattedWords.Add(formattedContraction))
+            {
+                candidates.Add(new SuggestionCandidate
+                {
+                    Word = formattedContraction,
+                    Score = 1.0,
+                    IsNextWordPrediction = false,
+                    ReplacePrefixLength = replaceScalarLength
+                });
+            }
+        }
+
+        // 2. Add ranked dictionary & user-learned prefix matches
+        if (matches.Count > 0)
+        {
+            var maxFrequency = Math.Max(1.0, matches.Max(m => m.Frequency));
+
+            foreach (var (word, frequency, isUserWord) in matches)
+            {
+                if (candidates.Count >= clampedMax)
+                {
+                    break;
+                }
+
+                var formattedWord = isEnglishPrefix
+                    ? FormatEnglishCompletionCasing(normalizedPrefix, word)
+                    : word;
+
+                if (!seenFormattedWords.Add(formattedWord))
+                {
+                    continue;
+                }
+
+                var baseScore = frequency / maxFrequency;
+                if (isUserWord)
+                {
+                    baseScore = Math.Min(1.0, baseScore + 0.10);
+                }
+
+                candidates.Add(new SuggestionCandidate
+                {
+                    Word = formattedWord,
+                    Score = Math.Round(Math.Clamp(baseScore, 0.05, 1.0), 4),
+                    IsNextWordPrediction = false,
+                    ReplacePrefixLength = replaceScalarLength
+                });
+            }
+        }
+
+        // 3. Also surface contraction prefix matches for 3+ character English prefixes (e.g., "don" or "don'" -> "don't")
+        if (isEnglishPrefix && strippedContractionKey.Length >= 3 && candidates.Count < clampedMax)
+        {
+            foreach (var (key, contractionValue) in EnglishContractions)
+            {
+                if (candidates.Count >= clampedMax)
+                {
+                    break;
+                }
+
+                if (key.StartsWith(strippedContractionKey, StringComparison.OrdinalIgnoreCase))
+                {
+                    var formattedContraction = FormatEnglishCompletionCasing(normalizedPrefix, contractionValue);
+                    if (seenFormattedWords.Add(formattedContraction))
+                    {
+                        candidates.Add(new SuggestionCandidate
+                        {
+                            Word = formattedContraction,
+                            Score = 0.82,
+                            IsNextWordPrediction = false,
+                            ReplacePrefixLength = replaceScalarLength
+                        });
+                    }
+                }
+            }
+        }
+
+        // 4. Repeated-character deduplication & progressive prefix backoff (e.g., "hhhh" -> "h", "helllo" -> "helo" -> "hel")
+        // Guarantees the suggestion bar remains populated with up to clampedMax helpful candidates even on key-repeat or typos.
+        if (candidates.Count < clampedMax && normalizedPrefix.Length >= 2)
+        {
+            var backoffPrefixes = BuildBackoffPrefixes(normalizedPrefix);
+            foreach (var backoffPrefix in backoffPrefixes)
+            {
+                if (candidates.Count >= clampedMax)
+                {
+                    break;
+                }
+
+                var backoffMatches = await _dictionaryService
+                    .QueryPrefixMatchesAsync(backoffPrefix, clampedMax * 2, cancellationToken)
+                    .ConfigureAwait(false);
+
+                foreach (var (word, frequency, _) in backoffMatches)
+                {
+                    if (candidates.Count >= clampedMax)
+                    {
+                        break;
+                    }
+
+                    var formattedWord = isEnglishPrefix
+                        ? FormatEnglishCompletionCasing(normalizedPrefix, word)
+                        : word;
+
+                    if (!seenFormattedWords.Add(formattedWord))
+                    {
+                        continue;
+                    }
+
+                    var score = Math.Round(Math.Clamp((frequency / 1000.0) * 0.75, 0.05, 0.79), 4);
+                    candidates.Add(new SuggestionCandidate
+                    {
+                        Word = formattedWord,
+                        Score = score,
+                        IsNextWordPrediction = false,
+                        ReplacePrefixLength = replaceScalarLength
+                    });
+                }
+            }
+        }
+
+        if (candidates.Count == 0)
         {
             // Always surface at least the literal prefix so the user can commit their custom word with 1 click
+            var fallbackWord = string.Equals(normalizedPrefix, "i", StringComparison.OrdinalIgnoreCase)
+                ? "I"
+                : normalizedPrefix;
+
             return
             [
                 new SuggestionCandidate
                 {
-                    Word = normalizedPrefix,
+                    Word = fallbackWord,
                     Score = 1.0,
                     IsNextWordPrediction = false,
                     ReplacePrefixLength = replaceScalarLength
@@ -50,32 +235,133 @@ public sealed class WordCompletionService
             ];
         }
 
-        var maxFrequency = Math.Max(1.0, matches.Max(m => m.Frequency));
-        var candidates = new List<SuggestionCandidate>(clampedMax);
+        return candidates;
+    }
 
-        foreach (var (word, frequency, isUserWord) in matches)
+    public static string FormatEnglishCompletionCasing(string userPrefix, string candidateWord)
+    {
+        if (string.IsNullOrEmpty(candidateWord) || string.IsNullOrEmpty(userPrefix))
         {
-            var baseScore = frequency / maxFrequency;
-            if (isUserWord)
-            {
-                baseScore = Math.Min(1.0, baseScore + 0.10);
-            }
+            return candidateWord;
+        }
 
-            candidates.Add(new SuggestionCandidate
-            {
-                Word = word,
-                Score = Math.Round(Math.Clamp(baseScore, 0.05, 1.0), 4),
-                IsNextWordPrediction = false,
-                ReplacePrefixLength = replaceScalarLength
-            });
+        if (string.Equals(candidateWord, "i", StringComparison.OrdinalIgnoreCase))
+        {
+            return "I";
+        }
 
-            if (candidates.Count >= clampedMax)
+        if (candidateWord.StartsWith("I'", StringComparison.OrdinalIgnoreCase))
+        {
+            return "I'" + candidateWord[2..];
+        }
+
+        var hasUpperStart = char.IsAsciiLetterUpper(userPrefix[0]);
+        if (!hasUpperStart)
+        {
+            return candidateWord;
+        }
+
+        // Check if user typed >= 2 letters in ALL CAPS (e.g. "HEL" -> "HELLO")
+        var letterCount = 0;
+        var allUpper = true;
+        foreach (var ch in userPrefix)
+        {
+            if (char.IsAsciiLetter(ch))
             {
-                break;
+                letterCount++;
+                if (!char.IsAsciiLetterUpper(ch))
+                {
+                    allUpper = false;
+                    break;
+                }
             }
         }
 
-        return candidates;
+        if (letterCount >= 2 && allUpper)
+        {
+            return candidateWord.ToUpperInvariant();
+        }
+
+        // Title Case preservation (e.g. "Hel" -> "Hello", "Ban" -> "Bangladesh")
+        return char.ToUpperInvariant(candidateWord[0]) + candidateWord[1..];
+    }
+
+    public static bool IsAsciiWord(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return false;
+        }
+
+        foreach (var ch in text)
+        {
+            if (ch > 0x7F)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static List<string> BuildBackoffPrefixes(string normalizedPrefix)
+    {
+        var result = new List<string>(4);
+        var collapsed = CollapseRepeatedCharacters(normalizedPrefix);
+        if (!string.Equals(collapsed, normalizedPrefix, StringComparison.Ordinal) && collapsed.Length >= 1)
+        {
+            result.Add(collapsed);
+        }
+
+        if (normalizedPrefix.Length >= 4)
+        {
+            var p3 = normalizedPrefix[..3];
+            if (!result.Contains(p3, StringComparer.Ordinal))
+            {
+                result.Add(p3);
+            }
+        }
+
+        if (normalizedPrefix.Length >= 3)
+        {
+            var p2 = normalizedPrefix[..2];
+            if (!result.Contains(p2, StringComparer.Ordinal))
+            {
+                result.Add(p2);
+            }
+        }
+
+        var p1 = normalizedPrefix[..1];
+        if (!result.Contains(p1, StringComparer.Ordinal))
+        {
+            result.Add(p1);
+        }
+
+        return result;
+    }
+
+    public static string CollapseRepeatedCharacters(string input)
+    {
+        if (string.IsNullOrEmpty(input) || input.Length <= 1)
+        {
+            return input;
+        }
+
+        var sb = new StringBuilder(input.Length);
+        var prev = input[0];
+        sb.Append(prev);
+
+        for (var i = 1; i < input.Length; i++)
+        {
+            var current = input[i];
+            if (char.ToLowerInvariant(current) != char.ToLowerInvariant(prev))
+            {
+                sb.Append(current);
+                prev = current;
+            }
+        }
+
+        return sb.ToString();
     }
 
     private static int CountUnicodeScalars(string text)

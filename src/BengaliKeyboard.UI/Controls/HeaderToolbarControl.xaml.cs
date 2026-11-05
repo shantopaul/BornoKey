@@ -1,12 +1,15 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using BengaliKeyboard.Core.Enums;
 
 namespace BengaliKeyboard.UI.Controls;
 
 /// <summary>
-/// Top draggable header bar containing the [ বাংলা | ENG ] language toggle and 4-mode window controls.
+/// Top draggable header bar containing the [ ☰ BornoKey ▾ ] Quick Menu,
+/// [ বাংলা | ENG ] language toggle, interactive [ − | 100% | + ] size increase/decrease &amp; drag-zoom controls,
+/// Quick Settings button, and 4-mode window controls.
 /// </summary>
 public partial class HeaderToolbarControl : UserControl
 {
@@ -24,6 +27,12 @@ public partial class HeaderToolbarControl : UserControl
             typeof(HeaderToolbarControl),
             new PropertyMetadata(null, OnToggleLanguageCommandChanged));
 
+    private bool _isDraggingScaleBadge;
+    private bool _hasMovedDuringScaleDrag;
+    private Point _scaleDragLastPoint;
+    private bool _isCompact;
+    private double _lastAvailableWidth = 850.0;
+
     public event EventHandler? CompactModeRequested;
 
     public event EventHandler? MinimalIconModeRequested;
@@ -31,6 +40,20 @@ public partial class HeaderToolbarControl : UserControl
     public event EventHandler? MinimizeRequested;
 
     public event EventHandler? CloseRequested;
+
+    public event EventHandler? SettingsRequested;
+
+    public event EventHandler? EmojiPanelRequested;
+
+    public event EventHandler? ClipboardPanelRequested;
+
+    public event EventHandler? IncreaseSizeRequested;
+
+    public event EventHandler? DecreaseSizeRequested;
+
+    public event EventHandler? ResetSizeRequested;
+
+    public event EventHandler<double>? DragScaleDeltaRequested;
 
     public LanguageMode ActiveLanguage
     {
@@ -51,7 +74,67 @@ public partial class HeaderToolbarControl : UserControl
 
     public void SetCompactButtonState(bool isCompact)
     {
-        CompactModeButton.Content = isCompact ? "Expand" : "Compact";
+        _isCompact = isCompact;
+        UpdateCompactButtonLabel();
+
+        if (MenuCompactModeItem is not null)
+        {
+            MenuCompactModeItem.Header = isCompact
+                ? "⤡  Switch to Expanded Mode (850×310)"
+                : "⤢  Switch to Compact Mode (620×230)";
+        }
+    }
+
+    public void ApplyResponsiveLayout(double availableWidth, double uniformScale = 1.0)
+    {
+        if (double.IsNaN(availableWidth) || availableWidth <= 0)
+        {
+            return;
+        }
+
+        _lastAvailableWidth = availableWidth;
+        BrandTitleBorder.Visibility = availableWidth < 540
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+
+        UpdateCompactButtonLabel();
+    }
+
+    private void UpdateCompactButtonLabel()
+    {
+        if (_lastAvailableWidth < 680)
+        {
+            CompactModeButton.Content = _isCompact ? "⤡" : "⤢";
+        }
+        else
+        {
+            CompactModeButton.Content = _isCompact ? "⤡ Expand" : "⤢ Compact";
+        }
+    }
+
+    public void OpenQuickMenu()
+    {
+        if (AppQuickMenu is null)
+        {
+            return;
+        }
+
+        if (MenuSwitchLanguageItem is not null)
+        {
+            MenuSwitchLanguageItem.Header = ActiveLanguage == LanguageMode.Bangla
+                ? "🌐  Switch to English (বাংলা ✓ → ENG)"
+                : "🌐  Switch to Bangla (ENG ✓ → বাংলা)";
+        }
+
+        AppQuickMenu.PlacementTarget = AppMenuButton;
+        AppQuickMenu.Placement = PlacementMode.Bottom;
+        AppQuickMenu.IsOpen = true;
+    }
+
+    public void SetScalePercentage(int percentage)
+    {
+        var clamped = Math.Clamp(percentage, 40, 250);
+        ScalePercentTextBlock.Text = $"{clamped}%";
     }
 
     private static void OnActiveLanguageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -70,6 +153,15 @@ public partial class HeaderToolbarControl : UserControl
         }
     }
 
+    private void OnDecreaseSizeClick(object sender, RoutedEventArgs e) =>
+        DecreaseSizeRequested?.Invoke(this, EventArgs.Empty);
+
+    private void OnIncreaseSizeClick(object sender, RoutedEventArgs e) =>
+        IncreaseSizeRequested?.Invoke(this, EventArgs.Empty);
+
+    private void OnSettingsClick(object sender, RoutedEventArgs e) =>
+        SettingsRequested?.Invoke(this, EventArgs.Empty);
+
     private void OnCompactClick(object sender, RoutedEventArgs e) =>
         CompactModeRequested?.Invoke(this, EventArgs.Empty);
 
@@ -81,4 +173,90 @@ public partial class HeaderToolbarControl : UserControl
 
     private void OnCloseClick(object sender, RoutedEventArgs e) =>
         CloseRequested?.Invoke(this, EventArgs.Empty);
+
+    private void OnAppMenuButtonClick(object sender, RoutedEventArgs e)
+    {
+        OpenQuickMenu();
+        e.Handled = true;
+    }
+
+    private void OnBrandTitleMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        OpenQuickMenu();
+        e.Handled = true;
+    }
+
+    private void OnBrandTitleMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+    }
+
+    private void OnMenuSwitchLanguageClick(object sender, RoutedEventArgs e)
+    {
+        if (ToggleLanguageCommand?.CanExecute(null) == true)
+        {
+            ToggleLanguageCommand.Execute(null);
+        }
+    }
+
+    private void OnMenuEmojiClick(object sender, RoutedEventArgs e) =>
+        EmojiPanelRequested?.Invoke(this, EventArgs.Empty);
+
+    private void OnMenuClipboardClick(object sender, RoutedEventArgs e) =>
+        ClipboardPanelRequested?.Invoke(this, EventArgs.Empty);
+
+    private void OnMenuResetSizeClick(object sender, RoutedEventArgs e) =>
+        ResetSizeRequested?.Invoke(this, EventArgs.Empty);
+
+    private void OnScaleBadgeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        _isDraggingScaleBadge = true;
+        _hasMovedDuringScaleDrag = false;
+        _scaleDragLastPoint = PointToScreen(e.GetPosition(this));
+        _ = ScaleDragBadge.CaptureMouse();
+        e.Handled = true;
+    }
+
+    private void OnScaleBadgeMouseMove(object sender, MouseEventArgs e)
+    {
+        if (!_isDraggingScaleBadge || e.LeftButton != MouseButtonState.Pressed)
+        {
+            return;
+        }
+
+        var currentScreenPoint = PointToScreen(e.GetPosition(this));
+        var deltaX = currentScreenPoint.X - _scaleDragLastPoint.X;
+        if (Math.Abs(deltaX) >= 4.0)
+        {
+            _hasMovedDuringScaleDrag = true;
+            _scaleDragLastPoint = currentScreenPoint;
+            var scaleDelta = Math.Clamp(deltaX / 500.0, -0.12, 0.12);
+            DragScaleDeltaRequested?.Invoke(this, scaleDelta);
+        }
+
+        e.Handled = true;
+    }
+
+    private void OnScaleBadgeMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if (!_isDraggingScaleBadge)
+        {
+            return;
+        }
+
+        _isDraggingScaleBadge = false;
+        ScaleDragBadge.ReleaseMouseCapture();
+
+        if (!_hasMovedDuringScaleDrag)
+        {
+            ResetSizeRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        e.Handled = true;
+    }
+
+    private void OnScaleBadgeLostMouseCapture(object sender, MouseEventArgs e)
+    {
+        _isDraggingScaleBadge = false;
+    }
 }

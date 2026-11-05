@@ -35,14 +35,14 @@
             BorderThickness="1"
             CornerRadius="8"
             ClipToBounds="True">
-        <!-- Proportional Vector Scaling across Expanded (850x310) and Compact (620x230) sizes -->
-        <Viewbox Stretch="Fill">
-            <Grid Width="850" Height="310">
+        <Grid>
+            <!-- Responsive Proportional Layout (Zero Non-Uniform Viewbox Font/Icon Distortion) -->
+            <Grid>
                 <Grid.RowDefinitions>
-                    <!-- Row 0: Draggable Header Toolbar (32px) -->
-                    <RowDefinition Height="32" />
-                    <!-- Row 1: Suggestion Bar (36px) -->
-                    <RowDefinition Height="36" />
+                    <!-- Row 0: Draggable Header Toolbar -->
+                    <RowDefinition Height="Auto" />
+                    <!-- Row 1: Responsive Suggestion Bar -->
+                    <RowDefinition Height="Auto" />
                     <!-- Row 2: Proportional Data-Driven Keyboard Layout Grid -->
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
@@ -53,6 +53,13 @@
                                                ActiveLanguage="{Binding ActiveLanguage}"
                                                ToggleLanguageCommand="{Binding ToggleLanguageCommand}"
                                                MouseLeftButtonDown="OnHeaderMouseLeftButtonDown"
+                                               DecreaseSizeRequested="OnHeaderDecreaseSizeRequested"
+                                               IncreaseSizeRequested="OnHeaderIncreaseSizeRequested"
+                                               ResetSizeRequested="OnHeaderResetSizeRequested"
+                                               DragScaleDeltaRequested="OnHeaderDragScaleDeltaRequested"
+                                               EmojiPanelRequested="OnHeaderEmojiPanelRequested"
+                                               ClipboardPanelRequested="OnHeaderClipboardPanelRequested"
+                                               SettingsRequested="OnHeaderSettingsRequested"
                                                CompactModeRequested="OnHeaderCompactModeRequested"
                                                MinimalIconModeRequested="OnHeaderMinimalIconModeRequested"
                                                MinimizeRequested="OnHeaderMinimizeRequested"
@@ -69,6 +76,24 @@
                       Grid.Row="2"
                       Margin="4,3,4,5" />
             </Grid>
-        </Viewbox>
+
+            <!-- Bottom-Right Corner Interactive Drag-Resize Grip (◢) -->
+            <Border HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Width="16"
+                    Height="16"
+                    Background="Transparent"
+                    Cursor="SizeNWSE"
+                    ToolTip="Drag Corner or Any Window Edge to Resize Keyboard"
+                    MouseLeftButtonDown="OnCornerResizeGripMouseLeftButtonDown">
+                <TextBlock Text="◢"
+                           FontSize="10"
+                           Foreground="{DynamicResource Brush.Text.Muted}"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Bottom"
+                           Margin="0,0,2,1"
+                           IsHitTestVisible="False" />
+            </Border>
+        </Grid>
     </Border>
 </Window>

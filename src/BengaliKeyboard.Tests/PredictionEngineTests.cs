@@ -160,6 +160,88 @@ public sealed class PredictionEngineTests : IDisposable
         Assert.Contains(nextAfterAmi, c => c.Word == "বর্ণকী");
     }
 
+    [Fact]
+    public async Task EnglishPrediction_CompletionsContractionsCasingAndNextWordNGrams_WorkSeamlessly()
+    {
+        await _databaseInitializer.InitializeAsync();
+        await _settingsService.LoadAsync();
+
+        var rankingService = CreatePredictionService();
+        await rankingService.InitializeAsync();
+
+        var messenger = new StrongReferenceMessenger();
+        var unicodeProcessor = new UnicodeProcessor();
+        var fakeInjector = new FakeTextInjector();
+
+        using var inputEngine = new BengaliInputEngine(
+            unicodeProcessor,
+            fakeInjector,
+            rankingService,
+            _settingsService,
+            messenger);
+
+        using var suggestionBarVm = new SuggestionBarViewModel(inputEngine, messenger);
+
+        // 1. Switch to English mode and verify starter suggestions switch to English
+        inputEngine.SetLanguage(LanguageMode.English);
+        Assert.Equal(LanguageMode.English, inputEngine.CurrentLanguage);
+        Assert.Contains(suggestionBarVm.Candidates, c => c.Word == "I");
+        Assert.Contains(suggestionBarVm.Candidates, c => c.Word == "Hello");
+        Assert.Contains(suggestionBarVm.Candidates, c => c.Word == "Thank");
+
+        // 2. Lowercase prefix "hel" -> ["hello", "help", "helpful"]
+        var lowerCompletions = await rankingService.GetWordCompletionsAsync("hel", maxResults: 4);
+        var lowerWords = lowerCompletions.Select(c => c.Word).ToList();
+        Assert.Contains("hello", lowerWords);
+        Assert.Contains("help", lowerWords);
+        Assert.Contains("helpful", lowerWords);
+
+        // 3. Title Case prefix "Hel" -> ["Hello", "Help", "Helpful"] and ALL CAPS "HEL" -> ["HELLO", "HELP", "HELPFUL"]
+        var titleCompletions = await rankingService.GetWordCompletionsAsync("Hel", maxResults: 4);
+        Assert.Contains(titleCompletions, c => c.Word == "Hello");
+        Assert.Contains(titleCompletions, c => c.Word == "Help");
+
+        var upperCompletions = await rankingService.GetWordCompletionsAsync("HEL", maxResults: 4);
+        Assert.Contains(upperCompletions, c => c.Word == "HELLO");
+
+        // 4. Contractions & shorthands: "dont" -> "don't", "im" -> "I'm", "plz" -> "please", and repeated "hhhh" -> 4 English 'h' words
+        var dontCompletions = await rankingService.GetWordCompletionsAsync("dont", maxResults: 4);
+        Assert.Equal("don't", dontCompletions[0].Word);
+
+        var imCompletions = await rankingService.GetWordCompletionsAsync("im", maxResults: 4);
+        Assert.Equal("I'm", imCompletions[0].Word);
+
+        var plzCompletions = await rankingService.GetWordCompletionsAsync("plz", maxResults: 4);
+        Assert.Equal("please", plzCompletions[0].Word);
+
+        var repeatedHCompletions = await rankingService.GetWordCompletionsAsync("hhhh", maxResults: 4);
+        Assert.Equal(4, repeatedHCompletions.Count);
+        Assert.Contains(repeatedHCompletions, c => c.Word == "hello");
+        Assert.All(repeatedHCompletions, c => Assert.Equal(4, c.ReplacePrefixLength));
+
+        // 5. Type "T", "h", "a" in English mode and select "Thank"
+        await inputEngine.ProcessKeyAsync(new KeyDefinition { Id = "T", UnicodeOutput = "t", AlternateOutput = "T", KeyType = KeyType.Character }, isShifted: true);
+        await inputEngine.ProcessKeyAsync(new KeyDefinition { Id = "H", UnicodeOutput = "h", AlternateOutput = "H", KeyType = KeyType.Character });
+        await inputEngine.ProcessKeyAsync(new KeyDefinition { Id = "A", UnicodeOutput = "a", AlternateOutput = "A", KeyType = KeyType.Character });
+
+        Assert.Equal("Tha", inputEngine.CurrentWordBuffer);
+        Assert.Contains(suggestionBarVm.Candidates, c => c.Word == "Thank");
+
+        var thankCandidate = suggestionBarVm.Candidates.First(c => c.Word == "Thank");
+        await suggestionBarVm.SelectCandidateCommand.ExecuteAsync(thankCandidate);
+
+        Assert.Equal(3, fakeInjector.LastReplaceBackspaceCount);
+        Assert.Equal("Thank ", fakeInjector.LastReplacementText);
+
+        // Next-word predictions after "Thank" (case-insensitive bigram lookup for "thank") should surface "you"
+        Assert.Contains(suggestionBarVm.Candidates, c => c.Word == "you" && c.IsNextWordPrediction);
+
+        // 6. Trigram next-word prediction: "How" + "are" -> "you"
+        var trigramNext = await rankingService.GetNextWordPredictionsAsync("How", "are", maxResults: 4);
+        Assert.NotEmpty(trigramNext);
+        Assert.Equal("you", trigramNext[0].Word);
+    }
+
     private SuggestionRankingService CreatePredictionService()
     {
         var dictionaryService = new DictionaryService(_connectionFactory);

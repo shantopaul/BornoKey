@@ -173,8 +173,26 @@ public sealed class EmojiUsageTests : IDisposable
         Assert.Equal("❤️‍🔥", restartedViewModel.DisplayedEmojis[0].Emoji);
         Assert.Equal(1, restartedViewModel.DisplayedEmojis[0].UsageCount);
 
+        // Verify CategoryTabs active highlight and PopularEmojis fallback when history is sparse (< 16 items)
+        Assert.Equal(10, restartedViewModel.CategoryTabs.Count);
+        Assert.True(restartedViewModel.CategoryTabs[0].IsSelected);
+        Assert.Equal("🕒", restartedViewModel.CategoryTabs[0].Icon);
+        Assert.True(restartedViewModel.ShowPopularFallbackSection);
+        Assert.NotEmpty(restartedViewModel.PopularEmojis);
+        Assert.DoesNotContain(restartedViewModel.PopularEmojis, x => x.Emoji == "❤️‍🔥");
+
+        // Verify live hover preview updates
+        restartedViewModel.SetHoveredEmoji(heartOnFire);
+        Assert.Equal("❤️‍🔥", restartedViewModel.PreviewEmoji);
+        Assert.Equal("Heart on Fire", restartedViewModel.PreviewTitle);
+        Assert.Contains("ভালোবাসা", restartedViewModel.PreviewKeywords, StringComparison.Ordinal);
+
         // Switching to "Symbols" and executing ClearHistoryCommand resets UsageCount on displayed items as well
         await restartedViewModel.SelectCategoryCommand.ExecuteAsync("Symbols");
+        Assert.False(restartedViewModel.CategoryTabs[0].IsSelected);
+        Assert.True(restartedViewModel.CategoryTabs.Single(t => t.CategoryName == "Symbols").IsSelected);
+        Assert.False(restartedViewModel.ShowPopularFallbackSection);
+
         var symbolFire = restartedViewModel.DisplayedEmojis.First(x => x.Emoji == "❤️‍🔥");
         Assert.Equal(1, symbolFire.UsageCount);
 
@@ -195,6 +213,40 @@ public sealed class EmojiUsageTests : IDisposable
         Assert.NotEmpty(allEmojis);
         Assert.True(repository.TryGetByEmoji("😀", out var grinning));
         Assert.NotNull(grinning);
+    }
+
+    [Fact]
+    public void ColorEmojiRenderer_RendersFullColorPixelsForEmojisAndCountryFlags()
+    {
+        foreach (var glyph in new[] { "😂", "❤️", "🔥", "🇧🇩", "🇺🇸" })
+        {
+            var bitmap = BengaliKeyboard.UI.Controls.ColorEmojiRenderer.GetOrCreateEmojiBitmap(glyph, 64);
+            Assert.NotNull(bitmap);
+            Assert.Equal(64, bitmap!.PixelWidth);
+            Assert.Equal(64, bitmap.PixelHeight);
+
+            var stride = bitmap.PixelWidth * 4;
+            var pixels = new byte[stride * bitmap.PixelHeight];
+            bitmap.CopyPixels(pixels, stride, 0);
+
+            var colorfulPixelCount = 0;
+            for (var i = 0; i < pixels.Length; i += 4)
+            {
+                var b = pixels[i];
+                var g = pixels[i + 1];
+                var r = pixels[i + 2];
+                var a = pixels[i + 3];
+
+                if (a > 32 && (Math.Abs(r - g) > 25 || Math.Abs(r - b) > 25 || Math.Abs(g - b) > 25))
+                {
+                    colorfulPixelCount++;
+                }
+            }
+
+            Assert.True(
+                colorfulPixelCount > 20,
+                $"Expected full-color pixels for '{glyph}', but found only {colorfulPixelCount} colorful pixels.");
+        }
     }
 
     private EmojiUsageService CreateEmojiService()

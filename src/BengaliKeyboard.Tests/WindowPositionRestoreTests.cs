@@ -8,6 +8,7 @@ using BengaliKeyboard.Input.TSF;
 using BengaliKeyboard.Layouts;
 using BengaliKeyboard.Storage;
 using BengaliKeyboard.Storage.Configuration;
+using BengaliKeyboard.UI.Windows;
 using BengaliKeyboard.Windows;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Win32;
@@ -269,6 +270,69 @@ public sealed class WindowPositionRestoreTests : IDisposable
 
         Assert.True(hotkeyService.DispatchHotkeyById(GlobalHotkeyService.HotkeyIdToggleVisibility));
         Assert.True(visibilityToggled);
+    }
+
+    [Fact]
+    public void NonActivatingWindowResizer_ShouldHitTestAllEightEdgesAndCorners_AndClampSteppedAndDraggedDimensions()
+    {
+        // 1. Hit-testing all 8 edges/corners + interior
+        Assert.Equal(ResizeEdge.TopLeft, NonActivatingWindowResizer.HitTestResizeEdge(new Point(2, 2), 850, 310));
+        Assert.Equal(ResizeEdge.TopRight, NonActivatingWindowResizer.HitTestResizeEdge(new Point(848, 2), 850, 310));
+        Assert.Equal(ResizeEdge.BottomLeft, NonActivatingWindowResizer.HitTestResizeEdge(new Point(2, 308), 850, 310));
+        Assert.Equal(ResizeEdge.BottomRight, NonActivatingWindowResizer.HitTestResizeEdge(new Point(848, 308), 850, 310));
+        Assert.Equal(ResizeEdge.Left, NonActivatingWindowResizer.HitTestResizeEdge(new Point(2, 150), 850, 310));
+        Assert.Equal(ResizeEdge.Right, NonActivatingWindowResizer.HitTestResizeEdge(new Point(848, 150), 850, 310));
+        Assert.Equal(ResizeEdge.Top, NonActivatingWindowResizer.HitTestResizeEdge(new Point(400, 2), 850, 310));
+        Assert.Equal(ResizeEdge.Bottom, NonActivatingWindowResizer.HitTestResizeEdge(new Point(400, 308), 850, 310));
+        Assert.Equal(ResizeEdge.None, NonActivatingWindowResizer.HitTestResizeEdge(new Point(400, 150), 850, 310));
+
+        // 2. Proportional [+] / [-] step scaling and scale percentage calculation
+        var (increasedW, increasedH) = NonActivatingWindowResizer.CalculateSteppedSize(
+            850, 310, NonActivatingWindowResizer.StepScaleFactor, 440, 1600, 180, 600);
+        Assert.Equal(918, increasedW);
+        Assert.Equal(335, increasedH);
+        Assert.Equal(108, NonActivatingWindowResizer.CalculateScalePercentage(increasedW, 850));
+
+        var (decreasedW, decreasedH) = NonActivatingWindowResizer.CalculateSteppedSize(
+            850, 310, -NonActivatingWindowResizer.StepScaleFactor, 440, 1600, 180, 600);
+        Assert.Equal(782, decreasedW);
+        Assert.Equal(285, decreasedH);
+        Assert.Equal(92, NonActivatingWindowResizer.CalculateScalePercentage(decreasedW, 850));
+
+        // 3. Drag resize bounds calculation & min/max clamping
+        var startBounds = new Rect(400, 600, 850, 310);
+        var draggedBottomRight = NonActivatingWindowResizer.CalculateResizedBounds(
+            ResizeEdge.BottomRight, startBounds, new Vector(150, 70), 440, 1600, 180, 600);
+        Assert.Equal(new Rect(400, 600, 1000, 380), draggedBottomRight);
+
+        var draggedTopLeftClampedToMin = NonActivatingWindowResizer.CalculateResizedBounds(
+            ResizeEdge.TopLeft, startBounds, new Vector(900, 900), 440, 1600, 180, 600);
+        Assert.Equal(440, draggedTopLeftClampedToMin.Width);
+        Assert.Equal(180, draggedTopLeftClampedToMin.Height);
+        Assert.Equal(startBounds.Right, draggedTopLeftClampedToMin.Right);
+        Assert.Equal(startBounds.Bottom, draggedTopLeftClampedToMin.Bottom);
+    }
+
+    [Fact]
+    public void ComputeUniformScale_ShouldMaintainAspectRatioFreeScaling_AcrossAllWindowSizes()
+    {
+        // Default 850x310 -> 1.0 uniform scale
+        Assert.Equal(1.0, KeyboardWindow.ComputeUniformScale(850, 310), precision: 3);
+
+        // Wide-short 1600x310 (188% width, 100% height) -> must stay 1.0 so glyphs never stretch horizontally
+        Assert.Equal(1.0, KeyboardWindow.ComputeUniformScale(1600, 310), precision: 3);
+
+        // Narrow-tall 518x310 (61% width, 100% height) -> scales uniformly by 518/850 (~0.609) without squishing
+        var narrowScale = KeyboardWindow.ComputeUniformScale(518, 310);
+        Assert.InRange(narrowScale, 0.60, 0.62);
+
+        // Compact 440x180 -> bounded safely above 0.55
+        var minScale = KeyboardWindow.ComputeUniformScale(440, 180);
+        Assert.InRange(minScale, 0.55, 0.60);
+
+        // Ultrawide tall 1600x600 -> bounded safely at <= 1.85
+        var maxScale = KeyboardWindow.ComputeUniformScale(1600, 600);
+        Assert.InRange(maxScale, 1.80, 1.85);
     }
 
     [Fact]

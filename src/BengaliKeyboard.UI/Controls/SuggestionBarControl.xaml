@@ -12,9 +12,11 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border Background="{DynamicResource Brush.Header.Background}"
+    <Border x:Name="RootSuggestionBorder"
+            Background="{DynamicResource Brush.Header.Background}"
             BorderBrush="{DynamicResource Brush.Window.Border}"
             BorderThickness="0,0,0,1"
+            Height="36"
             Padding="6,2">
         <ItemsControl x:Name="CandidatesItemsControl"
                       Focusable="False">
@@ -29,7 +31,8 @@
                             Click="OnCandidateButtonClick"
                             Tag="{Binding}">
                         <TextBlock Text="{Binding Word}"
-                                   Style="{StaticResource Style.Text.Suggestion}" />
+                                   Style="{StaticResource Style.Text.Suggestion}"
+                                   FontSize="{Binding CandidateFontSize, RelativeSource={RelativeSource AncestorType=UserControl}}" />
                     </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

@@ -72,21 +72,39 @@
                 <Setter Property="Background" Value="{DynamicResource Brush.Accent.Primary}" />
                 <Setter Property="Foreground" Value="#FFFFFF" />
                 <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="Padding" Value="14,7" />
+                <Setter Property="Padding" Value="16,7" />
                 <Setter Property="FontSize" Value="12.5" />
                 <Setter Property="FontWeight" Value="SemiBold" />
                 <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="BtnBorder"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="6"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="BtnBorder" Property="Background" Value="{DynamicResource Brush.Accent.Hover}" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="BtnBorder" Property="Background" Value="{DynamicResource Brush.Accent.Subtle}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
 
-            <Style x:Key="Style.Button.SecondaryAction" TargetType="Button">
-                <Setter Property="Background" Value="{DynamicResource Brush.Key.Special.Background}" />
-                <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
-                <Setter Property="BorderBrush" Value="{DynamicResource Brush.Window.Border}" />
-                <Setter Property="BorderThickness" Value="1" />
+            <Style x:Key="Style.Button.SecondaryAction" TargetType="Button" BasedOn="{StaticResource Style.Button.ToolbarPill}">
                 <Setter Property="Padding" Value="12,6" />
                 <Setter Property="FontSize" Value="12" />
-                <Setter Property="Cursor" Value="Hand" />
             </Style>
+
+            <Style TargetType="TextBox" BasedOn="{StaticResource Style.TextBox.ModernInput}" />
         </ResourceDictionary>
     </Window.Resources>
 

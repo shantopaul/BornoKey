@@ -16,7 +16,8 @@
     <Border Background="{DynamicResource Brush.Header.Background}"
             BorderBrush="{DynamicResource Brush.Window.Border}"
             BorderThickness="0,0,0,1"
-            Padding="10,0,6,0">
+            Height="32"
+            Padding="8,0,6,0">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -25,22 +26,86 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <!-- Brand & Drag Handle -->
+            <!-- Top-Left Hamburger Quick Menu [ ☰ ] + Brand & Drag Handle -->
             <StackPanel Grid.Column="0"
                         Orientation="Horizontal"
                         VerticalAlignment="Center"
-                        Margin="0,0,12,0">
-                <TextBlock Text="≡"
-                           Foreground="{DynamicResource Brush.Text.Secondary}"
-                           FontSize="15"
-                           Margin="0,0,6,0"
-                           VerticalAlignment="Center" />
-                <TextBlock Text="BornoKey"
-                           Foreground="{DynamicResource Brush.Text.Primary}"
-                           FontFamily="{StaticResource FontFamily.English}"
-                           FontWeight="SemiBold"
-                           FontSize="13"
-                           VerticalAlignment="Center" />
+                        Margin="0,0,10,0">
+                <Button x:Name="AppMenuButton"
+                        Width="26"
+                        Height="22"
+                        Margin="0,0,6,0"
+                        Padding="0"
+                        Style="{StaticResource Style.Button.HeaderAction}"
+                        ToolTip="Open BornoKey Quick Menu (Language, Emoji, Clipboard, Modes, Settings)"
+                        Click="OnAppMenuButtonClick">
+                    <Button.ContextMenu>
+                        <ContextMenu x:Name="AppQuickMenu"
+                                     Placement="Bottom">
+                            <MenuItem x:Name="MenuSwitchLanguageItem"
+                                      Header="🌐  Switch Language (বাংলা ↔ ENG)"
+                                      InputGestureText="Ctrl+Space"
+                                      Click="OnMenuSwitchLanguageClick" />
+                            <MenuItem Header="😀  Emoji &amp; Symbols Keyboard"
+                                      InputGestureText="Ctrl+Shift+E"
+                                      Click="OnMenuEmojiClick" />
+                            <MenuItem Header="📋  Clipboard History Manager"
+                                      InputGestureText="Ctrl+Shift+V"
+                                      Click="OnMenuClipboardClick" />
+                            <Separator />
+                            <MenuItem x:Name="MenuCompactModeItem"
+                                      Header="⤢  Toggle Compact / Expanded Mode"
+                                      Click="OnCompactClick" />
+                            <MenuItem Header="🔹  Minimal Floating [বাংলা] Badge"
+                                      Click="OnMinimalIconClick" />
+                            <Separator />
+                            <MenuItem Header="＋  Increase Keyboard Size (+8%)"
+                                      InputGestureText="Ctrl+Wheel Up"
+                                      Click="OnIncreaseSizeClick" />
+                            <MenuItem Header="－  Decrease Keyboard Size (−8%)"
+                                      InputGestureText="Ctrl+Wheel Down"
+                                      Click="OnDecreaseSizeClick" />
+                            <MenuItem Header="↺  Reset Keyboard Size (100%)"
+                                      Click="OnMenuResetSizeClick" />
+                            <Separator />
+                            <MenuItem Header="⚙  Settings &amp; Customization..."
+                                      Click="OnSettingsClick" />
+                            <MenuItem Header="—  Hide Keyboard to System Tray"
+                                      InputGestureText="Ctrl+Shift+K"
+                                      Click="OnMinimizeClick" />
+                            <MenuItem Header="✕  Close Keyboard Window"
+                                      Click="OnCloseClick" />
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                    <TextBlock Text="☰"
+                               Foreground="{DynamicResource Brush.Accent.Primary}"
+                               FontSize="13"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </Button>
+
+                <Border x:Name="BrandTitleBorder"
+                        Background="Transparent"
+                        Padding="2,2,4,2"
+                        Cursor="Hand"
+                        ToolTip="Click to Open Quick Menu • Drag to Move Keyboard"
+                        MouseLeftButtonDown="OnBrandTitleMouseLeftButtonDown"
+                        MouseLeftButtonUp="OnBrandTitleMouseLeftButtonUp">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="BornoKey"
+                                   Foreground="{DynamicResource Brush.Text.Primary}"
+                                   FontFamily="{StaticResource FontFamily.English}"
+                                   FontWeight="SemiBold"
+                                   FontSize="13"
+                                   VerticalAlignment="Center" />
+                        <TextBlock Text="▾"
+                                   Foreground="{DynamicResource Brush.Text.Muted}"
+                                   FontSize="9.5"
+                                   Margin="4,1,0,0"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </Border>
             </StackPanel>
 
             <!-- [ বাংলা | ENG ] Pill Switch -->
@@ -48,31 +113,103 @@
                                             Grid.Column="1"
                                             VerticalAlignment="Center" />
 
-            <!-- Right Window & 4-Mode Action Controls -->
+            <!-- Right Window, Zoom/Drag-Scale & 4-Mode Action Controls -->
             <StackPanel Grid.Column="3"
                         Orientation="Horizontal"
                         VerticalAlignment="Center">
+
+                <!-- Size Decrease [ − ] / Interactive Drag-Zoom [ 100% ] / Size Increase [ + ] Pill Group -->
+                <Border Background="{DynamicResource Brush.Window.Background}"
+                        BorderBrush="{DynamicResource Brush.Window.Border}"
+                        BorderThickness="1"
+                        CornerRadius="5"
+                        Padding="2,1"
+                        Margin="0,0,5,0"
+                        VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="DecreaseSizeButton"
+                                Content="−"
+                                Width="22"
+                                Height="20"
+                                Margin="0"
+                                Padding="0"
+                                FontSize="13"
+                                FontWeight="Bold"
+                                Style="{StaticResource Style.Button.HeaderAction}"
+                                BorderThickness="0"
+                                ToolTip="Decrease Keyboard Size (−8% or Ctrl + Scroll Down)"
+                                Click="OnDecreaseSizeClick" />
+
+                        <Border x:Name="ScaleDragBadge"
+                                Background="Transparent"
+                                Padding="6,2"
+                                Cursor="SizeWE"
+                                ToolTip="Drag Left/Right to Resize Smoothly • Click to Reset to 100%"
+                                MouseLeftButtonDown="OnScaleBadgeMouseLeftButtonDown"
+                                MouseMove="OnScaleBadgeMouseMove"
+                                MouseLeftButtonUp="OnScaleBadgeMouseLeftButtonUp"
+                                LostMouseCapture="OnScaleBadgeLostMouseCapture">
+                            <TextBlock x:Name="ScalePercentTextBlock"
+                                       Text="100%"
+                                       Foreground="{DynamicResource Brush.Text.Secondary}"
+                                       FontFamily="{StaticResource FontFamily.Mono}"
+                                       FontSize="10.5"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center" />
+                        </Border>
+
+                        <Button x:Name="IncreaseSizeButton"
+                                Content="+"
+                                Width="22"
+                                Height="20"
+                                Margin="0"
+                                Padding="0"
+                                FontSize="13"
+                                FontWeight="Bold"
+                                Style="{StaticResource Style.Button.HeaderAction}"
+                                BorderThickness="0"
+                                ToolTip="Increase Keyboard Size (+8% or Ctrl + Scroll Up)"
+                                Click="OnIncreaseSizeClick" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Toggle Compact / Expanded Mode -->
                 <Button x:Name="CompactModeButton"
-                        Content="Compact"
+                        Content="⤢ Compact"
                         Style="{StaticResource Style.Button.HeaderAction}"
-                        ToolTip="Toggle Compact / Expanded Mode"
+                        ToolTip="Toggle Compact (620×230) / Expanded (850×310) Mode"
                         Click="OnCompactClick" />
+
+                <!-- Shrink to Minimal Floating [বাংলা] Icon -->
                 <Button x:Name="MinimalIconButton"
                         Content="বাংলা"
+                        FontFamily="{StaticResource FontFamily.Bengali}"
+                        FontWeight="SemiBold"
                         Style="{StaticResource Style.Button.HeaderAction}"
-                        ToolTip="Shrink to Minimal Floating [বাংলা] Icon"
+                        ToolTip="Shrink to Minimal Floating [বাংলা] Desktop Badge"
                         Click="OnMinimalIconClick" />
+
+                <!-- Open Settings & Customization Dialog -->
+                <Button x:Name="SettingsButton"
+                        Content="⚙"
+                        Width="26"
+                        Style="{StaticResource Style.Button.HeaderAction}"
+                        ToolTip="Open Settings &amp; Customization"
+                        Click="OnSettingsClick" />
+
+                <!-- Hide to System Tray -->
                 <Button x:Name="MinimizeButton"
                         Content="—"
                         Width="26"
                         Style="{StaticResource Style.Button.HeaderAction}"
-                        ToolTip="Hide Keyboard to System Tray"
+                        ToolTip="Hide Keyboard to System Tray (Ctrl+Shift+K)"
                         Click="OnMinimizeClick" />
+
+                <!-- Close Application / Hide -->
                 <Button x:Name="CloseButton"
                         Content="✕"
-                        Width="26"
-                        Style="{StaticResource Style.Button.HeaderAction}"
-                        ToolTip="Close BornoKey"
+                        Style="{StaticResource Style.Button.HeaderClose}"
+                        ToolTip="Close Keyboard Window"
                         Click="OnCloseClick" />
             </StackPanel>
         </Grid>
