@@ -6,8 +6,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Deterministic>true</Deterministic>
-    <Company>BornoKey Open Source</Company>
-    <Product>BornoKey — Ridmik-Style Bengali Virtual Keyboard</Product>
+    <Authors>Shanto Paul</Authors>
+    <Company>Shanto Paul • BornoKey Open Source</Company>
+    <Product>BornoKey — Ridmik-Style Bengali Virtual Keyboard for Windows</Product>
+    <Description>Lightweight, 100% offline Ridmik-Style Bengali (বাংলা) and English Virtual &amp; Physical Keyboard for Windows 10/11.</Description>
+    <Copyright>Copyright © 2026 Shanto Paul &amp; BornoKey Contributors. Licensed under the MIT License.</Copyright>
+    <PackageProjectUrl>https://github.com/shantopaul/BornoKey</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/shantopaul/BornoKey.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 </Project>
