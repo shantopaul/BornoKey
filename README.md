@@ -15,13 +15,17 @@
 A lightweight, offline-first, system-wide Bengali (`বাংলা`) and English (`ENG`) Unicode virtual and physical keyboard featuring real-time bilingual word completion, next-word n-gram prediction, a Direct2D full-color emoji keyboard with usage tracking, and a built-in DPAPI-encrypted privacy-first clipboard manager.
 
 [Features](#-key-features) •
-[Visual Preview](#-keyboard-preview--window-modes) •
+[Screenshots](#-screenshots--visual-preview) •
 [Shortcuts](#-default-global-keyboard-shortcuts) •
 [Architecture](#-system-architecture--tech-stack) •
 [Getting Started](#-getting-started) •
 [Documentation](#-project-documentation--security-specs) •
 [Roadmap](#-development-roadmap) •
 [Contributing](#-contributing)
+
+<br />
+
+<img src="./assets/image/preview/01-bangla-ridmik-virtual-keyboard.jpg" alt="BornoKey Ridmik-Style Bengali Virtual Keyboard Preview" width="850" />
 
 </div>
 
@@ -53,9 +57,49 @@ Unlike web wrappers or UI-only demos, BornoKey is engineered with **C# 13 / .NET
 
 ---
 
-## 🖥️ Keyboard Preview & Window Modes
+## 🖼️ Screenshots & Visual Preview
 
-### Mode A: Expanded Floating Keyboard (`850 × 310 px` Default — All-Size Responsive `440×180` to `1600×600`)
+### 1. Authentic Ridmik-Style Bengali Virtual Keyboard (`[ বাংলা ]` Mode)
+<div align="center">
+  <img src="./assets/image/preview/01-bangla-ridmik-virtual-keyboard.jpg" alt="1. Authentic Ridmik-Style Bengali Virtual Keyboard (Bangla Mode)" width="850" />
+</div>
+
+> **Direct Bengali Unicode Typing & Smart Suggestion Bar (`01-bangla-ridmik-virtual-keyboard.jpg`):**  
+> Displays the signature Ridmik dark-slate keycaps with primary & secondary Shift/Right-click glyphs (`ঙ / ং`, `য / য়`, `্র / ৃ`, `া / আ`, `ি / ই`, `ু / উ`), a dedicated Bengali number row (`১–০`), real-time offline Bengali word completion & next-word predictions (`আমার`, `আমি`, `বাংলা`, `ভালো`), full-color Direct2D emoji trigger (`😀`), and the adaptive top toolbar (`[ ☰ ] BornoKey ▾`, `[ বাংলা | ENG ]`, `[ − | 101% | + ]`, `[⤢ Compact]`, `[বাংলা]`, `[⚙]`).
+
+---
+
+### 2. English QWERTY Virtual Keyboard with Smart Predictive Text (`[ ENG ]` Mode)
+<div align="center">
+  <img src="./assets/image/preview/02-english-qwerty-predictive-keyboard.jpg" alt="2. English QWERTY Virtual Keyboard with Smart Predictive Text (ENG Mode)" width="850" />
+</div>
+
+> **Instant English Mode & Predictive Suggestions (`02-english-qwerty-predictive-keyboard.jpg`):**  
+> Switching the header pill or pressing `Ctrl + Space` transitions BornoKey to full **English QWERTY (`[ ENG ]`)** with live English starter/completion suggestions (`I`, `Hello`, `Thank`, `The`), automatic apostrophe contraction expansion (`dont` → `don't`, `im` → `I'm`), chat shorthand expansion (`plz` → `please`), and secondary uppercase/symbol hints (`1 / !`, `q / Q`, `a / A`).
+
+---
+
+### 3. 8-Section Settings & Customization Suite (`Appearance & Themes`)
+<div align="center">
+  <img src="./assets/image/preview/03-settings-appearance-customization.jpg" alt="3. 8-Section Settings & Customization Suite (Appearance & Themes)" width="780" />
+</div>
+
+> **Windows 11-Inspired 2-Pane Settings Dialog (`03-settings-appearance-customization.jpg`):**  
+> Provides granular offline configuration across **8 sections** (*General, Keyboard, Appearance, Prediction, Emoji, Clipboard, Shortcuts, Privacy*). Shown above is the **Appearance & Themes** panel featuring runtime **Dark / Light / System** theme switching, floating window opacity (`60%–100%`), key corner radius (`2–14 px`), and custom `#RRGGBB` accent & key background overrides.
+
+---
+
+### 4. Minimal Floating `[ • ENG / বাংলা ]` Pill Badge & System Tray Mode (`Mode C`)
+<div align="center">
+  <img src="./assets/image/preview/04-minimal-floating-badge-mode.jpg" alt="4. Minimal Floating Pill Badge & System Tray Mode" width="850" />
+</div>
+
+> **Unobtrusive Floating Desktop Badge (`04-minimal-floating-badge-mode.jpg`):**  
+> Clicking the `[বাংলা]` badge button in the keyboard header collapses the full keyboard into a compact, non-activating, draggable **`[ • ENG ]` / `[ • বাংলা ]` pill badge** (`72 × 40 px`) that floats gently above your active browser or editor alongside the Windows System Tray icon—restoring the full keyboard with a single click.
+
+---
+
+### ASCII Layout & 4 Presentation Modes Reference
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
@@ -71,10 +115,9 @@ Unlike web wrappers or UI-only demos, BornoKey is engineered with **C# 13 / .NET
 └────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Presentation Modes Summary
 - **Mode A — Expanded Floating Keyboard:** Full virtual keyboard with bilingual suggestion bar, dedicated number row, and header controls (`850 × 310 px` default, freely resizable up to `1600 × 600 px`).
 - **Mode B — Compact Floating Keyboard:** Space-saving `620 × 230 px` footprint (resizable down to `440 × 180 px`) with automatic responsive header breakpoints and crisp 1:1 Bengali glyph legibility.
-- **Mode C — Minimal Floating Icon:** Shrinks into a non-activating, draggable `[ বাংলা ]` floating badge (`72 × 40 px`) anywhere on screen; click once to restore your last active keyboard mode.
+- **Mode C — Minimal Floating Icon:** Shrinks into a non-activating, draggable `[ বাংলা ]` / `[ ENG ]` floating badge (`72 × 40 px`) anywhere on screen; click once to restore your last active keyboard mode.
 - **Mode D — System Tray Hidden Mode:** Runs quietly in the Windows Notification Area (`< 1%` idle CPU) with a 10-item context menu, global hotkeys, and optional Windows startup registration.
 
 ---
@@ -193,7 +236,9 @@ BornoKey/
 ├── native/
 │   └── BengaliKeyboard.TSF/                # Native C++ Windows Text Services Framework COM DLL
 │
-├── assets/                                 # Application & System Tray Icons (.ico)
+├── assets/                                 # Icons & UI Preview Screenshots
+│   ├── Icons/                              # Application & System Tray Icons (.ico)
+│   └── image/preview/                      # Live UI Preview Screenshots (01..04)
 ├── data/                                   # Offline Bengali/English Dictionary, N-Grams & Emoji Seeds
 └── installer/                              # Inno Setup 6 Script (BornoKeySetup.iss)
 ```
