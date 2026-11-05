@@ -9,7 +9,7 @@
 #define MyAppVersion "1.0.0"
 #define MyAppPublisher "BornoKey Open Source Project"
 #define MyAppURL "https://github.com/shantopaul/BornoKey"
-#define MyAppExeName "BengaliKeyboard.App.exe"
+#define MyAppExeName "BornoKey.exe"
 #define MyPublishDir "..\publish\win-x64"
 
 [Setup]
@@ -26,9 +26,9 @@ DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
-PrivilegesRequired=admin
+PrivilegesRequired=lowest
 OutputDir=Output
-OutputBaseFilename=BornoKeySetup-{#MyAppVersion}-x64
+OutputBaseFilename=BornoKey-Setup-v{#MyAppVersion}-win-x64
 SetupIconFile=..\assets\Icons\app-icon.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 Compression=lzma2/ultra64
@@ -45,7 +45,7 @@ SignedUninstaller=yes
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 Name: "startupicon"; Description: "Start {#MyAppName} automatically when Windows starts"; GroupDescription: "Startup Options:"
 
 [Files]

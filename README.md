@@ -291,7 +291,7 @@ dotnet run --project src/BengaliKeyboard.App/BengaliKeyboard.App.csproj -c Relea
 ### Publish Standalone Windows `win-x64` Release
 ```powershell
 dotnet publish src/BengaliKeyboard.App/BengaliKeyboard.App.csproj -c Release -r win-x64 --self-contained false -o publish/win-x64
-.\publish\win-x64\BengaliKeyboard.App.exe
+.\publish\win-x64\BornoKey.exe
 ```
 
 ### Runtime Data Location

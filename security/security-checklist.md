@@ -32,7 +32,7 @@
 ### 1.5 Injection (SQL Injection, Command Injection, Keystroke Injection)
 - [x] **[Implemented in `ClipboardRepository.cs`, `EmojiUsageService.cs`, `DictionaryService.cs`]** Use parameterized `SqliteCommand` queries (`@param`) exclusively across all SQLite repositories.
 - [x] **[Implemented in `DictionaryService.cs`]** Escape SQLite `LIKE` wildcard characters (`%`, `_`, `\`) using an `ESCAPE '\'` clause so literal `%` searches do not trigger full-table wildcard scans.
-- [x] **[Implemented in `StartupService.cs` & `BornoKeySetup.iss`]** Quote executable paths (`"\"...\\BengaliKeyboard.App.exe\" --startup"`) when registering `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` to prevent unquoted path hijacking.
+- [x] **[Implemented in `StartupService.cs` & `BornoKeySetup.iss`]** Quote executable paths (`"\"...\\BornoKey.exe\" --startup"`) when registering `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` to prevent unquoted path hijacking.
 - [x] **[Implemented in `TsfBridgeService.cs`]** Reject unauthenticated or oversized IPC messages (`> 4096` bytes) on `TsfBridgeService`.
 
 ### 1.6 XSS / CSRF (Desktop UI & Local IPC Equivalents)
