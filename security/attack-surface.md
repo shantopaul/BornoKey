@@ -23,7 +23,7 @@ Although BornoKey has no network endpoints, it exposes **four local inter-proces
 |---|---|---|---|
 | **1. Single-Instance Kernel Mutex** | `src/BengaliKeyboard.App/Program.cs` (`docs/Rules.md:27`) | Named Mutex `Global\BornoKey_SingleInstance_Mutex` | **Multi-Session Local Reachability:** Because `Global\` is specified instead of `Local\`, processes in other Windows login sessions on the same PC can open or lock this mutex. |
 | **2. Single-Instance Wakeup IPC** | `src/BengaliKeyboard.App/Program.cs` (`docs/Rules.md:27`) | Named Pipe or Win32 Registered Window Message | **Same-Session / Local Reachability:** Used by a second launched instance to signal the primary instance to restore its window. |
-| **3. TSF Managed-to-Native Bridge** | `src/BengaliKeyboard.Input/TSF/TsfBridgeService.cs` (`docs/Architecture.md:187`) | Local IPC / COM bridge between `BengaliKeyboard.App.exe` and `BengaliKeyboard.TSF.dll` | **Cross-Process Local Reachability:** Every target Windows application that loads `BengaliKeyboard.TSF.dll` communicates across process boundaries with BornoKey. |
+| **3. TSF Managed-to-Native Bridge** | `src/BengaliKeyboard.Input/TSF/TsfBridgeService.cs` (`docs/Architecture.md:187`) | Local IPC / COM bridge between `BornoKey.exe` and `BengaliKeyboard.TSF.dll` | **Cross-Process Local Reachability:** Every target Windows application that loads `BengaliKeyboard.TSF.dll` communicates across process boundaries with BornoKey. |
 | **4. Win32 Window Procedure (`WndProc`)** | `src/BengaliKeyboard.UI/Windows/KeyboardWindow.xaml.cs` (`docs/Architecture.md:146`, `287`) | HwndSource hook receiving `WM_MOUSEACTIVATE`, `WM_CLIPBOARDUPDATE`, `WM_HOTKEY`, `WM_DPICHANGED` | **Same-Session Desktop Reachability:** Any medium-integrity process on the interactive desktop can send Win32 messages via `SendMessage`/`PostMessage` unless restricted. |
 
 ---
@@ -78,7 +78,7 @@ All database operations use `Microsoft.Data.Sqlite` (`docs/Architecture.md:269`)
    - Contains `Config/settings.json`, `Database/keyboard.db`, `Database/dictionary.db`, `Logs/bornokey-YYYYMMDD.log`, and `Cache/` (`docs/Architecture.md:250-258`).
    - Inherits default NTFS permissions for the current user (`%USERNAME%:(F)`, `SYSTEM:(F)`, `Administrators:(F)`).
 2. **Application Installation Directory (`%ProgramFiles%\BornoKey\` or User Install Path):**
-   - Houses `BengaliKeyboard.App.exe`, managed `.dll` assemblies, `native/BengaliKeyboard.TSF.dll`, `assets/`, and `data/`.
+   - Houses `BornoKey.exe`, managed `.dll` assemblies, `native/BengaliKeyboard.TSF.dll`, `assets/`, and `data/`.
 3. **Windows Registry Keys:**
    - **Auto-Startup:** `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` (or `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup`) managed by `StartupService.cs` (`docs/PRD.md:116`, `docs/Architecture.md:204`).
    - **COM / TSF Registration:** `HKLM\SOFTWARE\Classes\CLSID\{...}\InprocServer32` and TSF profile registration via `ITfInputProcessorProfiles` in `native/BengaliKeyboard.TSF/Register.cpp` (`docs/Architecture.md:229`).
@@ -103,7 +103,7 @@ All database operations use `Microsoft.Data.Sqlite` (`docs/Architecture.md:269`)
 
 ## 10. Network & Deployment Exposure
 
-- **Runtime Network Exposure:** Zero. Neither `BengaliKeyboard.App.exe` nor `BengaliKeyboard.TSF.dll` links against network client libraries (`HttpClient` is unused).
+- **Runtime Network Exposure:** Zero. Neither `BornoKey.exe` nor `BengaliKeyboard.TSF.dll` links against network client libraries (`HttpClient` is unused).
 - **Deployment / Update Surface:**
   - `Ridmik-Style Bengali Virtual Keyboard for Windows.md:1256` lists *"Safe application update mechanism"* under Security & Privacy requirements, and line `1503`/`1507` specifies an Inno Setup / MSIX installer distributed via GitHub Release.
   - Currently, no automated updater service is included in the module tree (`docs/Architecture.md:130-248`), meaning updates are performed via signed installer packages.
@@ -166,4 +166,4 @@ All database operations use `Microsoft.Data.Sqlite` (`docs/Architecture.md:269`)
 - **Risk:** Writing an unquoted executable path containing spaces into `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` creates a classic Windows **Unquoted Startup Path** weakness (`C:\Program.exe` execution hijacking).
 - **Affected location:** `docs/PRD.md:116`, `docs/Architecture.md:204` (planned `src/BengaliKeyboard.Windows/StartupService.cs`).
 - **Why it matters:** Unquoted registry run paths allow privilege escalation or code hijacking if a writable parent path prefix exists.
-- **Recommended fix:** Always wrap the executable path in explicit double quotes (`"\"C:\\Program Files\\BornoKey\\BengaliKeyboard.App.exe\" --startup"`) when writing the `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` registry value, and validate that the executable path is rooted inside the application's actual base directory (`AppContext.BaseDirectory`).
+- **Recommended fix:** Always wrap the executable path in explicit double quotes (`"\"C:\\Program Files\\BornoKey\\BornoKey.exe\" --startup"`) when writing the `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` registry value, and validate that the executable path is rooted inside the application's actual base directory (`AppContext.BaseDirectory`).

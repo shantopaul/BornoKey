@@ -61,7 +61,7 @@ dotnet publish src/BengaliKeyboard.App/BengaliKeyboard.App.csproj `
 
 ### Verified Published Layout (`publish/win-x64/`)
 The publish target automatically includes all required offline assets:
-- `BengaliKeyboard.App.exe` (Primary executable with `app.manifest` `PerMonitorV2` DPI & `asInvoker`)
+- `BornoKey.exe` (Primary executable with `app.manifest` `PerMonitorV2` DPI & `asInvoker`)
 - `Definitions/Bangla/*.json` & `Definitions/English/*.json` (6 customizable keyboard layout definitions)
 - `data/Dictionary/bn_dictionary_seed.json` (Offline Bengali words, bigrams, and trigrams seed)
 - `data/Emoji/emoji_catalog.json` (Offline 10-category emoji catalog with Bengali & English keywords)
@@ -86,7 +86,7 @@ The publish target automatically includes all required offline assets:
 ### Security & Deployment Guarantees in `BornoKeySetup.iss`
 - Installs binaries into the Administrator-protected `%ProgramFiles%\BornoKey` (`{autopf}\BornoKey`) directory (`security/security-checklist.md` CHK-08).
 - Registers `BengaliKeyboard.TSF.dll` only if present inside `{app}` (`%ProgramFiles%\BornoKey`).
-- Quotes the auto-startup registry path in `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` (`"\"C:\Program Files\BornoKey\BengaliKeyboard.App.exe\" --startup"`) to prevent unquoted path hijacking (CHK-09).
+- Quotes the auto-startup registry path in `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` (`"\"C:\Program Files\BornoKey\BornoKey.exe\" --startup"`) to prevent unquoted path hijacking (CHK-09).
 
 ---
 
@@ -107,4 +107,4 @@ At runtime, **BornoKey** stores all user configuration and offline databases str
 
 ### Resetting or Removing User Data
 - **Inside BornoKey:** Open **System Tray → Settings → Privacy** and click **Clear All Application Data** or **Reset Settings to Defaults**.
-- **During Uninstallation:** The Inno Setup uninstaller cleanly stops any running `BengaliKeyboard.App.exe` instance, removes the `HKCU\...\Run` startup entry, unregisters `BengaliKeyboard.TSF.dll` (if installed), and offers an optional prompt to delete `%LOCALAPPDATA%\BengaliKeyboard\`.
+- **During Uninstallation:** The Inno Setup uninstaller cleanly stops any running `BornoKey.exe` instance, removes the `HKCU\...\Run` startup entry, unregisters `BengaliKeyboard.TSF.dll` (if installed), and offers an optional prompt to delete `%LOCALAPPDATA%\BengaliKeyboard\`.

@@ -20,7 +20,7 @@ However, three distinct categories of sensitive/secret material apply to this pr
 |---|---|---|---|
 | **1. User-Owned Secrets Captured via Clipboard (`ClipboardHistory`)** | `%LOCALAPPDATA%\BengaliKeyboard\Database\keyboard.db` (`ClipboardHistory.Content`) | Users inevitably copy passwords, API tokens, 2FA codes, and private keys to the Windows clipboard while BornoKey is running. | **Gap Identified:** Currently specified as plaintext `Content TEXT NOT NULL` (`docs/Architecture.md:304`). |
 | **2. Per-User Local Encryption & HMAC Key Material** | Windows DPAPI (`DataProtectionScope.CurrentUser`) or `%LOCALAPPDATA%\BengaliKeyboard\Config\` | Protects local SQLite clipboard contents at rest and keys the deduplication `ContentHash` (`HMACSHA256`). | **Gap Identified:** Not yet specified in `docs/Architecture.md` or `docs/Rules.md`. |
-| **3. Authenticode Code-Signing Certificates (`.pfx` / Hardware Token)** | External CI/CD Secret Store or Developer Windows Certificate Store (`Cert:\CurrentUser\My`) | Signs `BengaliKeyboard.App.exe`, `BengaliKeyboard.TSF.dll` (COM in-process server), and the Inno Setup installer (`BornoKeySetup.iss`). | **Gap Identified:** No `.gitignore` or signing key handling policy is documented yet. |
+| **3. Authenticode Code-Signing Certificates (`.pfx` / Hardware Token)** | External CI/CD Secret Store or Developer Windows Certificate Store (`Cert:\CurrentUser\My`) | Signs `BornoKey.exe`, `BengaliKeyboard.TSF.dll` (COM in-process server), and the Inno Setup installer (`BornoKeySetup.iss`). | **Gap Identified:** No `.gitignore` or signing key handling policy is documented yet. |
 
 ---
 

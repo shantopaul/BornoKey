@@ -7,7 +7,7 @@ namespace BengaliKeyboard.Windows;
 
 /// <summary>
 /// Manages Windows auto-startup registration under <c>HKCU\Software\Microsoft\Windows\CurrentVersion\Run</c>.
-/// Enforces quoted executable paths (<c>"\"C:\\...\\BengaliKeyboard.App.exe\" --startup"</c>) to prevent
+/// Enforces quoted executable paths (<c>"\"C:\\...\\BornoKey.exe\" --startup"</c>) to prevent
 /// unquoted path execution hijacking on paths containing spaces (security/security-checklist.md Finding CHK-09).
 /// </summary>
 public sealed class StartupService : IStartupService
@@ -127,6 +127,6 @@ public sealed class StartupService : IStartupService
             return Path.GetFullPath(mainModulePath);
         }
 
-        return Path.Combine(AppContext.BaseDirectory, "BengaliKeyboard.App.exe");
+        return Path.Combine(AppContext.BaseDirectory, "BornoKey.exe");
     }
 }

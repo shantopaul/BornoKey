@@ -212,12 +212,12 @@ public sealed class WindowPositionRestoreTests : IDisposable
     [Fact]
     public void StartupService_ShouldEnforceQuotedExecutablePath_RejectInjection_AndPersistToRegistry()
     {
-        var pathWithSpaces = @"C:\Program Files\BornoKey\BengaliKeyboard.App.exe";
+        var pathWithSpaces = @"C:\Program Files\BornoKey\BornoKey.exe";
         var formatted = StartupService.FormatQuotedStartupCommand(pathWithSpaces);
-        Assert.Equal("\"C:\\Program Files\\BornoKey\\BengaliKeyboard.App.exe\" --startup", formatted);
+        Assert.Equal("\"C:\\Program Files\\BornoKey\\BornoKey.exe\" --startup", formatted);
 
         Assert.Throws<ArgumentException>(() =>
-            StartupService.FormatQuotedStartupCommand(@"C:\Program Files\BornoKey\BengaliKeyboard.App.exe & calc.exe"));
+            StartupService.FormatQuotedStartupCommand(@"C:\Program Files\BornoKey\BornoKey.exe & calc.exe"));
 
         Assert.Throws<ArgumentException>(() =>
             StartupService.FormatQuotedStartupCommand(@"C:\Program Files\BornoKey\script.bat"));
@@ -363,7 +363,7 @@ public sealed class WindowPositionRestoreTests : IDisposable
             await layoutManager.InitializeAsync();
 
             using var inputEngine = new BengaliInputEngine(new UnicodeProcessor(), new Win32SendInputInjector(), null, settingsService, messenger);
-            var startupService = new StartupService(testRegSubKey, @"C:\Program Files\BornoKey\BengaliKeyboard.App.exe");
+            var startupService = new StartupService(testRegSubKey, @"C:\Program Files\BornoKey\BornoKey.exe");
 
             Exception? staError = null;
             var staThread = new Thread(() =>

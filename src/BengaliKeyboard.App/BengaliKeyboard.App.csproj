@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <RootNamespace>BengaliKeyboard.App</RootNamespace>
-    <AssemblyName>BengaliKeyboard.App</AssemblyName>
+    <AssemblyName>BornoKey</AssemblyName>
     <UseWPF>true</UseWPF>
     <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
     <ApplicationManifest>app.manifest</ApplicationManifest>
