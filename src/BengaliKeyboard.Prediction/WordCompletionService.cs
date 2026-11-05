@@ -70,8 +70,12 @@ public sealed class WordCompletionService
         var seenFormattedWords = new HashSet<string>(StringComparer.Ordinal);
         var candidates = new List<SuggestionCandidate>(clampedMax);
 
-        // 1. Check for exact English contraction match (e.g., "dont" -> "don't", "im" -> "I'm")
-        if (isEnglishPrefix && EnglishContractions.TryGetValue(normalizedPrefix, out var contraction))
+        // 1. Check for exact English contraction match (e.g., "dont" or "don't" -> "don't", "im" or "i'm" -> "I'm")
+        var strippedContractionKey = isEnglishPrefix
+            ? normalizedPrefix.Replace("'", string.Empty, StringComparison.Ordinal)
+            : normalizedPrefix;
+
+        if (isEnglishPrefix && EnglishContractions.TryGetValue(strippedContractionKey, out var contraction))
         {
             var formattedContraction = FormatEnglishCompletionCasing(normalizedPrefix, contraction);
             if (seenFormattedWords.Add(formattedContraction))
@@ -123,8 +127,8 @@ public sealed class WordCompletionService
             }
         }
 
-        // 3. Also surface contraction prefix matches for 3+ character English prefixes (e.g., "don" -> "don't", "wasn" -> "wasn't")
-        if (isEnglishPrefix && normalizedPrefix.Length >= 3 && candidates.Count < clampedMax)
+        // 3. Also surface contraction prefix matches for 3+ character English prefixes (e.g., "don" or "don'" -> "don't")
+        if (isEnglishPrefix && strippedContractionKey.Length >= 3 && candidates.Count < clampedMax)
         {
             foreach (var (key, contractionValue) in EnglishContractions)
             {
@@ -133,7 +137,7 @@ public sealed class WordCompletionService
                     break;
                 }
 
-                if (key.StartsWith(normalizedPrefix, StringComparison.OrdinalIgnoreCase))
+                if (key.StartsWith(strippedContractionKey, StringComparison.OrdinalIgnoreCase))
                 {
                     var formattedContraction = FormatEnglishCompletionCasing(normalizedPrefix, contractionValue);
                     if (seenFormattedWords.Add(formattedContraction))

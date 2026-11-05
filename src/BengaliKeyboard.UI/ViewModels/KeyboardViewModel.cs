@@ -162,18 +162,40 @@ public sealed partial class KeyboardViewModel : ObservableObject, IRecipient<Sug
 
     private void OnLayoutManagerLayoutChanged(object? sender, KeyboardLayoutModel updatedLayout)
     {
+        var previousLanguage = ActiveLanguage;
         CurrentLayout = updatedLayout;
         ActiveLanguage = _layoutManager.ActiveLanguage;
         ActiveLayer = _layoutManager.ActiveLayer;
+
+        if (previousLanguage != ActiveLanguage)
+        {
+            if (_inputEngine is not null)
+            {
+                _inputEngine.SetLanguage(ActiveLanguage);
+            }
+            else
+            {
+                InitializeDefaultSuggestions();
+            }
+        }
     }
 
     private void InitializeDefaultSuggestions()
     {
         Suggestions.Clear();
-        Suggestions.Add(new SuggestionCandidate { Word = "আমার", Score = 1.0, ReplacePrefixLength = 0 });
-        Suggestions.Add(new SuggestionCandidate { Word = "আমি", Score = 0.95, ReplacePrefixLength = 0 });
-        Suggestions.Add(new SuggestionCandidate { Word = "বাংলা", Score = 0.90, ReplacePrefixLength = 0 });
-        Suggestions.Add(new SuggestionCandidate { Word = "ভালো", Score = 0.85, ReplacePrefixLength = 0 });
+        if (ActiveLanguage == LanguageMode.English)
+        {
+            Suggestions.Add(new SuggestionCandidate { Word = "I", Score = 1.0, ReplacePrefixLength = 0, IsNextWordPrediction = true });
+            Suggestions.Add(new SuggestionCandidate { Word = "Hello", Score = 0.95, ReplacePrefixLength = 0, IsNextWordPrediction = true });
+            Suggestions.Add(new SuggestionCandidate { Word = "Thank", Score = 0.90, ReplacePrefixLength = 0, IsNextWordPrediction = true });
+            Suggestions.Add(new SuggestionCandidate { Word = "The", Score = 0.85, ReplacePrefixLength = 0, IsNextWordPrediction = true });
+            return;
+        }
+
+        Suggestions.Add(new SuggestionCandidate { Word = "আমার", Score = 1.0, ReplacePrefixLength = 0, IsNextWordPrediction = true });
+        Suggestions.Add(new SuggestionCandidate { Word = "আমি", Score = 0.95, ReplacePrefixLength = 0, IsNextWordPrediction = true });
+        Suggestions.Add(new SuggestionCandidate { Word = "বাংলা", Score = 0.90, ReplacePrefixLength = 0, IsNextWordPrediction = true });
+        Suggestions.Add(new SuggestionCandidate { Word = "ভালো", Score = 0.85, ReplacePrefixLength = 0, IsNextWordPrediction = true });
     }
 
     public void Dispose()

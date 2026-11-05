@@ -18,11 +18,28 @@ public sealed class BengaliInputEngine : IBengaliInputEngine, IDisposable
 
     private static readonly IReadOnlyList<SuggestionCandidate> DefaultInitialCandidates =
     [
-        new SuggestionCandidate { Word = "আমার", Score = 1.0, ReplacePrefixLength = 0 },
-        new SuggestionCandidate { Word = "আমি", Score = 0.95, ReplacePrefixLength = 0 },
-        new SuggestionCandidate { Word = "বাংলা", Score = 0.90, ReplacePrefixLength = 0 },
-        new SuggestionCandidate { Word = "ভালো", Score = 0.85, ReplacePrefixLength = 0 }
+        new SuggestionCandidate { Word = "আমার", Score = 1.0, ReplacePrefixLength = 0, IsNextWordPrediction = true },
+        new SuggestionCandidate { Word = "আমি", Score = 0.95, ReplacePrefixLength = 0, IsNextWordPrediction = true },
+        new SuggestionCandidate { Word = "বাংলা", Score = 0.90, ReplacePrefixLength = 0, IsNextWordPrediction = true },
+        new SuggestionCandidate { Word = "ভালো", Score = 0.85, ReplacePrefixLength = 0, IsNextWordPrediction = true }
     ];
+
+    private static readonly IReadOnlyList<SuggestionCandidate> DefaultEnglishInitialCandidates =
+    [
+        new SuggestionCandidate { Word = "I", Score = 1.0, ReplacePrefixLength = 0, IsNextWordPrediction = true },
+        new SuggestionCandidate { Word = "Hello", Score = 0.95, ReplacePrefixLength = 0, IsNextWordPrediction = true },
+        new SuggestionCandidate { Word = "Thank", Score = 0.90, ReplacePrefixLength = 0, IsNextWordPrediction = true },
+        new SuggestionCandidate { Word = "The", Score = 0.85, ReplacePrefixLength = 0, IsNextWordPrediction = true }
+    ];
+
+    public static IReadOnlyList<SuggestionCandidate> GetDefaultCandidatesForLanguage(LanguageMode language, int maxResults = 4)
+    {
+        var source = language == LanguageMode.English
+            ? DefaultEnglishInitialCandidates
+            : DefaultInitialCandidates;
+
+        return source.Take(Math.Clamp(maxResults, 1, 5)).ToList();
+    }
 
     private readonly UnicodeProcessor _unicodeProcessor;
     private readonly ITextInjector _textInjector;
@@ -72,8 +89,12 @@ public sealed class BengaliInputEngine : IBengaliInputEngine, IDisposable
         }
 
         _currentLanguage = language;
+        _recentWords.Clear();
         ResetBuffer();
+
+        var maxResults = Math.Clamp(_settingsService?.Current.SuggestionCount ?? 4, 3, 5);
         _messenger.Send(new LanguageChangedMessage(language));
+        _messenger.Send(new SuggestionsUpdatedMessage(GetDefaultCandidatesForLanguage(language, maxResults)));
     }
 
     public void ToggleLanguage()
@@ -120,10 +141,27 @@ public sealed class BengaliInputEngine : IBengaliInputEngine, IDisposable
             return;
         }
 
+        // Allow mid-word apostrophe inside English contractions (e.g., "don't", "I'm", "it's")
+        var isEnglishMidWordApostrophe = _currentLanguage == LanguageMode.English
+            && !string.IsNullOrEmpty(_currentWordBuffer)
+            && rawOutput == "'";
+
         // Check if this key is punctuation or a word boundary (e.g., Dari '।', comma, period)
-        if (key.KeyType == KeyType.Punctuation || (rawOutput.Length == 1 && UnicodeProcessor.IsWordBoundary(rawOutput[0])))
+        if (!isEnglishMidWordApostrophe &&
+            (key.KeyType == KeyType.Punctuation || (rawOutput.Length == 1 && UnicodeProcessor.IsWordBoundary(rawOutput[0]))))
         {
-            CommitCurrentWordToContext();
+            var previousWordBeforeCommit = _recentWords.Count >= 1 ? _recentWords[^1] : null;
+            var completedWord = CommitCurrentWordToContext();
+            if (!string.IsNullOrWhiteSpace(completedWord) && _predictionService is not null)
+            {
+                await _predictionService.RecordAcceptedWordAsync(completedWord, previousWordBeforeCommit, cancellationToken).ConfigureAwait(false);
+            }
+
+            if (rawOutput.Length == 1 && rawOutput[0] is '।' or '.' or '!' or '?')
+            {
+                _recentWords.Clear();
+            }
+
             _textInjector.SendUnicodeText(rawOutput);
             await UpdatePredictionsAsync(cancellationToken).ConfigureAwait(false);
             return;
@@ -293,22 +331,29 @@ public sealed class BengaliInputEngine : IBengaliInputEngine, IDisposable
             }
             else if (string.IsNullOrEmpty(_currentWordBuffer) && nextWordEnabled)
             {
-                string? word1 = null;
-                string? word2 = null;
-
-                if (_recentWords.Count >= 2)
+                if (_recentWords.Count == 0)
                 {
-                    word1 = _recentWords[^2];
-                    word2 = _recentWords[^1];
+                    candidates = GetDefaultCandidatesForLanguage(_currentLanguage, maxResults);
                 }
-                else if (_recentWords.Count == 1)
+                else
                 {
-                    word1 = _recentWords[0];
-                }
+                    string? word1 = null;
+                    string? word2 = null;
 
-                candidates = await _predictionService
-                    .GetNextWordPredictionsAsync(word1, word2, maxResults, token)
-                    .ConfigureAwait(false);
+                    if (_recentWords.Count >= 2)
+                    {
+                        word1 = _recentWords[^2];
+                        word2 = _recentWords[^1];
+                    }
+                    else if (_recentWords.Count == 1)
+                    {
+                        word1 = _recentWords[0];
+                    }
+
+                    candidates = await _predictionService
+                        .GetNextWordPredictionsAsync(word1, word2, maxResults, token)
+                        .ConfigureAwait(false);
+                }
             }
 
             if (!token.IsCancellationRequested)
@@ -324,11 +369,16 @@ public sealed class BengaliInputEngine : IBengaliInputEngine, IDisposable
 
     private void PublishFallbackSuggestions(int maxResults)
     {
+        var defaultPool = GetDefaultCandidatesForLanguage(_currentLanguage, maxResults: 5);
+        var comparison = _currentLanguage == LanguageMode.English
+            ? StringComparison.OrdinalIgnoreCase
+            : StringComparison.Ordinal;
+
         if (!string.IsNullOrEmpty(_currentWordBuffer))
         {
             var prefixScalarCount = UnicodeProcessor.CountUnicodeScalars(_currentWordBuffer);
-            var matching = DefaultInitialCandidates
-                .Where(c => c.Word.StartsWith(_currentWordBuffer, StringComparison.Ordinal))
+            var matching = defaultPool
+                .Where(c => c.Word.StartsWith(_currentWordBuffer, comparison))
                 .Select(c => new SuggestionCandidate
                 {
                     Word = c.Word,
@@ -353,7 +403,7 @@ public sealed class BengaliInputEngine : IBengaliInputEngine, IDisposable
             return;
         }
 
-        _messenger.Send(new SuggestionsUpdatedMessage(DefaultInitialCandidates.Take(maxResults).ToList()));
+        _messenger.Send(new SuggestionsUpdatedMessage(defaultPool.Take(maxResults).ToList()));
     }
 
     private void CancelInFlightPrediction()
