@@ -209,7 +209,7 @@
                 <Button x:Name="CloseButton"
                         Content="✕"
                         Style="{StaticResource Style.Button.HeaderClose}"
-                        ToolTip="Close Keyboard Window"
+                        ToolTip="Close to Minimal Floating Desktop Badge"
                         Click="OnCloseClick" />
             </StackPanel>
         </Grid>

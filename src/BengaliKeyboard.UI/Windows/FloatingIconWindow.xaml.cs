@@ -10,10 +10,11 @@ using CommunityToolkit.Mvvm.Messaging;
 namespace BengaliKeyboard.UI.Windows;
 
 /// <summary>
-/// Mode C — Minimal Floating Icon Mode (<c>72 × 40 px</c> draggable <c>[ বাংলা ]</c> pill badge).
+/// Mode C — Minimal Floating Icon Mode (<c>94 × 40 px</c> draggable <c>[ • বাংলা  ✕ ]</c> pill badge).
 /// Uses <c>WS_EX_NOACTIVATE</c> so clicking or dragging never steals focus from external apps.
-/// Clicking restores the previous Expanded or Compact keyboard; dragging repositions the badge;
-/// right-clicking toggles <c>বাংলা</c> ↔ <c>ENG</c>.
+/// Clicking the badge restores the previous Expanded or Compact keyboard; dragging repositions the badge;
+/// right-clicking toggles <c>বাংলা</c> ↔ <c>ENG</c>; clicking the small <c>✕</c> button hides the badge
+/// into the System Tray while BornoKey continues running in the background.
 /// </summary>
 public partial class FloatingIconWindow : Window, IRecipient<LanguageChangedMessage>
 {
@@ -23,6 +24,9 @@ public partial class FloatingIconWindow : Window, IRecipient<LanguageChangedMess
     private const int WmMouseActivate = 0x0021;
     private const int MaNoActivate = 3;
     private const double DragThresholdPixels = 4.0;
+
+    private static readonly SolidColorBrush CloseIdleBackground = new(Color.FromArgb(0x1F, 0xFF, 0xFF, 0xFF));
+    private static readonly SolidColorBrush CloseHoverBackground = new(Color.FromArgb(0xCC, 0xEF, 0x44, 0x44));
 
     private readonly IMessenger _messenger;
     private HwndSource? _hwndSource;
@@ -36,6 +40,8 @@ public partial class FloatingIconWindow : Window, IRecipient<LanguageChangedMess
     public event EventHandler? RestoreRequested;
 
     public event EventHandler? LanguageToggleRequested;
+
+    public event EventHandler? CloseToTrayRequested;
 
     public event EventHandler<(double Left, double Top)>? BadgePositionChanged;
 
@@ -112,6 +118,34 @@ public partial class FloatingIconWindow : Window, IRecipient<LanguageChangedMess
                 StatusDot.Fill = blueBrush;
             }
         }
+    }
+
+    private void OnCloseButtonMouseEnter(object sender, MouseEventArgs e)
+    {
+        CloseBadgeButton.Background = CloseHoverBackground;
+        CloseBadgeIcon.Foreground = Brushes.White;
+    }
+
+    private void OnCloseButtonMouseLeave(object sender, MouseEventArgs e)
+    {
+        CloseBadgeButton.Background = CloseIdleBackground;
+        if (TryFindResource("Brush.Text.Secondary") is Brush secondaryBrush)
+        {
+            CloseBadgeIcon.Foreground = secondaryBrush;
+        }
+    }
+
+    private void OnCloseButtonMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        _isPointerDown = false;
+        e.Handled = true;
+    }
+
+    private void OnCloseButtonMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        _isPointerDown = false;
+        e.Handled = true;
+        CloseToTrayRequested?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnBadgeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

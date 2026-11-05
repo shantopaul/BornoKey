@@ -2,11 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="BornoKey Floating Icon"
-        Width="72"
+        Width="94"
         Height="40"
-        MinWidth="60"
+        MinWidth="84"
         MinHeight="36"
-        MaxWidth="96"
+        MaxWidth="112"
         MaxHeight="48"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -17,7 +17,7 @@
         ShowActivated="False"
         Focusable="False"
         Cursor="Hand"
-        ToolTip="Left-click to expand keyboard • Drag to move • Right-click to toggle বাংলা/ENG">
+        ToolTip="Left-click to expand keyboard • Drag to move • Right-click to toggle বাংলা/ENG • Click ✕ to hide to System Tray">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -33,28 +33,63 @@
             BorderBrush="{DynamicResource Brush.Accent.Primary}"
             BorderThickness="1.5"
             CornerRadius="20"
-            Padding="10,4"
+            Padding="10,4,6,4"
             MouseLeftButtonDown="OnBadgeMouseLeftButtonDown"
             MouseMove="OnBadgeMouseMove"
             MouseLeftButtonUp="OnBadgeMouseLeftButtonUp"
             MouseRightButtonUp="OnBadgeMouseRightButtonUp">
-        <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-            <Ellipse x:Name="StatusDot"
-                     Width="7"
-                     Height="7"
-                     Fill="{DynamicResource Brush.Status.Success}"
-                     VerticalAlignment="Center"
-                     Margin="0,0,6,0" />
-            <TextBlock x:Name="BadgeLabelText"
-                       Text="বাংলা"
-                       Foreground="{DynamicResource Brush.Text.Primary}"
-                       FontFamily="{StaticResource FontFamily.Bengali}"
-                       FontSize="13"
-                       FontWeight="SemiBold"
-                       VerticalAlignment="Center"
-                       Padding="0,1,0,1" />
-        </StackPanel>
+        <Grid VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Left/Center: Status Dot + Active Language Label (Click to Expand / Drag to Move) -->
+            <StackPanel Grid.Column="0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="0,0,4,0">
+                <Ellipse x:Name="StatusDot"
+                         Width="7"
+                         Height="7"
+                         Fill="{DynamicResource Brush.Status.Success}"
+                         VerticalAlignment="Center"
+                         Margin="0,0,5,0" />
+                <TextBlock x:Name="BadgeLabelText"
+                           Text="বাংলা"
+                           Foreground="{DynamicResource Brush.Text.Primary}"
+                           FontFamily="{StaticResource FontFamily.Bengali}"
+                           FontSize="12.5"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           Padding="0,1,0,1" />
+            </StackPanel>
+
+            <!-- Right: Small Cancel/Close Button (Hides Badge to System Tray while BornoKey keeps running) -->
+            <Border Grid.Column="1"
+                    x:Name="CloseBadgeButton"
+                    Width="18"
+                    Height="18"
+                    CornerRadius="9"
+                    Background="#1FFFFFFF"
+                    VerticalAlignment="Center"
+                    Cursor="Hand"
+                    ToolTip="Close Floating Badge (Keep BornoKey running in System Tray)"
+                    MouseEnter="OnCloseButtonMouseEnter"
+                    MouseLeave="OnCloseButtonMouseLeave"
+                    MouseLeftButtonDown="OnCloseButtonMouseLeftButtonDown"
+                    MouseLeftButtonUp="OnCloseButtonMouseLeftButtonUp">
+                <TextBlock x:Name="CloseBadgeIcon"
+                           Text="✕"
+                           FontSize="9"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource Brush.Text.Secondary}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0,-0.5,0,0"
+                           IsHitTestVisible="False" />
+            </Border>
+        </Grid>
     </Border>
 </Window>

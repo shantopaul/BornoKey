@@ -481,7 +481,7 @@ public partial class KeyboardWindow : Window
     {
         if (_windowManagerService is not null)
         {
-            _windowManagerService.ApplyWindowMode(KeyboardMode.HiddenToTray);
+            _windowManagerService.ApplyWindowMode(KeyboardMode.MinimalIcon);
             return;
         }
 
@@ -494,7 +494,7 @@ public partial class KeyboardWindow : Window
         if (_windowManagerService is not null)
         {
             await _windowManagerService.SaveWindowStateAsync(updatedState).ConfigureAwait(true);
-            _windowManagerService.ApplyWindowMode(KeyboardMode.HiddenToTray);
+            _windowManagerService.ApplyWindowMode(KeyboardMode.MinimalIcon);
             return;
         }
 
