@@ -1,13 +1,14 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using BengaliKeyboard.Core.Enums;
 
 namespace BengaliKeyboard.UI.Controls;
 
 /// <summary>
-/// Top draggable header bar containing the [ বাংলা | ENG ] language toggle,
-/// interactive [ − | 100% | + ] size increase/decrease &amp; drag-zoom controls,
+/// Top draggable header bar containing the [ ☰ BornoKey ▾ ] Quick Menu,
+/// [ বাংলা | ENG ] language toggle, interactive [ − | 100% | + ] size increase/decrease &amp; drag-zoom controls,
 /// Quick Settings button, and 4-mode window controls.
 /// </summary>
 public partial class HeaderToolbarControl : UserControl
@@ -40,6 +41,10 @@ public partial class HeaderToolbarControl : UserControl
 
     public event EventHandler? SettingsRequested;
 
+    public event EventHandler? EmojiPanelRequested;
+
+    public event EventHandler? ClipboardPanelRequested;
+
     public event EventHandler? IncreaseSizeRequested;
 
     public event EventHandler? DecreaseSizeRequested;
@@ -68,6 +73,31 @@ public partial class HeaderToolbarControl : UserControl
     public void SetCompactButtonState(bool isCompact)
     {
         CompactModeButton.Content = isCompact ? "⤡ Expand" : "⤢ Compact";
+        if (MenuCompactModeItem is not null)
+        {
+            MenuCompactModeItem.Header = isCompact
+                ? "⤡  Switch to Expanded Mode (850×310)"
+                : "⤢  Switch to Compact Mode (620×230)";
+        }
+    }
+
+    public void OpenQuickMenu()
+    {
+        if (AppQuickMenu is null)
+        {
+            return;
+        }
+
+        if (MenuSwitchLanguageItem is not null)
+        {
+            MenuSwitchLanguageItem.Header = ActiveLanguage == LanguageMode.Bangla
+                ? "🌐  Switch to English (বাংলা ✓ → ENG)"
+                : "🌐  Switch to Bangla (ENG ✓ → বাংলা)";
+        }
+
+        AppQuickMenu.PlacementTarget = AppMenuButton;
+        AppQuickMenu.Placement = PlacementMode.Bottom;
+        AppQuickMenu.IsOpen = true;
     }
 
     public void SetScalePercentage(int percentage)
@@ -112,6 +142,40 @@ public partial class HeaderToolbarControl : UserControl
 
     private void OnCloseClick(object sender, RoutedEventArgs e) =>
         CloseRequested?.Invoke(this, EventArgs.Empty);
+
+    private void OnAppMenuButtonClick(object sender, RoutedEventArgs e)
+    {
+        OpenQuickMenu();
+        e.Handled = true;
+    }
+
+    private void OnBrandTitleMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        OpenQuickMenu();
+        e.Handled = true;
+    }
+
+    private void OnBrandTitleMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+    }
+
+    private void OnMenuSwitchLanguageClick(object sender, RoutedEventArgs e)
+    {
+        if (ToggleLanguageCommand?.CanExecute(null) == true)
+        {
+            ToggleLanguageCommand.Execute(null);
+        }
+    }
+
+    private void OnMenuEmojiClick(object sender, RoutedEventArgs e) =>
+        EmojiPanelRequested?.Invoke(this, EventArgs.Empty);
+
+    private void OnMenuClipboardClick(object sender, RoutedEventArgs e) =>
+        ClipboardPanelRequested?.Invoke(this, EventArgs.Empty);
+
+    private void OnMenuResetSizeClick(object sender, RoutedEventArgs e) =>
+        ResetSizeRequested?.Invoke(this, EventArgs.Empty);
 
     private void OnScaleBadgeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {

@@ -58,6 +58,8 @@
                                                    IncreaseSizeRequested="OnHeaderIncreaseSizeRequested"
                                                    ResetSizeRequested="OnHeaderResetSizeRequested"
                                                    DragScaleDeltaRequested="OnHeaderDragScaleDeltaRequested"
+                                                   EmojiPanelRequested="OnHeaderEmojiPanelRequested"
+                                                   ClipboardPanelRequested="OnHeaderClipboardPanelRequested"
                                                    SettingsRequested="OnHeaderSettingsRequested"
                                                    CompactModeRequested="OnHeaderCompactModeRequested"
                                                    MinimalIconModeRequested="OnHeaderMinimalIconModeRequested"

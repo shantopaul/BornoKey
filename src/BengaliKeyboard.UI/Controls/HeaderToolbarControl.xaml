@@ -25,25 +25,86 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <!-- Brand & Drag Handle -->
+            <!-- Top-Left Hamburger Quick Menu [ ☰ ] + Brand & Drag Handle -->
             <StackPanel Grid.Column="0"
                         Orientation="Horizontal"
                         VerticalAlignment="Center"
-                        Margin="0,0,12,0"
-                        Cursor="SizeAll"
-                        ToolTip="Drag anywhere on the header bar to move BornoKey">
-                <TextBlock Text="⠿"
-                           Foreground="{DynamicResource Brush.Accent.Primary}"
-                           FontSize="14"
-                           FontWeight="Bold"
-                           Margin="0,0,6,0"
-                           VerticalAlignment="Center" />
-                <TextBlock Text="BornoKey"
-                           Foreground="{DynamicResource Brush.Text.Primary}"
-                           FontFamily="{StaticResource FontFamily.English}"
-                           FontWeight="SemiBold"
-                           FontSize="13"
-                           VerticalAlignment="Center" />
+                        Margin="0,0,10,0">
+                <Button x:Name="AppMenuButton"
+                        Width="26"
+                        Height="22"
+                        Margin="0,0,6,0"
+                        Padding="0"
+                        Style="{StaticResource Style.Button.HeaderAction}"
+                        ToolTip="Open BornoKey Quick Menu (Language, Emoji, Clipboard, Modes, Settings)"
+                        Click="OnAppMenuButtonClick">
+                    <Button.ContextMenu>
+                        <ContextMenu x:Name="AppQuickMenu"
+                                     Placement="Bottom">
+                            <MenuItem x:Name="MenuSwitchLanguageItem"
+                                      Header="🌐  Switch Language (বাংলা ↔ ENG)"
+                                      InputGestureText="Ctrl+Space"
+                                      Click="OnMenuSwitchLanguageClick" />
+                            <MenuItem Header="😀  Emoji &amp; Symbols Keyboard"
+                                      InputGestureText="Ctrl+Shift+E"
+                                      Click="OnMenuEmojiClick" />
+                            <MenuItem Header="📋  Clipboard History Manager"
+                                      InputGestureText="Ctrl+Shift+V"
+                                      Click="OnMenuClipboardClick" />
+                            <Separator />
+                            <MenuItem x:Name="MenuCompactModeItem"
+                                      Header="⤢  Toggle Compact / Expanded Mode"
+                                      Click="OnCompactClick" />
+                            <MenuItem Header="🔹  Minimal Floating [বাংলা] Badge"
+                                      Click="OnMinimalIconClick" />
+                            <Separator />
+                            <MenuItem Header="＋  Increase Keyboard Size (+8%)"
+                                      InputGestureText="Ctrl+Wheel Up"
+                                      Click="OnIncreaseSizeClick" />
+                            <MenuItem Header="－  Decrease Keyboard Size (−8%)"
+                                      InputGestureText="Ctrl+Wheel Down"
+                                      Click="OnDecreaseSizeClick" />
+                            <MenuItem Header="↺  Reset Keyboard Size (100%)"
+                                      Click="OnMenuResetSizeClick" />
+                            <Separator />
+                            <MenuItem Header="⚙  Settings &amp; Customization..."
+                                      Click="OnSettingsClick" />
+                            <MenuItem Header="—  Hide Keyboard to System Tray"
+                                      InputGestureText="Ctrl+Shift+K"
+                                      Click="OnMinimizeClick" />
+                            <MenuItem Header="✕  Close Keyboard Window"
+                                      Click="OnCloseClick" />
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                    <TextBlock Text="☰"
+                               Foreground="{DynamicResource Brush.Accent.Primary}"
+                               FontSize="13"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </Button>
+
+                <Border x:Name="BrandTitleBorder"
+                        Background="Transparent"
+                        Padding="2,2,4,2"
+                        Cursor="Hand"
+                        ToolTip="Click to Open Quick Menu • Drag to Move Keyboard"
+                        MouseLeftButtonDown="OnBrandTitleMouseLeftButtonDown"
+                        MouseLeftButtonUp="OnBrandTitleMouseLeftButtonUp">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="BornoKey"
+                                   Foreground="{DynamicResource Brush.Text.Primary}"
+                                   FontFamily="{StaticResource FontFamily.English}"
+                                   FontWeight="SemiBold"
+                                   FontSize="13"
+                                   VerticalAlignment="Center" />
+                        <TextBlock Text="▾"
+                                   Foreground="{DynamicResource Brush.Text.Muted}"
+                                   FontSize="9.5"
+                                   Margin="4,1,0,0"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </Border>
             </StackPanel>
 
             <!-- [ বাংলা | ENG ] Pill Switch -->

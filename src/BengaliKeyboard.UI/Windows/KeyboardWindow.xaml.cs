@@ -371,6 +371,26 @@ public partial class KeyboardWindow : Window
         SettingsWindowRequested?.Invoke(this, EventArgs.Empty);
     }
 
+    private async void OnHeaderEmojiPanelRequested(object? sender, EventArgs e)
+    {
+        await _viewModel.PressKeyAsync(new KeyDefinition
+        {
+            Id = "menu_emoji",
+            DisplayLabel = "😀",
+            KeyType = KeyType.EmojiSwitch
+        }).ConfigureAwait(true);
+    }
+
+    private async void OnHeaderClipboardPanelRequested(object? sender, EventArgs e)
+    {
+        await _viewModel.PressKeyAsync(new KeyDefinition
+        {
+            Id = "menu_clipboard",
+            DisplayLabel = "📋",
+            KeyType = KeyType.ClipboardSwitch
+        }).ConfigureAwait(true);
+    }
+
     private async void OnHeaderMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (_windowResizer.IsDragging || e.Handled)
