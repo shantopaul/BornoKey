@@ -55,6 +55,10 @@ public partial class ClipboardWindow : Window
     {
         ArgumentNullException.ThrowIfNull(keyboardWindow);
 
+        MinWidth = keyboardWindow.MinWidth;
+        MaxWidth = keyboardWindow.MaxWidth;
+        MinHeight = keyboardWindow.MinHeight;
+        MaxHeight = keyboardWindow.MaxHeight;
         Left = keyboardWindow.Left;
         Top = keyboardWindow.Top;
         Width = keyboardWindow.ActualWidth > 0 ? keyboardWindow.ActualWidth : keyboardWindow.Width;

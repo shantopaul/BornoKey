@@ -117,7 +117,7 @@ public partial class HeaderToolbarControl : UserControl
     {
         _isDraggingScaleBadge = true;
         _hasMovedDuringScaleDrag = false;
-        _scaleDragLastPoint = e.GetPosition(this);
+        _scaleDragLastPoint = PointToScreen(e.GetPosition(this));
         _ = ScaleDragBadge.CaptureMouse();
         e.Handled = true;
     }
@@ -129,13 +129,12 @@ public partial class HeaderToolbarControl : UserControl
             return;
         }
 
-        var currentPoint = e.GetPosition(this);
-        var deltaX = currentPoint.X - _scaleDragLastPoint.X;
-        if (Math.Abs(deltaX) >= 3.0)
+        var currentScreenPoint = PointToScreen(e.GetPosition(this));
+        var deltaX = currentScreenPoint.X - _scaleDragLastPoint.X;
+        if (Math.Abs(deltaX) >= 4.0)
         {
             _hasMovedDuringScaleDrag = true;
-            _scaleDragLastPoint = currentPoint;
-            // Every 100px of horizontal drag scales by ~20%
+            _scaleDragLastPoint = currentScreenPoint;
             var scaleDelta = Math.Clamp(deltaX / 500.0, -0.12, 0.12);
             DragScaleDeltaRequested?.Invoke(this, scaleDelta);
         }
