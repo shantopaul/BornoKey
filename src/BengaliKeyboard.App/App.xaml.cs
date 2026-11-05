@@ -205,6 +205,7 @@ public partial class App : Application
 
             // Wire FloatingIconWindow events
             floatingIconWindow.RestoreRequested += (_, _) => windowPositionService.RestoreLastVisibleMode();
+            floatingIconWindow.CloseToTrayRequested += (_, _) => windowPositionService.ApplyWindowMode(KeyboardMode.HiddenToTray);
             floatingIconWindow.LanguageToggleRequested += async (_, _) => await keyboardViewModel.ToggleLanguageAsync().ConfigureAwait(true);
             floatingIconWindow.BadgePositionChanged += (_, coords) =>
             {
