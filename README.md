@@ -354,10 +354,17 @@ Contributions from the open-source community are warmly welcomed! Whether you ar
 
 ---
 
+## 👤 Author & Maintainer
+
+- **Shanto Paul** — Creator & Lead Developer ([@shantopaul](https://github.com/shantopaul))
+- See [`AUTHORS.md`](./AUTHORS.md) for full authorship and contributor credits.
+
+---
+
 ## 📄 License
 
 Distributed under the **MIT License**. See [`LICENSE`](./LICENSE) for the full license text.
 
 <div align="center">
-  <sub>Built with ❤️ for the Bengali-speaking Windows community.</sub>
+  <sub>Built with ❤️ by <a href="https://github.com/shantopaul">Shanto Paul</a> for the Bengali-speaking Windows community.</sub>
 </div>

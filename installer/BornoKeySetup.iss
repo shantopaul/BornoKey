@@ -13,7 +13,7 @@
 #define MyAppName "BornoKey"
 #define MyAppDisplayName "BornoKey — Bengali Virtual Keyboard"
 #define MyAppVersion "1.0.0"
-#define MyAppPublisher "BornoKey Open Source Project"
+#define MyAppPublisher "Shanto Paul (BornoKey Open Source)"
 #define MyAppURL "https://github.com/shantopaul/BornoKey"
 #define MyAppExeName "BornoKey.exe"
 #define MyPublishDir "..\publish\win-x64"
@@ -28,6 +28,7 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
+AppCopyright=Copyright (C) 2026 Shanto Paul
 DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 ; Support Windows 10 (1809 / 21H2+) and Windows 11 on both low-end and high-end 64-bit PCs
@@ -50,6 +51,7 @@ UninstallDisplayIcon={app}\{#MyAppExeName}
 UninstallDisplayName={#MyAppDisplayName}
 VersionInfoVersion={#MyAppVersion}.0
 VersionInfoCompany={#MyAppPublisher}
+VersionInfoCopyright=Copyright (C) 2026 Shanto Paul
 VersionInfoDescription={#MyAppDisplayName} Smart Setup Installer
 VersionInfoProductName={#MyAppName}
 VersionInfoProductVersion={#MyAppVersion}
