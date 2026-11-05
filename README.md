@@ -23,10 +23,6 @@ A lightweight, offline-first, system-wide Bengali (`বাংলা`) and Englis
 [Roadmap](#-development-roadmap) •
 [Contributing](#-contributing)
 
-<br />
-
-<img src="./assets/image/preview/01-bangla-ridmik-virtual-keyboard.jpg" alt="BornoKey Ridmik-Style Bengali Virtual Keyboard Preview" width="850" />
-
 </div>
 
 ---
