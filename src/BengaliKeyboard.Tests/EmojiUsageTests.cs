@@ -173,8 +173,26 @@ public sealed class EmojiUsageTests : IDisposable
         Assert.Equal("❤️‍🔥", restartedViewModel.DisplayedEmojis[0].Emoji);
         Assert.Equal(1, restartedViewModel.DisplayedEmojis[0].UsageCount);
 
+        // Verify CategoryTabs active highlight and PopularEmojis fallback when history is sparse (< 16 items)
+        Assert.Equal(10, restartedViewModel.CategoryTabs.Count);
+        Assert.True(restartedViewModel.CategoryTabs[0].IsSelected);
+        Assert.Equal("🕒", restartedViewModel.CategoryTabs[0].Icon);
+        Assert.True(restartedViewModel.ShowPopularFallbackSection);
+        Assert.NotEmpty(restartedViewModel.PopularEmojis);
+        Assert.DoesNotContain(restartedViewModel.PopularEmojis, x => x.Emoji == "❤️‍🔥");
+
+        // Verify live hover preview updates
+        restartedViewModel.SetHoveredEmoji(heartOnFire);
+        Assert.Equal("❤️‍🔥", restartedViewModel.PreviewEmoji);
+        Assert.Equal("Heart on Fire", restartedViewModel.PreviewTitle);
+        Assert.Contains("ভালোবাসা", restartedViewModel.PreviewKeywords, StringComparison.Ordinal);
+
         // Switching to "Symbols" and executing ClearHistoryCommand resets UsageCount on displayed items as well
         await restartedViewModel.SelectCategoryCommand.ExecuteAsync("Symbols");
+        Assert.False(restartedViewModel.CategoryTabs[0].IsSelected);
+        Assert.True(restartedViewModel.CategoryTabs.Single(t => t.CategoryName == "Symbols").IsSelected);
+        Assert.False(restartedViewModel.ShowPopularFallbackSection);
+
         var symbolFire = restartedViewModel.DisplayedEmojis.First(x => x.Emoji == "❤️‍🔥");
         Assert.Equal(1, symbolFire.UsageCount);
 

@@ -1,723 +1,249 @@
 [
-  {
-    "emoji": "😀",
-    "name": "Grinning Face",
-    "category": "Smileys & Emotions",
-    "keywords": ["smile", "happy", "grin", "face", "joy", "হাসি", "খুশি"],
-    "aliases": [":grinning:", ":smile_face:"]
-  },
-  {
-    "emoji": "😃",
-    "name": "Grinning Face with Big Eyes",
-    "category": "Smileys & Emotions",
-    "keywords": ["smile", "happy", "joy", "open mouth", "হাসি", "আনন্দ"],
-    "aliases": [":smiley:"]
-  },
-  {
-    "emoji": "😄",
-    "name": "Grinning Face with Smiling Eyes",
-    "category": "Smileys & Emotions",
-    "keywords": ["smile", "happy", "laugh", "pleased", "হাসি"],
-    "aliases": [":smile:"]
-  },
-  {
-    "emoji": "😁",
-    "name": "Beaming Face with Smiling Eyes",
-    "category": "Smileys & Emotions",
-    "keywords": ["smile", "grin", "happy", "teeth", "হাসি"],
-    "aliases": [":grin:"]
-  },
-  {
-    "emoji": "😆",
-    "name": "Grinning Squinting Face",
-    "category": "Smileys & Emotions",
-    "keywords": ["smile", "laugh", "haha", "satisfied", "হাসি"],
-    "aliases": [":laughing:", ":satisfied:"]
-  },
-  {
-    "emoji": "😅",
-    "name": "Grinning Face with Sweat",
-    "category": "Smileys & Emotions",
-    "keywords": ["smile", "sweat", "relief", "nervous", "হাসি"],
-    "aliases": [":sweat_smile:"]
-  },
-  {
-    "emoji": "😂",
-    "name": "Face with Tears of Joy",
-    "category": "Smileys & Emotions",
-    "keywords": ["laugh", "joy", "tears", "lol", "funny", "হাসি", "কান্না"],
-    "aliases": [":joy:"]
-  },
-  {
-    "emoji": "🤣",
-    "name": "Rolling on the Floor Laughing",
-    "category": "Smileys & Emotions",
-    "keywords": ["rofl", "laugh", "lol", "hilarious", "হাসি"],
-    "aliases": [":rofl:"]
-  },
-  {
-    "emoji": "😊",
-    "name": "Smiling Face with Smiling Eyes",
-    "category": "Smileys & Emotions",
-    "keywords": ["smile", "blush", "warm", "happy", "হাসি", "মিষ্টি"],
-    "aliases": [":blush:"]
-  },
-  {
-    "emoji": "😇",
-    "name": "Smiling Face with Halo",
-    "category": "Smileys & Emotions",
-    "keywords": ["smile", "angel", "innocent", "halo", "ভালো"],
-    "aliases": [":innocent:"]
-  },
-  {
-    "emoji": "🙂",
-    "name": "Slightly Smiling Face",
-    "category": "Smileys & Emotions",
-    "keywords": ["smile", "friendly", "okay", "হাসি"],
-    "aliases": [":slight_smile:"]
-  },
-  {
-    "emoji": "😉",
-    "name": "Winking Face",
-    "category": "Smileys & Emotions",
-    "keywords": ["wink", "playful", "smile"],
-    "aliases": [":wink:"]
-  },
-  {
-    "emoji": "😍",
-    "name": "Smiling Face with Heart-Eyes",
-    "category": "Smileys & Emotions",
-    "keywords": ["love", "heart", "smile", "crush", "adore", "ভালোবাসা"],
-    "aliases": [":heart_eyes:"]
-  },
-  {
-    "emoji": "🥰",
-    "name": "Smiling Face with Hearts",
-    "category": "Smileys & Emotions",
-    "keywords": ["love", "heart", "smile", "affection", "ভালোবাসা", "আদর"],
-    "aliases": [":smiling_face_with_three_hearts:"]
-  },
-  {
-    "emoji": "😘",
-    "name": "Face Blowing a Kiss",
-    "category": "Smileys & Emotions",
-    "keywords": ["kiss", "love", "heart", "ভালোবাসা"],
-    "aliases": [":kissing_heart:"]
-  },
-  {
-    "emoji": "😎",
-    "name": "Smiling Face with Sunglasses",
-    "category": "Smileys & Emotions",
-    "keywords": ["cool", "sunglasses", "smile", "confident"],
-    "aliases": [":sunglasses:"]
-  },
-  {
-    "emoji": "🤔",
-    "name": "Thinking Face",
-    "category": "Smileys & Emotions",
-    "keywords": ["think", "hmm", "question", "idea", "চিন্তা", "ভাবনা"],
-    "aliases": [":thinking:"]
-  },
-  {
-    "emoji": "😢",
-    "name": "Crying Face",
-    "category": "Smileys & Emotions",
-    "keywords": ["sad", "cry", "tear", "upset", "কান্না", "দুঃখ"],
-    "aliases": [":cry:"]
-  },
-  {
-    "emoji": "😭",
-    "name": "Loudly Crying Face",
-    "category": "Smileys & Emotions",
-    "keywords": ["sob", "cry", "sad", "tears", "কান্না", "কষ্ট"],
-    "aliases": [":sob:"]
-  },
-  {
-    "emoji": "😡",
-    "name": "Pouting Face",
-    "category": "Smileys & Emotions",
-    "keywords": ["angry", "mad", "rage", "রাগ"],
-    "aliases": [":rage:"]
-  },
-  {
-    "emoji": "👍",
-    "name": "Thumbs Up",
-    "category": "People & Body",
-    "keywords": ["thumbs", "up", "like", "ok", "yes", "good", "approve", "ভালো", "ঠিক"],
-    "aliases": [":+1:", ":thumbsup:"]
-  },
-  {
-    "emoji": "👎",
-    "name": "Thumbs Down",
-    "category": "People & Body",
-    "keywords": ["thumbs", "down", "dislike", "no", "bad"],
-    "aliases": [":-1:", ":thumbsdown:"]
-  },
-  {
-    "emoji": "👏",
-    "name": "Clapping Hands",
-    "category": "People & Body",
-    "keywords": ["clap", "applause", "bravo", "congrats", "তালি", "অভিনন্দন"],
-    "aliases": [":clap:"]
-  },
-  {
-    "emoji": "🙏",
-    "name": "Folded Hands",
-    "category": "People & Body",
-    "keywords": ["pray", "thank you", "thanks", "please", "namaste", "salam", "ধন্যবাদ", "প্রার্থনা"],
-    "aliases": [":pray:"]
-  },
-  {
-    "emoji": "🤝",
-    "name": "Handshake",
-    "category": "People & Body",
-    "keywords": ["handshake", "deal", "agreement", "friend", "বন্ধুত্ব"],
-    "aliases": [":handshake:"]
-  },
-  {
-    "emoji": "👋",
-    "name": "Waving Hand",
-    "category": "People & Body",
-    "keywords": ["wave", "hello", "hi", "goodbye", "bye", "হ্যালো", "বিদায়"],
-    "aliases": [":wave:"]
-  },
-  {
-    "emoji": "👌",
-    "name": "OK Hand",
-    "category": "People & Body",
-    "keywords": ["ok", "perfect", "good", "fine", "দারুণ"],
-    "aliases": [":ok_hand:"]
-  },
-  {
-    "emoji": "✌️",
-    "name": "Victory Hand",
-    "category": "People & Body",
-    "keywords": ["peace", "victory", "two", "জয়"],
-    "aliases": [":v:"]
-  },
-  {
-    "emoji": "💪",
-    "name": "Flexed Biceps",
-    "category": "People & Body",
-    "keywords": ["strong", "muscle", "power", "fitness", "শক্তি"],
-    "aliases": [":muscle:"]
-  },
-  {
-    "emoji": "👨‍💻",
-    "name": "Man Technologist",
-    "category": "People & Body",
-    "keywords": ["developer", "coder", "programmer", "computer", "tech"],
-    "aliases": [":man_technologist:"]
-  },
-  {
-    "emoji": "🐯",
-    "name": "Tiger Face",
-    "category": "Animals & Nature",
-    "keywords": ["tiger", "bengal", "animal", "cat", "বাঘ", "রয়েল বেঙ্গল"],
-    "aliases": [":tiger:"]
-  },
-  {
-    "emoji": "🐱",
-    "name": "Cat Face",
-    "category": "Animals & Nature",
-    "keywords": ["cat", "kitten", "pet", "animal", "বিড়াল"],
-    "aliases": [":cat:"]
-  },
-  {
-    "emoji": "🐶",
-    "name": "Dog Face",
-    "category": "Animals & Nature",
-    "keywords": ["dog", "puppy", "pet", "animal", "কুকুর"],
-    "aliases": [":dog:"]
-  },
-  {
-    "emoji": "🕊️",
-    "name": "Dove",
-    "category": "Animals & Nature",
-    "keywords": ["bird", "peace", "dove", "পাখি", "শান্তি"],
-    "aliases": [":dove:"]
-  },
-  {
-    "emoji": "🐟",
-    "name": "Fish",
-    "category": "Animals & Nature",
-    "keywords": ["fish", "hilsha", "ilic", "seafood", "মাছ", "ইলিশ"],
-    "aliases": [":fish:"]
-  },
-  {
-    "emoji": "🌹",
-    "name": "Rose",
-    "category": "Animals & Nature",
-    "keywords": ["flower", "rose", "love", "nature", "ফুল", "গোলাপ"],
-    "aliases": [":rose:"]
-  },
-  {
-    "emoji": "🌸",
-    "name": "Cherry Blossom",
-    "category": "Animals & Nature",
-    "keywords": ["flower", "blossom", "spring", "nature", "ফুল"],
-    "aliases": [":cherry_blossom:"]
-  },
-  {
-    "emoji": "🌻",
-    "name": "Sunflower",
-    "category": "Animals & Nature",
-    "keywords": ["flower", "sunflower", "sun", "nature", "সূর্যমুখী"],
-    "aliases": [":sunflower:"]
-  },
-  {
-    "emoji": "🌳",
-    "name": "Deciduous Tree",
-    "category": "Animals & Nature",
-    "keywords": ["tree", "green", "nature", "forest", "গাছ", "প্রকৃতি"],
-    "aliases": [":deciduous_tree:"]
-  },
-  {
-    "emoji": "☀️",
-    "name": "Sun",
-    "category": "Animals & Nature",
-    "keywords": ["sun", "sunny", "weather", "morning", "সূর্য", "রোদ"],
-    "aliases": [":sunny:"]
-  },
-  {
-    "emoji": "🌙",
-    "name": "Crescent Moon",
-    "category": "Animals & Nature",
-    "keywords": ["moon", "night", "eid", "চাঁদ", "রাত"],
-    "aliases": [":crescent_moon:"]
-  },
-  {
-    "emoji": "🍎",
-    "name": "Red Apple",
-    "category": "Food & Drink",
-    "keywords": ["food", "fruit", "apple", "healthy", "খাবার", "ফল", "আপেল"],
-    "aliases": [":apple:"]
-  },
-  {
-    "emoji": "🥭",
-    "name": "Mango",
-    "category": "Food & Drink",
-    "keywords": ["food", "fruit", "mango", "summer", "খাবার", "আম"],
-    "aliases": [":mango:"]
-  },
-  {
-    "emoji": "🍌",
-    "name": "Banana",
-    "category": "Food & Drink",
-    "keywords": ["food", "fruit", "banana", "খাবার", "কলা"],
-    "aliases": [":banana:"]
-  },
-  {
-    "emoji": "🍕",
-    "name": "Pizza",
-    "category": "Food & Drink",
-    "keywords": ["food", "pizza", "slice", "cheese", "খাবার", "পিজ্জা"],
-    "aliases": [":pizza:"]
-  },
-  {
-    "emoji": "🍔",
-    "name": "Hamburger",
-    "category": "Food & Drink",
-    "keywords": ["food", "burger", "hamburger", "fastfood", "খাবার", "বার্গার"],
-    "aliases": [":hamburger:"]
-  },
-  {
-    "emoji": "🍟",
-    "name": "French Fries",
-    "category": "Food & Drink",
-    "keywords": ["food", "fries", "chips", "snack", "খাবার"],
-    "aliases": [":fries:"]
-  },
-  {
-    "emoji": "🍛",
-    "name": "Curry Rice",
-    "category": "Food & Drink",
-    "keywords": ["food", "rice", "curry", "biryani", "lunch", "dinner", "খাবার", "ভাত", "বিরিয়ানি"],
-    "aliases": [":curry:"]
-  },
-  {
-    "emoji": "🍚",
-    "name": "Cooked Rice",
-    "category": "Food & Drink",
-    "keywords": ["food", "rice", "meal", "খাবার", "ভাত"],
-    "aliases": [":rice:"]
-  },
-  {
-    "emoji": "🍜",
-    "name": "Steaming Bowl",
-    "category": "Food & Drink",
-    "keywords": ["food", "noodles", "soup", "ramen", "খাবার", "নুডলস"],
-    "aliases": [":ramen:"]
-  },
-  {
-    "emoji": "🎂",
-    "name": "Birthday Cake",
-    "category": "Food & Drink",
-    "keywords": ["food", "cake", "birthday", "sweet", "dessert", "খাবার", "কেক", "জন্মদিন"],
-    "aliases": [":birthday:"]
-  },
-  {
-    "emoji": "☕",
-    "name": "Hot Beverage",
-    "category": "Food & Drink",
-    "keywords": ["drink", "tea", "coffee", "chai", "food", "চা", "কফি"],
-    "aliases": [":coffee:"]
-  },
-  {
-    "emoji": "🍵",
-    "name": "Teacup Without Handle",
-    "category": "Food & Drink",
-    "keywords": ["drink", "tea", "green tea", "food", "চা"],
-    "aliases": [":tea:"]
-  },
-  {
-    "emoji": "🏠",
-    "name": "House",
-    "category": "Travel & Places",
-    "keywords": ["home", "house", "building", "place", "বাড়ি", "ঘর"],
-    "aliases": [":house:"]
-  },
-  {
-    "emoji": "🚗",
-    "name": "Automobile",
-    "category": "Travel & Places",
-    "keywords": ["car", "drive", "travel", "vehicle", "গাড়ি"],
-    "aliases": [":car:"]
-  },
-  {
-    "emoji": "🚌",
-    "name": "Bus",
-    "category": "Travel & Places",
-    "keywords": ["bus", "transport", "travel", "বাস"],
-    "aliases": [":bus:"]
-  },
-  {
-    "emoji": "✈️",
-    "name": "Airplane",
-    "category": "Travel & Places",
-    "keywords": ["airplane", "flight", "travel", "trip", "বিমান", "ভ্রমণ"],
-    "aliases": [":airplane:"]
-  },
-  {
-    "emoji": "🚀",
-    "name": "Rocket",
-    "category": "Travel & Places",
-    "keywords": ["rocket", "launch", "space", "fast", "speed", "রকেট"],
-    "aliases": [":rocket:"]
-  },
-  {
-    "emoji": "🌍",
-    "name": "Globe Showing Europe-Africa",
-    "category": "Travel & Places",
-    "keywords": ["world", "earth", "globe", "planet", "পৃথিবী", "বিশ্ব"],
-    "aliases": [":earth_africa:"]
-  },
-  {
-    "emoji": "🕌",
-    "name": "Mosque",
-    "category": "Travel & Places",
-    "keywords": ["mosque", "islam", "prayer", "place", "মসজিদ"],
-    "aliases": [":mosque:"]
-  },
-  {
-    "emoji": "🛕",
-    "name": "Hindu Temple",
-    "category": "Travel & Places",
-    "keywords": ["temple", "hindu", "prayer", "place", "মন্দির"],
-    "aliases": [":hindu_temple:"]
-  },
-  {
-    "emoji": "🎉",
-    "name": "Party Popper",
-    "category": "Activities",
-    "keywords": ["party", "celebration", "congrats", "tada", "উৎসব", "অভিনন্দন"],
-    "aliases": [":tada:"]
-  },
-  {
-    "emoji": "🎊",
-    "name": "Confetti Ball",
-    "category": "Activities",
-    "keywords": ["party", "celebrate", "festival", "উৎসব"],
-    "aliases": [":confetti_ball:"]
-  },
-  {
-    "emoji": "🎈",
-    "name": "Balloon",
-    "category": "Activities",
-    "keywords": ["balloon", "party", "birthday", "বেলুন"],
-    "aliases": [":balloon:"]
-  },
-  {
-    "emoji": "🎁",
-    "name": "Wrapped Gift",
-    "category": "Activities",
-    "keywords": ["gift", "present", "birthday", "surprise", "উপহার"],
-    "aliases": [":gift:"]
-  },
-  {
-    "emoji": "🏏",
-    "name": "Cricket Game",
-    "category": "Activities",
-    "keywords": ["cricket", "sport", "bat", "ball", "game", "ক্রিকেট", "খেলা"],
-    "aliases": [":cricket_game:"]
-  },
-  {
-    "emoji": "⚽",
-    "name": "Soccer Ball",
-    "category": "Activities",
-    "keywords": ["football", "soccer", "sport", "ball", "game", "ফুটবল", "খেলা"],
-    "aliases": [":soccer:"]
-  },
-  {
-    "emoji": "🏆",
-    "name": "Trophy",
-    "category": "Activities",
-    "keywords": ["trophy", "winner", "champion", "award", "জয়", "চ্যাম্পিয়ন"],
-    "aliases": [":trophy:"]
-  },
-  {
-    "emoji": "🎵",
-    "name": "Musical Note",
-    "category": "Activities",
-    "keywords": ["music", "song", "note", "audio", "গান", "সুর"],
-    "aliases": [":musical_note:"]
-  },
-  {
-    "emoji": "💻",
-    "name": "Laptop",
-    "category": "Objects",
-    "keywords": ["computer", "laptop", "pc", "work", "code", "কম্পিউটার", "ল্যাপটপ"],
-    "aliases": [":computer:"]
-  },
-  {
-    "emoji": "📱",
-    "name": "Mobile Phone",
-    "category": "Objects",
-    "keywords": ["phone", "mobile", "smartphone", "call", "মোবাইল", "ফোন"],
-    "aliases": [":iphone:"]
-  },
-  {
-    "emoji": "⌨️",
-    "name": "Keyboard",
-    "category": "Objects",
-    "keywords": ["keyboard", "type", "typing", "input", "কীবোর্ড", "টাইপ"],
-    "aliases": [":keyboard:"]
-  },
-  {
-    "emoji": "📚",
-    "name": "Books",
-    "category": "Objects",
-    "keywords": ["book", "books", "study", "read", "education", "বই", "পড়াশোনা"],
-    "aliases": [":books:"]
-  },
-  {
-    "emoji": "✍️",
-    "name": "Writing Hand",
-    "category": "Objects",
-    "keywords": ["write", "pen", "note", "author", "লেখা"],
-    "aliases": [":writing_hand:"]
-  },
-  {
-    "emoji": "💡",
-    "name": "Light Bulb",
-    "category": "Objects",
-    "keywords": ["idea", "light", "bulb", "tip", "smart", "বুদ্ধি", "আইডিয়া"],
-    "aliases": [":bulb:"]
-  },
-  {
-    "emoji": "🔒",
-    "name": "Locked",
-    "category": "Objects",
-    "keywords": ["lock", "security", "safe", "private", "নিরাপত্তা"],
-    "aliases": [":lock:"]
-  },
-  {
-    "emoji": "🔑",
-    "name": "Key",
-    "category": "Objects",
-    "keywords": ["key", "password", "unlock", "access", "চাবি"],
-    "aliases": [":key:"]
-  },
-  {
-    "emoji": "❤️",
-    "name": "Red Heart",
-    "category": "Symbols",
-    "keywords": ["heart", "love", "red", "romance", "like", "ভালোবাসা", "হৃদয়"],
-    "aliases": [":heart:"]
-  },
-  {
-    "emoji": "💙",
-    "name": "Blue Heart",
-    "category": "Symbols",
-    "keywords": ["heart", "love", "blue", "trust", "ভালোবাসা", "হৃদয়"],
-    "aliases": [":blue_heart:"]
-  },
-  {
-    "emoji": "💚",
-    "name": "Green Heart",
-    "category": "Symbols",
-    "keywords": ["heart", "love", "green", "nature", "ভালোবাসা", "হৃদয়"],
-    "aliases": [":green_heart:"]
-  },
-  {
-    "emoji": "💛",
-    "name": "Yellow Heart",
-    "category": "Symbols",
-    "keywords": ["heart", "love", "yellow", "friendship", "ভালোবাসা", "হৃদয়"],
-    "aliases": [":yellow_heart:"]
-  },
-  {
-    "emoji": "💜",
-    "name": "Purple Heart",
-    "category": "Symbols",
-    "keywords": ["heart", "love", "purple", "ভালোবাসা", "হৃদয়"],
-    "aliases": [":purple_heart:"]
-  },
-  {
-    "emoji": "🖤",
-    "name": "Black Heart",
-    "category": "Symbols",
-    "keywords": ["heart", "love", "black", "হৃদয়"],
-    "aliases": [":black_heart:"]
-  },
-  {
-    "emoji": "🤍",
-    "name": "White Heart",
-    "category": "Symbols",
-    "keywords": ["heart", "love", "white", "pure", "হৃদয়"],
-    "aliases": [":white_heart:"]
-  },
-  {
-    "emoji": "💔",
-    "name": "Broken Heart",
-    "category": "Symbols",
-    "keywords": ["heart", "broken", "sad", "pain", "হৃদয়", "কষ্ট"],
-    "aliases": [":broken_heart:"]
-  },
-  {
-    "emoji": "❤️‍🔥",
-    "name": "Heart on Fire",
-    "category": "Symbols",
-    "keywords": ["heart", "fire", "love", "passion", "ভালোবাসা", "আগুন"],
-    "aliases": [":heart_on_fire:"]
-  },
-  {
-    "emoji": "💕",
-    "name": "Two Hearts",
-    "category": "Symbols",
-    "keywords": ["heart", "hearts", "love", "couple", "ভালোবাসা"],
-    "aliases": [":two_hearts:"]
-  },
-  {
-    "emoji": "🔥",
-    "name": "Fire",
-    "category": "Symbols",
-    "keywords": ["fire", "hot", "lit", "flame", "trending", "আগুন"],
-    "aliases": [":fire:"]
-  },
-  {
-    "emoji": "✨",
-    "name": "Sparkles",
-    "category": "Symbols",
-    "keywords": ["sparkle", "star", "shine", "magic", "new", "তারা"],
-    "aliases": [":sparkles:"]
-  },
-  {
-    "emoji": "⭐",
-    "name": "Star",
-    "category": "Symbols",
-    "keywords": ["star", "favorite", "rating", "gold", "তারা"],
-    "aliases": [":star:"]
-  },
-  {
-    "emoji": "💯",
-    "name": "Hundred Points",
-    "category": "Symbols",
-    "keywords": ["100", "perfect", "score", "full", "একশো"],
-    "aliases": [":100:"]
-  },
-  {
-    "emoji": "✅",
-    "name": "Check Mark Button",
-    "category": "Symbols",
-    "keywords": ["check", "yes", "done", "complete", "correct", "ঠিক", "সম্পন্ন"],
-    "aliases": [":white_check_mark:"]
-  },
-  {
-    "emoji": "❌",
-    "name": "Cross Mark",
-    "category": "Symbols",
-    "keywords": ["cross", "no", "wrong", "delete", "cancel", "ভুল", "বাতিল"],
-    "aliases": [":x:"]
-  },
-  {
-    "emoji": "⚠️",
-    "name": "Warning",
-    "category": "Symbols",
-    "keywords": ["warning", "alert", "caution", "সতর্কতা"],
-    "aliases": [":warning:"]
-  },
-  {
-    "emoji": "🇧🇩",
-    "name": "Flag: Bangladesh",
-    "category": "Flags",
-    "keywords": ["flag", "bangladesh", "bd", "dhaka", "bangla", "বাংলাদেশ", "পতাকা"],
-    "aliases": [":flag_bd:", ":bangladesh:"]
-  },
-  {
-    "emoji": "🇮🇳",
-    "name": "Flag: India",
-    "category": "Flags",
-    "keywords": ["flag", "india", "in", "kolkata", "ভারত", "পতাকা"],
-    "aliases": [":flag_in:", ":india:"]
-  },
-  {
-    "emoji": "🇺🇸",
-    "name": "Flag: United States",
-    "category": "Flags",
-    "keywords": ["flag", "usa", "us", "america", "পতাকা"],
-    "aliases": [":flag_us:", ":us:"]
-  },
-  {
-    "emoji": "🇬🇧",
-    "name": "Flag: United Kingdom",
-    "category": "Flags",
-    "keywords": ["flag", "uk", "britain", "england", "পতাকা"],
-    "aliases": [":flag_gb:", ":uk:"]
-  },
-  {
-    "emoji": "🇨🇦",
-    "name": "Flag: Canada",
-    "category": "Flags",
-    "keywords": ["flag", "canada", "ca", "পতাকা"],
-    "aliases": [":flag_ca:"]
-  },
-  {
-    "emoji": "🇦🇺",
-    "name": "Flag: Australia",
-    "category": "Flags",
-    "keywords": ["flag", "australia", "au", "পতাকা"],
-    "aliases": [":flag_au:"]
-  },
-  {
-    "emoji": "🇸🇦",
-    "name": "Flag: Saudi Arabia",
-    "category": "Flags",
-    "keywords": ["flag", "saudi", "sa", "পতাকা"],
-    "aliases": [":flag_sa:"]
-  },
-  {
-    "emoji": "🇯🇵",
-    "name": "Flag: Japan",
-    "category": "Flags",
-    "keywords": ["flag", "japan", "jp", "পতাকা"],
-    "aliases": [":flag_jp:"]
-  },
-  {
-    "emoji": "🏳️",
-    "name": "White Flag",
-    "category": "Flags",
-    "keywords": ["flag", "white", "peace", "পতাকা"],
-    "aliases": [":white_flag:"]
-  }
+  { "Emoji": "😀", "Name": "Grinning Face", "Category": "Smileys & Emotions", "Keywords": ["smile", "happy", "grin", "face", "হাসি", "খুশি", " আনন্দ"] },
+  { "Emoji": "😃", "Name": "Grinning Face with Big Eyes", "Category": "Smileys & Emotions", "Keywords": ["smile", "happy", "joy", "excited", "হাসি", "খুশি"] },
+  { "Emoji": "😄", "Name": "Grinning Face with Smiling Eyes", "Category": "Smileys & Emotions", "Keywords": ["smile", "happy", "laugh", "joy", "হাসি", "আনন্দ"] },
+  { "Emoji": "😁", "Name": "Beaming Face with Smiling Eyes", "Category": "Smileys & Emotions", "Keywords": ["smile", "grin", "happy", "teeth", "হাসি"] },
+  { "Emoji": "😆", "Name": "Grinning Squinting Face", "Category": "Smileys & Emotions", "Keywords": ["smile", "laugh", "haha", "satisfied", "হাসি", "হা হা"] },
+  { "Emoji": "😅", "Name": "Grinning Face with Sweat", "Category": "Smileys & Emotions", "Keywords": ["smile", "sweat", "relief", "nervous", "হাসি", "ঘাম"] },
+  { "Emoji": "🤣", "Name": "Rolling on the Floor Laughing", "Category": "Smileys & Emotions", "Keywords": ["rofl", "lol", "laugh", "funny", "হাসি", "মজা"] },
+  { "Emoji": "😂", "Name": "Face with Tears of Joy", "Category": "Smileys & Emotions", "Keywords": ["joy", "laugh", "tears", "lol", "funny", "হাসি", "আনন্দ"] },
+  { "Emoji": "🙂", "Name": "Slightly Smiling Face", "Category": "Smileys & Emotions", "Keywords": ["smile", "polite", "happy", "মৃদু হাসি", "হাসি"] },
+  { "Emoji": "🙃", "Name": "Upside-Down Face", "Category": "Smileys & Emotions", "Keywords": ["silly", "sarcasm", "smile", "উল্টো", "মজা"] },
+  { "Emoji": "😉", "Name": "Winking Face", "Category": "Smileys & Emotions", "Keywords": ["wink", "flirt", "joke", "চোখ মারা", "ইশারা"] },
+  { "Emoji": "😊", "Name": "Smiling Face with Smiling Eyes", "Category": "Smileys & Emotions", "Keywords": ["smile", "blush", "happy", "warm", "হাসি", "লজ্জা", "খুশি"] },
+  { "Emoji": "😇", "Name": "Smiling Face with Halo", "Category": "Smileys & Emotions", "Keywords": ["angel", "innocent", "blessed", "smile", "ফেরেশতা", "নিষ্পাপ"] },
+  { "Emoji": "🥰", "Name": "Smiling Face with Hearts", "Category": "Smileys & Emotions", "Keywords": ["love", "hearts", "adore", "smile", "crush", "ভালোবাসা", "প্রেম", "আদর"] },
+  { "Emoji": "😍", "Name": "Smiling Face with Heart-Eyes", "Category": "Smileys & Emotions", "Keywords": ["love", "heart", "eyes", "smile", "adore", "ভালোবাসা", "পছন্দ"] },
+  { "Emoji": "🤩", "Name": "Star-Struck", "Category": "Smileys & Emotions", "Keywords": ["star", "excited", "amazing", "wow", "অবাক", "দারুণ"] },
+  { "Emoji": "😘", "Name": "Face Blowing a Kiss", "Category": "Smileys & Emotions", "Keywords": ["kiss", "love", "heart", "চুমু", "ভালোবাসা"] },
+  { "Emoji": "😗", "Name": "Kissing Face", "Category": "Smileys & Emotions", "Keywords": ["kiss", "love", "চুমু"] },
+  { "Emoji": "😚", "Name": "Kissing Face with Closed Eyes", "Category": "Smileys & Emotions", "Keywords": ["kiss", "blush", "love", "চুমু", "আদর"] },
+  { "Emoji": "😋", "Name": "Face Savoring Food", "Category": "Smileys & Emotions", "Keywords": ["yum", "delicious", "tasty", "food", "smile", "মজা", "স্বাদ"] },
+  { "Emoji": "😛", "Name": "Face with Tongue", "Category": "Smileys & Emotions", "Keywords": ["tongue", "playful", "silly", "জিহ্বা", "দুষ্টু"] },
+  { "Emoji": "😜", "Name": "Winking Face with Tongue", "Category": "Smileys & Emotions", "Keywords": ["wink", "tongue", "crazy", "fun", "মজা", "দুষ্টুমি"] },
+  { "Emoji": "🤪", "Name": "Zany Face", "Category": "Smileys & Emotions", "Keywords": [" goofy", "crazy", "wild", "পাগলামি", "মজা"] },
+  { "Emoji": "🤗", "Name": "Smiling Face with Open Hands", "Category": "Smileys & Emotions", "Keywords": ["hug", "warm", "welcome", "আলিঙ্গন", "স্বাগতম"] },
+  { "Emoji": "🤭", "Name": "Face with Hand Over Mouth", "Category": "Smileys & Emotions", "Keywords": ["oops", "giggle", "secret", "লজ্জা", "গোপন"] },
+  { "Emoji": "🤫", "Name": "Shushing Face", "Category": "Smileys & Emotions", "Keywords": ["quiet", "shh", "silence", "secret", "চুপ", "নীরব"] },
+  { "Emoji": "🤔", "Name": "Thinking Face", "Category": "Smileys & Emotions", "Keywords": ["think", "hmm", "wonder", "question", "চিন্তা", "ভাবনা"] },
+  { "Emoji": "🫡", "Name": "Saluting Face", "Category": "Smileys & Emotions", "Keywords": ["salute", "respect", "yes", "সালাম", "সম্মান"] },
+  { "Emoji": "😐", "Name": "Neutral Face", "Category": "Smileys & Emotions", "Keywords": ["neutral", "meh", "blank", "নীরব", "সাধারণ"] },
+  { "Emoji": "😑", "Name": "Expressionless Face", "Category": "Smileys & Emotions", "Keywords": ["blank", "unamused", "বিরক্ত"] },
+  { "Emoji": "🙄", "Name": "Face with Rolling Eyes", "Category": "Smileys & Emotions", "Keywords": ["eyeroll", "bored", "whatever", "বিরক্ত", "অবহেলা"] },
+  { "Emoji": "😌", "Name": "Relieved Face", "Category": "Smileys & Emotions", "Keywords": ["relief", "calm", "peace", "শান্তি", "স্বস্তি"] },
+  { "Emoji": "😔", "Name": "Pensive Face", "Category": "Smileys & Emotions", "Keywords": ["sad", "pensive", "down", "মন খারাপ", "দুঃখ"] },
+  { "Emoji": "😪", "Name": "Sleepy Face", "Category": "Smileys & Emotions", "Keywords": ["tired", "sleepy", "ঘুম", "ক্লান্ত"] },
+  { "Emoji": "😴", "Name": "Sleeping Face", "Category": "Smileys & Emotions", "Keywords": ["sleep", "zzz", "tired", "night", "ঘুম", "রাত"] },
+  { "Emoji": "😷", "Name": "Face with Medical Mask", "Category": "Smileys & Emotions", "Keywords": ["mask", "sick", "doctor", "মাস্ক", "অসুস্থ"] },
+  { "Emoji": "🤒", "Name": "Face with Thermometer", "Category": "Smileys & Emotions", "Keywords": ["sick", "fever", "ill", "জ্বর", "অসুস্থ"] },
+  { "Emoji": "🥵", "Name": "Hot Face", "Category": "Smileys & Emotions", "Keywords": ["hot", "heat", "sweat", "গরম"] },
+  { "Emoji": "🥶", "Name": "Cold Face", "Category": "Smileys & Emotions", "Keywords": ["cold", "freezing", "ice", "ঠান্ডা", "শীত"] },
+  { "Emoji": "🥳", "Name": "Partying Face", "Category": "Smileys & Emotions", "Keywords": ["party", "celebrate", "birthday", "উৎসব", "জন্মদিন", "আনন্দ"] },
+  { "Emoji": "😎", "Name": "Smiling Face with Sunglasses", "Category": "Smileys & Emotions", "Keywords": ["cool", "sunglasses", "smart", "chill", "স্মার্ট", "কুল"] },
+  { "Emoji": "🤓", "Name": "Nerd Face", "Category": "Smileys & Emotions", "Keywords": ["nerd", "glasses", "geek", "study", "পড়ুয়া", "চশমা"] },
+  { "Emoji": "🥺", "Name": "Pleading Face", "Category": "Smileys & Emotions", "Keywords": ["pleading", "cute", "please", "eyes", "অনুরোধ", "মায়া"] },
+  { "Emoji": "😢", "Name": "Crying Face", "Category": "Smileys & Emotions", "Keywords": ["cry", "sad", "tear", "কান্না", "দুঃখ", "মন খারাপ"] },
+  { "Emoji": "😭", "Name": "Loudly Crying Face", "Category": "Smileys & Emotions", "Keywords": ["cry", "sob", "sad", "tears", "কান্না", "দুঃখ"] },
+  { "Emoji": "😱", "Name": "Face Screaming in Fear", "Category": "Smileys & Emotions", "Keywords": ["scream", "shock", "fear", "omg", "ভয়", "অবাক"] },
+  { "Emoji": "😤", "Name": "Face with Steam From Nose", "Category": "Smileys & Emotions", "Keywords": ["angry", "frustrated", "proud", "রাগ", "জেদ"] },
+  { "Emoji": "😡", "Name": "Enraged Face", "Category": "Smileys & Emotions", "Keywords": ["angry", "mad", "rage", "hate", "রাগ", "ক্ষোভ"] },
+  { "Emoji": "🤬", "Name": "Face with Symbols on Mouth", "Category": "Smileys & Emotions", "Keywords": ["swear", "angry", "mad", "রাগ", "গালি"] },
+  { "Emoji": "🤯", "Name": "Exploding Head", "Category": "Smileys & Emotions", "Keywords": ["mindblown", "shocked", "amazed", "অবাক", "বিস্ময়"] },
+
+  { "Emoji": "👋", "Name": "Waving Hand", "Category": "People & Body", "Keywords": ["wave", "hello", "hi", "bye", "হাত", "হ্যালো", "বিদায়"] },
+  { "Emoji": "🤚", "Name": "Raised Back of Hand", "Category": "People & Body", "Keywords": ["hand", "stop", "হাত", "থামুন"] },
+  { "Emoji": "✋", "Name": "Raised Hand", "Category": "People & Body", "Keywords": ["hand", "highfive", "stop", "হাত"] },
+  { "Emoji": "👌", "Name": "OK Hand", "Category": "People & Body", "Keywords": ["ok", "perfect", "good", "fine", "ঠিক আছে", "ভালো", "দারুণ"] },
+  { "Emoji": "🤌", "Name": "Pinched Fingers", "Category": "People & Body", "Keywords": ["italian", "chef", "what", "চমৎকার"] },
+  { "Emoji": "✌️", "Name": "Victory Hand", "Category": "People & Body", "Keywords": ["peace", "victory", "two", "জয়", "শান্তি"] },
+  { "Emoji": "🤞", "Name": "Crossed Fingers", "Category": "People & Body", "Keywords": ["luck", "hope", "wish", "ভাগ্য", "আশা"] },
+  { "Emoji": "🫰", "Name": "Hand with Index Finger and Thumb Crossed", "Category": "People & Body", "Keywords": ["love", "finger heart", "money", "ভালোবাসা", "টাকা"] },
+  { "Emoji": "🤟", "Name": "Love-You Gesture", "Category": "People & Body", "Keywords": ["love", "rock", "ভালোবাসা"] },
+  { "Emoji": "👍", "Name": "Thumbs Up", "Category": "People & Body", "Keywords": ["like", "good", "yes", "approve", "ok", "ভালো", "লাইক", "হ্যাঁ"] },
+  { "Emoji": "👎", "Name": "Thumbs Down", "Category": "People & Body", "Keywords": ["dislike", "bad", "no", "খারাপ", "না"] },
+  { "Emoji": "✊", "Name": "Raised Fist", "Category": "People & Body", "Keywords": ["fist", "power", "solidarity", "শক্তি", "ঐক্য"] },
+  { "Emoji": "👊", "Name": "Oncoming Fist", "Category": "People & Body", "Keywords": ["fist", "bump", "punch", "ঘুষি", "বন্ধু"] },
+  { "Emoji": "👏", "Name": "Clapping Hands", "Category": "People & Body", "Keywords": ["clap", "applause", "bravo", "congrats", "তালি", "হাততালি", "অভিনন্দন"] },
+  { "Emoji": "🙌", "Name": "Raising Hands", "Category": "People & Body", "Keywords": ["celebrate", "hooray", "praise", "hands", "আনন্দ", "জয়"] },
+  { "Emoji": "🫶", "Name": "Heart Hands", "Category": "People & Body", "Keywords": ["love", "heart", "hands", "care", "ভালোবাসা", "হৃদয়"] },
+  { "Emoji": "👐", "Name": "Open Hands", "Category": "People & Body", "Keywords": ["hands", "open", "hug", "হাত"] },
+  { "Emoji": "🤲", "Name": "Palms Up Together", "Category": "People & Body", "Keywords": ["dua", "prayer", "pray", "hands", "দোয়া", "মোনাজাত", "প্রার্থনা"] },
+  { "Emoji": "🤝", "Name": "Handshake", "Category": "People & Body", "Keywords": ["handshake", "deal", "agree", "friend", "করমর্দন", "চুক্তি", "বন্ধুত্ব"] },
+  { "Emoji": "🙏", "Name": "Folded Hands", "Category": "People & Body", "Keywords": ["pray", "please", "thank you", "namaste", "প্রার্থনা", "ধন্যবাদ", "নমস্কার"] },
+  { "Emoji": "✍️", "Name": "Writing Hand", "Category": "People & Body", "Keywords": ["write", "pen", "note", "লেখা", "কলম"] },
+  { "Emoji": "💪", "Name": "Flexed Biceps", "Category": "People & Body", "Keywords": ["strong", "muscle", "power", "gym", "শক্তি", "সাহস"] },
+  { "Emoji": "🧠", "Name": "Brain", "Category": "People & Body", "Keywords": ["brain", "smart", "mind", "think", "বুদ্ধি", "মস্তিষ্ক"] },
+  { "Emoji": "👀", "Name": "Eyes", "Category": "People & Body", "Keywords": ["eyes", "look", "see", "watch", "চোখ", "দেখা"] },
+
+  { "Emoji": "🐶", "Name": "Dog Face", "Category": "Animals & Nature", "Keywords": ["dog", "puppy", "pet", "animal", "কুকুর", "ছানা"] },
+  { "Emoji": "🐱", "Name": "Cat Face", "Category": "Animals & Nature", "Keywords": ["cat", "kitten", "pet", "animal", "বিড়াল", "ছানা"] },
+  { "Emoji": "🐭", "Name": "Mouse Face", "Category": "Animals & Nature", "Keywords": ["mouse", "rat", "ইঁদুর"] },
+  { "Emoji": "🐰", "Name": "Rabbit Face", "Category": "Animals & Nature", "Keywords": ["rabbit", "bunny", "cute", "খরগোশ"] },
+  { "Emoji": "🦊", "Name": "Fox", "Category": "Animals & Nature", "Keywords": ["fox", "clever", "শিয়াল"] },
+  { "Emoji": "🐻", "Name": "Bear", "Category": "Animals & Nature", "Keywords": ["bear", "animal", "ভালুক"] },
+  { "Emoji": "🐼", "Name": "Panda", "Category": "Animals & Nature", "Keywords": ["panda", "bear", "cute", "পান্ডা"] },
+  { "Emoji": "🐯", "Name": "Tiger Face", "Category": "Animals & Nature", "Keywords": ["tiger", "bengal", "cat", "animal", "বাঘ", "রয়েল বেঙ্গল টাইগার"] },
+  { "Emoji": "🦁", "Name": "Lion", "Category": "Animals & Nature", "Keywords": ["lion", "king", "animal", "সিংহ", "রাজা"] },
+  { "Emoji": "🐮", "Name": "Cow Face", "Category": "Animals & Nature", "Keywords": ["cow", "cattle", "animal", "গরু"] },
+  { "Emoji": "🐸", "Name": "Frog", "Category": "Animals & Nature", "Keywords": ["frog", "toad", "ব্যাঙ"] },
+  { "Emoji": "🐵", "Name": "Monkey Face", "Category": "Animals & Nature", "Keywords": ["monkey", "ape", "বানর"] },
+  { "Emoji": "🐔", "Name": "Chicken", "Category": "Animals & Nature", "Keywords": ["chicken", "hen", "bird", "মুরগি"] },
+  { "Emoji": "🕊️", "Name": "Dove", "Category": "Animals & Nature", "Keywords": ["dove", "peace", "bird", "ঘুঘু", "কবুতর", "শান্তি"] },
+  { "Emoji": "🦅", "Name": "Eagle", "Category": "Animals & Nature", "Keywords": ["eagle", "bird", "ঈগল", "পাখি"] },
+  { "Emoji": "🦋", "Name": "Butterfly", "Category": "Animals & Nature", "Keywords": ["butterfly", "insect", "nature", "প্রজাপতি"] },
+  { "Emoji": "🐝", "Name": "Honeybee", "Category": "Animals & Nature", "Keywords": ["bee", "honey", "মৌমাছি", "মধু"] },
+  { "Emoji": "🌸", "Name": "Cherry Blossom", "Category": "Animals & Nature", "Keywords": ["flower", "pink", "spring", "nature", "ফুল", "বসন্ত"] },
+  { "Emoji": "🌹", "Name": "Rose", "Category": "Animals & Nature", "Keywords": ["rose", "flower", "red", "love", "গোলাপ", "ফুল", "ভালোবাসা"] },
+  { "Emoji": "🌺", "Name": "Hibiscus", "Category": "Animals & Nature", "Keywords": ["flower", "hibiscus", "জবা", "ফুল"] },
+  { "Emoji": "🌻", "Name": "Sunflower", "Category": "Animals & Nature", "Keywords": ["sunflower", "flower", "yellow", "সূর্যমুখী", "ফুল"] },
+  { "Emoji": "🌷", "Name": "Tulip", "Category": "Animals & Nature", "Keywords": ["tulip", "flower", "ফুল"] },
+  { "Emoji": "🌿", "Name": "Herb", "Category": "Animals & Nature", "Keywords": ["herb", "leaf", "green", "nature", "পাতা", "সবুজ", "প্রকৃতি"] },
+  { "Emoji": "🌳", "Name": "Deciduous Tree", "Category": "Animals & Nature", "Keywords": ["tree", "nature", "green", "গাছ", "প্রকৃতি"] },
+  { "Emoji": "🌴", "Name": "Palm Tree", "Category": "Animals & Nature", "Keywords": ["palm", "tree", "beach", "নারকেল গাছ", "গাছ"] },
+  { "Emoji": "☀️", "Name": "Sun", "Category": "Animals & Nature", "Keywords": ["sun", "sunny", "bright", "day", "সূর্য", "রোদ", "দিন"] },
+  { "Emoji": "🌙", "Name": "Crescent Moon", "Category": "Animals & Nature", "Keywords": ["moon", "night", "eid", "চাঁদ", "রাত", "ঈদ"] },
+  { "Emoji": "⭐", "Name": "Star", "Category": "Animals & Nature", "Keywords": ["star", "night", "shine", "তারা", "নক্ষত্র"] },
+  { "Emoji": "🌟", "Name": "Glowing Star", "Category": "Animals & Nature", "Keywords": ["star", "sparkle", "shine", "তারা", "উজ্জ্বল"] },
+  { "Emoji": "🌧️", "Name": "Cloud with Rain", "Category": "Animals & Nature", "Keywords": ["rain", "weather", "monsoon", "বৃষ্টি", "বর্ষা", "মেঘ"] },
+  { "Emoji": "🌈", "Name": "Rainbow", "Category": "Animals & Nature", "Keywords": ["rainbow", "colorful", "sky", "রংধনু", "আকাশ"] },
+
+  { "Emoji": "🍎", "Name": "Red Apple", "Category": "Food & Drink", "Keywords": ["apple", "fruit", "food", "red", "আপেল", "ফল", "খাবার"] },
+  { "Emoji": "🥭", "Name": "Mango", "Category": "Food & Drink", "Keywords": ["mango", "fruit", "food", "summer", "আম", "ফল", "খাবার"] },
+  { "Emoji": "🍌", "Name": "Banana", "Category": "Food & Drink", "Keywords": ["banana", "fruit", "food", "কলা", "ফল"] },
+  { "Emoji": "🍉", "Name": "Watermelon", "Category": "Food & Drink", "Keywords": ["watermelon", "fruit", "food", "তরমুজ", "ফল"] },
+  { "Emoji": "🍇", "Name": "Grapes", "Category": "Food & Drink", "Keywords": ["grapes", "fruit", "food", "আঙুর", "ফল"] },
+  { "Emoji": "🍓", "Name": "Strawberry", "Category": "Food & Drink", "Keywords": ["strawberry", "fruit", "berry", "স্ট্রবেরি", "ফল"] },
+  { "Emoji": "🍕", "Name": "Pizza", "Category": "Food & Drink", "Keywords": ["pizza", "food", "cheese", "slice", "পিৎজা", "খাবার"] },
+  { "Emoji": "🍔", "Name": "Hamburger", "Category": "Food & Drink", "Keywords": ["burger", "food", "fastfood", "বার্গার", "খাবার"] },
+  { "Emoji": "🍟", "Name": "French Fries", "Category": "Food & Drink", "Keywords": ["fries", "food", "snack", "ফ্রাই", "খাবার"] },
+  { "Emoji": "🌭", "Name": "Hot Dog", "Category": "Food & Drink", "Keywords": ["hotdog", "food", "snack", "খাবার"] },
+  { "Emoji": "🥪", "Name": "Sandwich", "Category": "Food & Drink", "Keywords": ["sandwich", "food", "bread", "স্যান্ডউইচ", "নাস্তা"] },
+  { "Emoji": "🍗", "Name": "Poultry Leg", "Category": "Food & Drink", "Keywords": ["chicken", "meat", "food", "রোস্ট", "মুরগি", "খাবার"] },
+  { "Emoji": "🍛", "Name": "Curry Rice", "Category": "Food & Drink", "Keywords": ["curry", "rice", "biryani", "food", "ভাত", "বিরিয়ানি", "তরকারি", "খাবার"] },
+  { "Emoji": "🍜", "Name": "Steaming Bowl", "Category": "Food & Drink", "Keywords": ["noodles", "soup", "ramen", "food", "নুডলস", "স্যুপ", "খাবার"] },
+  { "Emoji": "🥗", "Name": "Green Salad", "Category": "Food & Drink", "Keywords": ["salad", "healthy", "food", "সালাদ", "খাবার"] },
+  { "Emoji": "🍿", "Name": "Popcorn", "Category": "Food & Drink", "Keywords": ["popcorn", "movie", "snack", "পপকর্ন"] },
+  { "Emoji": "🍦", "Name": "Soft Ice Cream", "Category": "Food & Drink", "Keywords": ["icecream", "sweet", "dessert", "আইসক্রিম", "মিষ্টি"] },
+  { "Emoji": "🍰", "Name": "Shortcake", "Category": "Food & Drink", "Keywords": ["cake", "sweet", "dessert", "কেক", "মিষ্টি"] },
+  { "Emoji": "🎂", "Name": "Birthday Cake", "Category": "Food & Drink", "Keywords": ["cake", "birthday", "sweet", "food", "কেক", "জন্মদিন", "মিষ্টি"] },
+  { "Emoji": "🍫", "Name": "Chocolate Bar", "Category": "Food & Drink", "Keywords": ["chocolate", "sweet", "candy", "চকলেট", "মিষ্টি"] },
+  { "Emoji": "🍩", "Name": "Doughnut", "Category": "Food & Drink", "Keywords": ["donut", "sweet", "snack", "ডোনাট", "মিষ্টি"] },
+  { "Emoji": "☕", "Name": "Hot Beverage", "Category": "Food & Drink", "Keywords": ["coffee", "tea", "chai", "drink", "চা", "কফি", "পানীয়"] },
+  { "Emoji": "🍵", "Name": "Teacup Without Handle", "Category": "Food & Drink", "Keywords": ["tea", "green tea", "drink", "চা", "পানীয়"] },
+  { "Emoji": "🥤", "Name": "Cup with Straw", "Category": "Food & Drink", "Keywords": ["juice", "soda", "drink", "জুস", "পানীয়"] },
+
+  { "Emoji": "🚗", "Name": "Automobile", "Category": "Travel & Places", "Keywords": ["car", "drive", "vehicle", "travel", "গাড়ি", "ভ্রমণ"] },
+  { "Emoji": "🚕", "Name": "Taxi", "Category": "Travel & Places", "Keywords": ["taxi", "cab", "car", "ট্যাক্সি", "গাড়ি"] },
+  { "Emoji": "🚌", "Name": "Bus", "Category": "Travel & Places", "Keywords": ["bus", "transport", "travel", "বাস", "যাতায়াত"] },
+  { "Emoji": "🛺", "Name": "Auto Rickshaw", "Category": "Travel & Places", "Keywords": ["rickshaw", "cng", "auto", "dhaka", "রিকশা", "সিএনজি"] },
+  { "Emoji": "🚲", "Name": "Bicycle", "Category": "Travel & Places", "Keywords": ["bike", "bicycle", "cycle", "সাইকেল"] },
+  { "Emoji": "🏍️", "Name": "Motorcycle", "Category": "Travel & Places", "Keywords": ["bike", "motorcycle", "ride", "বাইক", "মোটরসাইকেল"] },
+  { "Emoji": "🚆", "Name": "Train", "Category": "Travel & Places", "Keywords": ["train", "railway", "metro", "travel", "ট্রেন", "রেল", "মেট্রোরেল"] },
+  { "Emoji": "✈️", "Name": "Airplane", "Category": "Travel & Places", "Keywords": ["plane", "flight", "travel", "fly", "বিমান", "ভ্রমণ"] },
+  { "Emoji": "🚀", "Name": "Rocket", "Category": "Travel & Places", "Keywords": ["rocket", "space", "launch", "fast", "রকেট", "মহাকাশ"] },
+  { "Emoji": "⛵", "Name": "Sailboat", "Category": "Travel & Places", "Keywords": ["boat", "river", "sail", "নৌকা", "নদী"] },
+  { "Emoji": "🏠", "Name": "House", "Category": "Travel & Places", "Keywords": ["house", "home", "building", "বাড়ি", "ঘর"] },
+  { "Emoji": "🏢", "Name": "Office Building", "Category": "Travel & Places", "Keywords": ["office", "building", "work", "অফিস", "ভবন"] },
+  { "Emoji": "🏥", "Name": "Hospital", "Category": "Travel & Places", "Keywords": ["hospital", "doctor", "medical", "হাসপাতাল"] },
+  { "Emoji": "🏫", "Name": "School", "Category": "Travel & Places", "Keywords": ["school", "college", "education", "স্কুল", "কলেজ", "বিদ্যালয়"] },
+  { "Emoji": "🕌", "Name": "Mosque", "Category": "Travel & Places", "Keywords": ["mosque", "islam", "prayer", "eid", "মসজিদ", "নামাজ", "ঈদ"] },
+  { "Emoji": "🛕", "Name": "Hindu Temple", "Category": "Travel & Places", "Keywords": ["temple", "mandir", "puja", "মন্দির", "পূজা"] },
+  { "Emoji": "🏖️", "Name": "Beach with Umbrella", "Category": "Travel & Places", "Keywords": ["beach", "sea", "coxsbazar", "vacation", "সমুদ্র", "সৈকত", "কক্সবাজার"] },
+  { "Emoji": "🌍", "Name": "Globe Showing Europe-Africa", "Category": "Travel & Places", "Keywords": ["world", "earth", "globe", "পৃথিবী", "বিশ্ব"] },
+
+  { "Emoji": "⚽", "Name": "Soccer Ball", "Category": "Activities", "Keywords": ["soccer", "football", "sport", "ball", "ফুটবল", "খেলা"] },
+  { "Emoji": "🏏", "Name": "Cricket Game", "Category": "Activities", "Keywords": ["cricket", "bat", "ball", "sport", "ক্রিকেট", "খেলা"] },
+  { "Emoji": "🏀", "Name": "Basketball", "Category": "Activities", "Keywords": ["basketball", "sport", "ball", "বাস্কেটবল", "খেলা"] },
+  { "Emoji": "🏸", "Name": "Badminton", "Category": "Activities", "Keywords": ["badminton", "racket", "sport", "winter", "ব্যাডমিন্টন", "খেলা"] },
+  { "Emoji": "🎾", "Name": "Tennis", "Category": "Activities", "Keywords": ["tennis", "ball", "sport", "টেনিস", "খেলা"] },
+  { "Emoji": "🏆", "Name": "Trophy", "Category": "Activities", "Keywords": ["trophy", "winner", "champion", "award", "ট্রফি", "জয়", "চ্যাম্পিয়ন"] },
+  { "Emoji": "🥇", "Name": "1st Place Medal", "Category": "Activities", "Keywords": ["gold", "medal", "first", "winner", "পদক", "প্রথম"] },
+  { "Emoji": "🎉", "Name": "Party Popper", "Category": "Activities", "Keywords": ["party", "celebrate", "congrats", "উৎসব", "অভিনন্দন", "আনন্দ"] },
+  { "Emoji": "🎊", "Name": "Confetti Ball", "Category": "Activities", "Keywords": ["confetti", "celebrate", "party", "উৎসব", "আনন্দ"] },
+  { "Emoji": "🎈", "Name": "Balloon", "Category": "Activities", "Keywords": ["balloon", "party", "birthday", "বেলুন", "জন্মদিন"] },
+  { "Emoji": "🎁", "Name": "Wrapped Gift", "Category": "Activities", "Keywords": ["gift", "present", "birthday", "উপহার", "জন্মদিন"] },
+  { "Emoji": "🎮", "Name": "Video Game", "Category": "Activities", "Keywords": ["game", "controller", "play", "গেম", "খেলা"] },
+  { "Emoji": "🎵", "Name": "Musical Note", "Category": "Activities", "Keywords": ["music", "song", "note", "গান", "সুর", "সংগীত"] },
+  { "Emoji": "🎶", "Name": "Musical Notes", "Category": "Activities", "Keywords": ["music", "melody", "song", "গান", "সংগীত"] },
+  { "Emoji": "🎸", "Name": "Guitar", "Category": "Activities", "Keywords": ["guitar", "music", "instrument", "গিটার", "গান"] },
+  { "Emoji": "🎤", "Name": "Microphone", "Category": "Activities", "Keywords": ["mic", "sing", "karaoke", "গান", "মাইক্রোফোন"] },
+  { "Emoji": "🎧", "Name": "Headphone", "Category": "Activities", "Keywords": ["headphone", "music", "audio", "হেডফোন", "গান"] },
+  { "Emoji": "🎬", "Name": "Clapper Board", "Category": "Activities", "Keywords": ["movie", "film", "cinema", "সিনেমা", "চলচ্চিত্র"] },
+
+  { "Emoji": "💻", "Name": "Laptop", "Category": "Objects", "Keywords": ["laptop", "computer", "pc", "code", "work", "ল্যাপটপ", "কম্পিউটার", "কাজ"] },
+  { "Emoji": "🖥️", "Name": "Desktop Computer", "Category": "Objects", "Keywords": ["computer", "monitor", "pc", "কম্পিউটার"] },
+  { "Emoji": "⌨️", "Name": "Keyboard", "Category": "Objects", "Keywords": ["keyboard", "type", "typing", "কীবোর্ড", "টাইপ"] },
+  { "Emoji": "📱", "Name": "Mobile Phone", "Category": "Objects", "Keywords": ["phone", "mobile", "smartphone", "call", "মোবাইল", "ফোন"] },
+  { "Emoji": "📷", "Name": "Camera", "Category": "Objects", "Keywords": ["camera", "photo", "picture", "ক্যামেরা", "ছবি"] },
+  { "Emoji": "💡", "Name": "Light Bulb", "Category": "Objects", "Keywords": ["idea", "light", "bulb", "smart", "আইডিয়া", "আলো", "বুদ্ধি"] },
+  { "Emoji": "🔦", "Name": "Flashlight", "Category": "Objects", "Keywords": ["flashlight", "torch", "light", "টর্চ", "আলো"] },
+  { "Emoji": "📚", "Name": "Books", "Category": "Objects", "Keywords": ["book", "study", "read", "education", "বই", "পড়াশোনা"] },
+  { "Emoji": "📖", "Name": "Open Book", "Category": "Objects", "Keywords": ["book", "read", "story", "বই", "পড়া"] },
+  { "Emoji": "✏️", "Name": "Pencil", "Category": "Objects", "Keywords": ["pencil", "write", "edit", "পেন্সিল", "লেখা"] },
+  { "Emoji": "✒️", "Name": "Black Nib", "Category": "Objects", "Keywords": ["pen", "write", "poetry", "কলম", "সাহিত্য", "লেখা"] },
+  { "Emoji": "📝", "Name": "Memo", "Category": "Objects", "Keywords": ["note", "memo", "write", "নোট", "লেখা"] },
+  { "Emoji": "📁", "Name": "File Folder", "Category": "Objects", "Keywords": ["folder", "file", "office", "ফাইল", "ফোল্ডার"] },
+  { "Emoji": "📅", "Name": "Calendar", "Category": "Objects", "Keywords": ["calendar", "date", "schedule", "ক্যালেন্ডার", "তারিখ"] },
+  { "Emoji": "📌", "Name": "Pushpin", "Category": "Objects", "Keywords": ["pin", "location", "important", "পিন", "জরুরি"] },
+  { "Emoji": "🔒", "Name": "Locked", "Category": "Objects", "Keywords": ["lock", "security", "private", "safe", "তালা", "নিরাপত্তা"] },
+  { "Emoji": "🔑", "Name": "Key", "Category": "Objects", "Keywords": ["key", "password", "unlock", "চাবি"] },
+  { "Emoji": "💰", "Name": "Money Bag", "Category": "Objects", "Keywords": ["money", "cash", "rich", "taka", "টাকা", "ধন", "অর্থ"] },
+  { "Emoji": "💎", "Name": "Gem Stone", "Category": "Objects", "Keywords": ["diamond", "gem", "precious", "হীরা", "রত্ন"] },
+  { "Emoji": "⏰", "Name": "Alarm Clock", "Category": "Objects", "Keywords": ["clock", "time", "alarm", "ঘড়ি", "সময়"] },
+  { "Emoji": "🔔", "Name": "Bell", "Category": "Objects", "Keywords": ["bell", "notification", "alert", "ঘণ্টা", "নোটিফিকেশন"] },
+
+  { "Emoji": "❤️", "Name": "Red Heart", "Category": "Symbols", "Keywords": ["heart", "love", "red", "romance", "ভালোবাসা", "হৃদয়", "প্রেম"] },
+  { "Emoji": "🧡", "Name": "Orange Heart", "Category": "Symbols", "Keywords": ["heart", "love", "orange", "ভালোবাসা", "হৃদয়"] },
+  { "Emoji": "💛", "Name": "Yellow Heart", "Category": "Symbols", "Keywords": ["heart", "love", "yellow", "friendship", "ভালোবাসা", "হৃদয়"] },
+  { "Emoji": "💚", "Name": "Green Heart", "Category": "Symbols", "Keywords": ["heart", "love", "green", "nature", "ভালোবাসা", "হৃদয়"] },
+  { "Emoji": "💙", "Name": "Blue Heart", "Category": "Symbols", "Keywords": ["heart", "love", "blue", "trust", "ভালোবাসা", "হৃদয়"] },
+  { "Emoji": "💜", "Name": "Purple Heart", "Category": "Symbols", "Keywords": ["heart", "love", "purple", "ভালোবাসা", "হৃদয়"] },
+  { "Emoji": "🖤", "Name": "Black Heart", "Category": "Symbols", "Keywords": ["heart", "black", "dark", "কালো হৃদয়", "হৃদয়"] },
+  { "Emoji": "🤍", "Name": "White Heart", "Category": "Symbols", "Keywords": ["heart", "white", "pure", "peace", "সাদা হৃদয়", "ভালোবাসা"] },
+  { "Emoji": "💖", "Name": "Sparkling Heart", "Category": "Symbols", "Keywords": ["heart", "love", "sparkle", "ভালোবাসা", "হৃদয়"] },
+  { "Emoji": "💝", "Name": "Heart with Ribbon", "Category": "Symbols", "Keywords": ["heart", "gift", "love", "ভালোবাসা", "উপহার"] },
+  { "Emoji": "💗", "Name": "Growing Heart", "Category": "Symbols", "Keywords": ["heart", "love", "pink", "ভালোবাসা"] },
+  { "Emoji": "💓", "Name": "Beating Heart", "Category": "Symbols", "Keywords": ["heart", "beat", "love", "হৃদস্পন্দন", "ভালোবাসা"] },
+  { "Emoji": "💕", "Name": "Two Hearts", "Category": "Symbols", "Keywords": ["hearts", "love", "couple", "ভালোবাসা", "প্রেম"] },
+  { "Emoji": "💔", "Name": "Broken Heart", "Category": "Symbols", "Keywords": ["heart", "broken", "sad", "হৃদয় ভাঙা", "দুঃখ"] },
+  { "Emoji": "❤️‍🔥", "Name": "Heart on Fire", "Category": "Symbols", "Keywords": ["heart", "fire", "love", "passion", "ভালোবাসা", "আগুন"] },
+  { "Emoji": "🔥", "Name": "Fire", "Category": "Symbols", "Keywords": ["fire", "hot", "lit", "flame", "আগুন", "গরম", "সেরা"] },
+  { "Emoji": "✨", "Name": "Sparkles", "Category": "Symbols", "Keywords": ["sparkle", "star", "magic", "clean", "ঝকঝকে", "তারা", "জাদু"] },
+  { "Emoji": "💯", "Name": "Hundred Points", "Category": "Symbols", "Keywords": ["100", "perfect", "score", "hundred", "একশ", "সেরা", "খাঁটি"] },
+  { "Emoji": "💥", "Name": "Collision", "Category": "Symbols", "Keywords": ["boom", "explosion", "bang", "বিস্ফোরণ", "ধামাকা"] },
+  { "Emoji": "💫", "Name": "Dizzy", "Category": "Symbols", "Keywords": ["star", "shooting star", "magic", "তারা"] },
+  { "Emoji": "✅", "Name": "Check Mark Button", "Category": "Symbols", "Keywords": ["check", "yes", "done", "correct", "ঠিক", "সম্পন্ন", "হ্যাঁ"] },
+  { "Emoji": "❌", "Name": "Cross Mark", "Category": "Symbols", "Keywords": ["cross", "no", "wrong", "cancel", "ভুল", "না", "বাতিল"] },
+  { "Emoji": "⚠️", "Name": "Warning", "Category": "Symbols", "Keywords": ["warning", "alert", "caution", "সতর্কতা", "সাবধান"] },
+  { "Emoji": "❓", "Name": "Red Question Mark", "Category": "Symbols", "Keywords": ["question", "what", "help", "প্রশ্ন", "কী"] },
+  { "Emoji": "❗", "Name": "Red Exclamation Mark", "Category": "Symbols", "Keywords": ["exclamation", "important", "alert", "জরুরি"] },
+  { "Emoji": "♻️", "Name": "Recycling Symbol", "Category": "Symbols", "Keywords": ["recycle", "green", "environment", "পরিবেশ"] },
+  { "Emoji": "♾️", "Name": "Infinity", "Category": "Symbols", "Keywords": ["infinity", "forever", "অসীম", "চিরকাল"] },
+
+  { "Emoji": "🇧🇩", "Name": "Flag: Bangladesh", "Category": "Flags", "Keywords": ["flag", "bangladesh", "bd", "dhaka", "বাংলাদেশ", "পতাকা"] },
+  { "Emoji": "🇮🇳", "Name": "Flag: India", "Category": "Flags", "Keywords": ["flag", "india", "in", "ভারত", "পতাকা"] },
+  { "Emoji": "🇵🇰", "Name": "Flag: Pakistan", "Category": "Flags", "Keywords": ["flag", "pakistan", "pk", "পাকিস্তান", "পতাকা"] },
+  { "Emoji": "🇳🇵", "Name": "Flag: Nepal", "Category": "Flags", "Keywords": ["flag", "nepal", "নেপাল", "পতাকা"] },
+  { "Emoji": "🇱🇰", "Name": "Flag: Sri Lanka", "Category": "Flags", "Keywords": ["flag", "sri lanka", "শ্রীলঙ্কা", "পতাকা"] },
+  { "Emoji": "🇵🇸", "Name": "Flag: Palestine", "Category": "Flags", "Keywords": ["flag", "palestine", "ফিলিস্তিন", "পতাকা"] },
+  { "Emoji": "🇸🇦", "Name": "Flag: Saudi Arabia", "Category": "Flags", "Keywords": ["flag", "saudi", "arabia", "সৌদি আরব", "পতাকা"] },
+  { "Emoji": "🇦🇪", "Name": "Flag: United Arab Emirates", "Category": "Flags", "Keywords": ["flag", "uae", "dubai", "দুবাই", "আমিরাত", "পতাকা"] },
+  { "Emoji": "🇶🇦", "Name": "Flag: Qatar", "Category": "Flags", "Keywords": ["flag", "qatar", "কাতার", "পতাকা"] },
+  { "Emoji": "🇲🇾", "Name": "Flag: Malaysia", "Category": "Flags", "Keywords": ["flag", "malaysia", "মালয়েশিয়া", "পতাকা"] },
+  { "Emoji": "🇸🇬", "Name": "Flag: Singapore", "Category": "Flags", "Keywords": ["flag", "singapore", "সিঙ্গাপুর", "পতাকা"] },
+  { "Emoji": "🇹🇷", "Name": "Flag: Türkiye", "Category": "Flags", "Keywords": ["flag", "turkey", "turkiye", "তুরস্ক", "পতাকা"] },
+  { "Emoji": "🇺🇸", "Name": "Flag: United States", "Category": "Flags", "Keywords": ["flag", "usa", "us", "america", "আমেরিকা", "পতাকা"] },
+  { "Emoji": "🇬🇧", "Name": "Flag: United Kingdom", "Category": "Flags", "Keywords": ["flag", "uk", "britain", "england", "যুক্তরাজ্য", "ইংল্যান্ড", "পতাকা"] },
+  { "Emoji": "🇨🇦", "Name": "Flag: Canada", "Category": "Flags", "Keywords": ["flag", "canada", "কানাডা", "পতাকা"] },
+  { "Emoji": "🇦🇺", "Name": "Flag: Australia", "Category": "Flags", "Keywords": ["flag", "australia", "অস্ট্রেলিয়া", "পতাকা"] },
+  { "Emoji": "🇩🇪", "Name": "Flag: Germany", "Category": "Flags", "Keywords": ["flag", "germany", "জার্মানি", "পতাকা"] },
+  { "Emoji": "🇫🇷", "Name": "Flag: France", "Category": "Flags", "Keywords": ["flag", "france", "ফ্রান্স", "পতাকা"] },
+  { "Emoji": "🇮🇹", "Name": "Flag: Italy", "Category": "Flags", "Keywords": ["flag", "italy", "ইতালি", "পতাকা"] },
+  { "Emoji": "🇪🇸", "Name": "Flag: Spain", "Category": "Flags", "Keywords": ["flag", "spain", "স্পেন", "পতাকা"] },
+  { "Emoji": "🇧🇷", "Name": "Flag: Brazil", "Category": "Flags", "Keywords": ["flag", "brazil", "football", "ব্রাজিল", "পতাকা"] },
+  { "Emoji": "🇦🇷", "Name": "Flag: Argentina", "Category": "Flags", "Keywords": ["flag", "argentina", "football", "আর্জেন্টিনা", "পতাকা"] },
+  { "Emoji": "🇯🇵", "Name": "Flag: Japan", "Category": "Flags", "Keywords": ["flag", "japan", "jp", "জাপান", "পতাকা"] },
+  { "Emoji": "🇰🇷", "Name": "Flag: South Korea", "Category": "Flags", "Keywords": ["flag", "korea", "kr", "কোরিয়া", "পতাকা"] },
+  { "Emoji": "🏳️", "Name": "White Flag", "Category": "Flags", "Keywords": ["flag", "white", "peace", "সাদা পতাকা", "শান্তি"] },
+  { "Emoji": "🏁", "Name": "Chequered Flag", "Category": "Flags", "Keywords": ["flag", "race", "finish", "win", "রেস", "সমাপ্তি"] }
 ]

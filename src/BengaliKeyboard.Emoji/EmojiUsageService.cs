@@ -203,6 +203,12 @@ public sealed class EmojiUsageService : IEmojiService
                 }
             },
             cancellationToken).ConfigureAwait(false);
+
+        foreach (var item in _repository.GetAll())
+        {
+            item.UsageCount = 0;
+            item.LastUsedUtc = null;
+        }
     }
 
     /// <summary>
@@ -274,17 +280,17 @@ public sealed class EmojiUsageService : IEmojiService
         IEnumerable<EmojiItem> items,
         IReadOnlyDictionary<string, (int UsageCount, DateTimeOffset? LastUsedUtc)> usageMap)
     {
-        if (usageMap.Count == 0)
-        {
-            return;
-        }
-
         foreach (var item in items)
         {
             if (usageMap.TryGetValue(item.Emoji, out var usage))
             {
                 item.UsageCount = usage.UsageCount;
                 item.LastUsedUtc = usage.LastUsedUtc;
+            }
+            else
+            {
+                item.UsageCount = 0;
+                item.LastUsedUtc = null;
             }
         }
     }

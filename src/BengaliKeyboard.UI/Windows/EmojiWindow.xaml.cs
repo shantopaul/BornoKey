@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 using BengaliKeyboard.Core.Interfaces;
+using BengaliKeyboard.Core.Models;
 using BengaliKeyboard.UI.ViewModels;
 
 namespace BengaliKeyboard.UI.Windows;
@@ -124,6 +125,14 @@ public partial class EmojiWindow : Window
         {
             Keyboard.ClearFocus();
             SetInteractiveFocusAllowed(false);
+        }
+    }
+
+    private void OnEmojiTileMouseEnter(object sender, MouseEventArgs e)
+    {
+        if (sender is FrameworkElement { DataContext: EmojiItem hoveredItem })
+        {
+            _viewModel.SetHoveredEmoji(hoveredItem);
         }
     }
 
