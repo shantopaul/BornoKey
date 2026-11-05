@@ -33,6 +33,7 @@ public partial class KeyboardKeyControl : UserControl
     private bool _isHovered;
     private int _repeatDelayMs = 400;
     private int _repeatIntervalMs = 45;
+    private double _uniformScale = 1.0;
 
     public KeyDefinition? KeyModel
     {
@@ -70,6 +71,40 @@ public partial class KeyboardKeyControl : UserControl
 
         _repeatDelayMs = Math.Clamp(repeatDelayMs, 150, 1000);
         _repeatIntervalMs = Math.Clamp(repeatIntervalMs, 15, 250);
+    }
+
+    /// <summary>
+    /// Scales glyph font sizes and emoji key icons uniformly (1:1 aspect ratio) based on window dimensions,
+    /// preventing horizontal or vertical glyph distortion when resizing the keyboard to any aspect ratio.
+    /// </summary>
+    public void ApplyResponsiveScale(double uniformScale)
+    {
+        _uniformScale = Math.Clamp(uniformScale, 0.55, 1.85);
+        ApplyScaledTypography();
+    }
+
+    private void ApplyScaledTypography()
+    {
+        var key = KeyModel;
+        if (key is null)
+        {
+            return;
+        }
+
+        var basePrimarySize = key.KeyType switch
+        {
+            KeyType.Space => 13.5,
+            KeyType.LayoutSwitch or KeyType.LanguageSwitch => 13.5,
+            KeyType.Number => 16.5,
+            _ => 19.0
+        };
+
+        PrimaryGlyphText.FontSize = Math.Clamp(Math.Round(basePrimarySize * _uniformScale, 1), 10.0, 30.0);
+        SecondaryGlyphText.FontSize = Math.Clamp(Math.Round(10.5 * _uniformScale, 1), 7.5, 16.5);
+
+        var iconSize = Math.Clamp(Math.Round(22.0 * _uniformScale), 14.0, 34.0);
+        PrimaryEmojiImage.Width = iconSize;
+        PrimaryEmojiImage.Height = iconSize;
     }
 
     private static void OnKeyModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -120,14 +155,7 @@ public partial class KeyboardKeyControl : UserControl
 
         ToolTip = string.IsNullOrWhiteSpace(key.Tooltip) ? null : key.Tooltip;
 
-        PrimaryGlyphText.FontSize = key.KeyType switch
-        {
-            KeyType.Space => 13.5,
-            KeyType.LayoutSwitch or KeyType.LanguageSwitch => 13.5,
-            KeyType.Number => 16.5,
-            _ => 19.0
-        };
-
+        ApplyScaledTypography();
         ApplyCurrentSurfaceBrush();
     }
 

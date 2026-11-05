@@ -16,7 +16,8 @@
     <Border Background="{DynamicResource Brush.Header.Background}"
             BorderBrush="{DynamicResource Brush.Window.Border}"
             BorderThickness="0,0,0,1"
-            Padding="10,0,6,0">
+            Height="32"
+            Padding="8,0,6,0">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />

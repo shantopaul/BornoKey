@@ -30,6 +30,8 @@ public partial class HeaderToolbarControl : UserControl
     private bool _isDraggingScaleBadge;
     private bool _hasMovedDuringScaleDrag;
     private Point _scaleDragLastPoint;
+    private bool _isCompact;
+    private double _lastAvailableWidth = 850.0;
 
     public event EventHandler? CompactModeRequested;
 
@@ -72,12 +74,41 @@ public partial class HeaderToolbarControl : UserControl
 
     public void SetCompactButtonState(bool isCompact)
     {
-        CompactModeButton.Content = isCompact ? "⤡ Expand" : "⤢ Compact";
+        _isCompact = isCompact;
+        UpdateCompactButtonLabel();
+
         if (MenuCompactModeItem is not null)
         {
             MenuCompactModeItem.Header = isCompact
                 ? "⤡  Switch to Expanded Mode (850×310)"
                 : "⤢  Switch to Compact Mode (620×230)";
+        }
+    }
+
+    public void ApplyResponsiveLayout(double availableWidth, double uniformScale = 1.0)
+    {
+        if (double.IsNaN(availableWidth) || availableWidth <= 0)
+        {
+            return;
+        }
+
+        _lastAvailableWidth = availableWidth;
+        BrandTitleBorder.Visibility = availableWidth < 540
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+
+        UpdateCompactButtonLabel();
+    }
+
+    private void UpdateCompactButtonLabel()
+    {
+        if (_lastAvailableWidth < 680)
+        {
+            CompactModeButton.Content = _isCompact ? "⤡" : "⤢";
+        }
+        else
+        {
+            CompactModeButton.Content = _isCompact ? "⤡ Expand" : "⤢ Compact";
         }
     }
 

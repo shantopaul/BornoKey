@@ -25,6 +25,13 @@ public partial class SuggestionBarControl : UserControl
             typeof(SuggestionBarControl),
             new PropertyMetadata(null));
 
+    public static readonly DependencyProperty CandidateFontSizeProperty =
+        DependencyProperty.Register(
+            nameof(CandidateFontSize),
+            typeof(double),
+            typeof(SuggestionBarControl),
+            new PropertyMetadata(14.5));
+
     public IEnumerable? Candidates
     {
         get => (IEnumerable?)GetValue(CandidatesProperty);
@@ -37,9 +44,22 @@ public partial class SuggestionBarControl : UserControl
         set => SetValue(CandidateSelectedCommandProperty, value);
     }
 
+    public double CandidateFontSize
+    {
+        get => (double)GetValue(CandidateFontSizeProperty);
+        set => SetValue(CandidateFontSizeProperty, value);
+    }
+
     public SuggestionBarControl()
     {
         InitializeComponent();
+    }
+
+    public void ApplyResponsiveLayout(double uniformScale)
+    {
+        var clampedScale = Math.Clamp(uniformScale, 0.60, 1.65);
+        RootSuggestionBorder.Height = Math.Clamp(Math.Round(36.0 * clampedScale), 26.0, 48.0);
+        CandidateFontSize = Math.Clamp(Math.Round(14.5 * clampedScale, 1), 11.0, 20.0);
     }
 
     private static void OnCandidatesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

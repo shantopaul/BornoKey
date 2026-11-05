@@ -59,7 +59,7 @@ public partial class KeyboardWindow : Window
         _windowResizer = new NonActivatingWindowResizer(
             this,
             onResizeCompleted: PersistCurrentGeometryAfterResize,
-            onSizeChangedLive: (w, _) => UpdateHeaderScaleBadge(w));
+            onSizeChangedLive: (w, h) => ApplyResponsiveMetrics(w, h));
 
         ApplySavedWindowGeometry(_settingsService.Current.WindowState);
         Opacity = _settingsService.Current.Opacity;
@@ -70,6 +70,7 @@ public partial class KeyboardWindow : Window
         SizeChanged += OnWindowSizeChanged;
         DpiChanged += OnWindowDpiChanged;
         RebuildKeyboardGrid(_viewModel.CurrentLayout);
+        ApplyResponsiveMetrics(Width, Height);
     }
 
     public void ApplyAppearanceFromSettings()
@@ -143,7 +144,7 @@ public partial class KeyboardWindow : Window
             Left = state.Left;
             Top = state.Top;
             Topmost = state.AlwaysOnTop;
-            UpdateHeaderScaleBadge(Width);
+            ApplyResponsiveMetrics(Width, Height);
         }
         finally
         {
@@ -218,6 +219,9 @@ public partial class KeyboardWindow : Window
                     currentSettings.KeySpacing,
                     currentSettings.KeyRepeatDelayMs,
                     currentSettings.KeyRepeatIntervalMs);
+                keyControl.ApplyResponsiveScale(ComputeUniformScale(
+                    ActualWidth > 0 ? ActualWidth : Width,
+                    ActualHeight > 0 ? ActualHeight : Height));
 
                 Grid.SetColumn(keyControl, c);
                 rowGrid.Children.Add(keyControl);
@@ -279,7 +283,7 @@ public partial class KeyboardWindow : Window
 
     private void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        UpdateHeaderScaleBadge(e.NewSize.Width);
+        ApplyResponsiveMetrics(e.NewSize.Width, e.NewSize.Height);
 
         if (_isApplyingGeometry || !IsLoaded)
         {
@@ -328,10 +332,37 @@ public partial class KeyboardWindow : Window
         _ = SetWindowLongPtr(hwnd, GwlExStyle, new IntPtr(updatedStyle));
     }
 
-    private void UpdateHeaderScaleBadge(double width)
+    private static double ComputeUniformScale(double width, double height)
+    {
+        var w = width > 0 ? width : WindowStateConfig.DefaultExpandedWidth;
+        var h = height > 0 ? height : WindowStateConfig.DefaultExpandedHeight;
+        var wRatio = w / WindowStateConfig.DefaultExpandedWidth;
+        var hRatio = h / WindowStateConfig.DefaultExpandedHeight;
+        return Math.Clamp(Math.Min(wRatio, hRatio), 0.55, 1.85);
+    }
+
+    private void ApplyResponsiveMetrics(double width, double height)
     {
         var pct = NonActivatingWindowResizer.CalculateScalePercentage(width, WindowStateConfig.DefaultExpandedWidth);
         HeaderToolbar.SetScalePercentage(pct);
+
+        var uniformScale = ComputeUniformScale(width, height);
+        HeaderToolbar.ApplyResponsiveLayout(width, uniformScale);
+        SuggestionBar.ApplyResponsiveLayout(uniformScale);
+
+        foreach (var child in KeyboardGridHost.Children)
+        {
+            if (child is Grid rowGrid)
+            {
+                foreach (var keyElement in rowGrid.Children)
+                {
+                    if (keyElement is KeyboardKeyControl keyControl)
+                    {
+                        keyControl.ApplyResponsiveScale(uniformScale);
+                    }
+                }
+            }
+        }
     }
 
     private void PersistCurrentGeometryAfterResize()

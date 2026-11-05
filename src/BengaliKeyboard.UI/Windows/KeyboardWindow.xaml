@@ -36,48 +36,46 @@
             CornerRadius="8"
             ClipToBounds="True">
         <Grid>
-            <!-- Proportional Vector Scaling across Expanded (850x310), Compact (620x230), and Custom Dragged Sizes -->
-            <Viewbox Stretch="Fill">
-                <Grid Width="850" Height="310">
-                    <Grid.RowDefinitions>
-                        <!-- Row 0: Draggable Header Toolbar (32px) -->
-                        <RowDefinition Height="32" />
-                        <!-- Row 1: Suggestion Bar (36px) -->
-                        <RowDefinition Height="36" />
-                        <!-- Row 2: Proportional Data-Driven Keyboard Layout Grid -->
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
+            <!-- Responsive Proportional Layout (Zero Non-Uniform Viewbox Font/Icon Distortion) -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <!-- Row 0: Draggable Header Toolbar -->
+                    <RowDefinition Height="Auto" />
+                    <!-- Row 1: Responsive Suggestion Bar -->
+                    <RowDefinition Height="Auto" />
+                    <!-- Row 2: Proportional Data-Driven Keyboard Layout Grid -->
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                    <!-- Row 0: Header Toolbar -->
-                    <controls:HeaderToolbarControl x:Name="HeaderToolbar"
-                                                   Grid.Row="0"
-                                                   ActiveLanguage="{Binding ActiveLanguage}"
-                                                   ToggleLanguageCommand="{Binding ToggleLanguageCommand}"
-                                                   MouseLeftButtonDown="OnHeaderMouseLeftButtonDown"
-                                                   DecreaseSizeRequested="OnHeaderDecreaseSizeRequested"
-                                                   IncreaseSizeRequested="OnHeaderIncreaseSizeRequested"
-                                                   ResetSizeRequested="OnHeaderResetSizeRequested"
-                                                   DragScaleDeltaRequested="OnHeaderDragScaleDeltaRequested"
-                                                   EmojiPanelRequested="OnHeaderEmojiPanelRequested"
-                                                   ClipboardPanelRequested="OnHeaderClipboardPanelRequested"
-                                                   SettingsRequested="OnHeaderSettingsRequested"
-                                                   CompactModeRequested="OnHeaderCompactModeRequested"
-                                                   MinimalIconModeRequested="OnHeaderMinimalIconModeRequested"
-                                                   MinimizeRequested="OnHeaderMinimizeRequested"
-                                                   CloseRequested="OnHeaderCloseRequested" />
+                <!-- Row 0: Header Toolbar -->
+                <controls:HeaderToolbarControl x:Name="HeaderToolbar"
+                                               Grid.Row="0"
+                                               ActiveLanguage="{Binding ActiveLanguage}"
+                                               ToggleLanguageCommand="{Binding ToggleLanguageCommand}"
+                                               MouseLeftButtonDown="OnHeaderMouseLeftButtonDown"
+                                               DecreaseSizeRequested="OnHeaderDecreaseSizeRequested"
+                                               IncreaseSizeRequested="OnHeaderIncreaseSizeRequested"
+                                               ResetSizeRequested="OnHeaderResetSizeRequested"
+                                               DragScaleDeltaRequested="OnHeaderDragScaleDeltaRequested"
+                                               EmojiPanelRequested="OnHeaderEmojiPanelRequested"
+                                               ClipboardPanelRequested="OnHeaderClipboardPanelRequested"
+                                               SettingsRequested="OnHeaderSettingsRequested"
+                                               CompactModeRequested="OnHeaderCompactModeRequested"
+                                               MinimalIconModeRequested="OnHeaderMinimalIconModeRequested"
+                                               MinimizeRequested="OnHeaderMinimizeRequested"
+                                               CloseRequested="OnHeaderCloseRequested" />
 
-                    <!-- Row 1: Smart Suggestion Bar -->
-                    <controls:SuggestionBarControl x:Name="SuggestionBar"
-                                                   Grid.Row="1"
-                                                   Candidates="{Binding Suggestions}"
-                                                   CandidateSelectedCommand="{Binding SelectCandidateCommand}" />
+                <!-- Row 1: Smart Suggestion Bar -->
+                <controls:SuggestionBarControl x:Name="SuggestionBar"
+                                               Grid.Row="1"
+                                               Candidates="{Binding Suggestions}"
+                                               CandidateSelectedCommand="{Binding SelectCandidateCommand}" />
 
-                    <!-- Row 2: Dynamic Proportional Key Grid Host -->
-                    <Grid x:Name="KeyboardGridHost"
-                          Grid.Row="2"
-                          Margin="4,3,4,5" />
-                </Grid>
-            </Viewbox>
+                <!-- Row 2: Dynamic Proportional Key Grid Host -->
+                <Grid x:Name="KeyboardGridHost"
+                      Grid.Row="2"
+                      Margin="4,3,4,5" />
+            </Grid>
 
             <!-- Bottom-Right Corner Interactive Drag-Resize Grip (◢) -->
             <Border HorizontalAlignment="Right"
