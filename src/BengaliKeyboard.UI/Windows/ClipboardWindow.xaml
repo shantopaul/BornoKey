@@ -36,11 +36,11 @@
         <Grid>
             <Grid.RowDefinitions>
                 <!-- Row 0: Top Header Bar with Search, Pause/Resume Monitoring, Clear Unpinned, and Back -->
-                <RowDefinition Height="38" />
+                <RowDefinition Height="40" />
                 <!-- Row 1: Scrollable Clipboard Entries List -->
                 <RowDefinition Height="*" />
                 <!-- Row 2: Privacy Status Footer -->
-                <RowDefinition Height="24" />
+                <RowDefinition Height="26" />
             </Grid.RowDefinitions>
 
             <!-- Row 0: Header Toolbar -->
@@ -48,7 +48,7 @@
                     Background="{DynamicResource Brush.Header.Background}"
                     BorderBrush="{DynamicResource Brush.Window.Border}"
                     BorderThickness="0,0,0,1"
-                    Padding="8,4"
+                    Padding="8,5"
                     MouseLeftButtonDown="OnHeaderMouseLeftButtonDown">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -64,14 +64,9 @@
                             Content="← বাংলা / ABC"
                             Command="{Binding BackToKeyboardCommand}"
                             Click="OnNonSearchActionClick"
-                            Background="{DynamicResource Brush.Key.Special.Background}"
-                            Foreground="{DynamicResource Brush.Text.Primary}"
-                            BorderThickness="0"
-                            Padding="10,4"
+                            Style="{StaticResource Style.Button.ToolbarPill}"
                             Margin="0,0,8,0"
                             FontSize="12"
-                            FontWeight="SemiBold"
-                            Cursor="Hand"
                             ToolTip="Return to Virtual Keyboard" />
 
                     <!-- Real-Time Search Box -->
@@ -79,10 +74,22 @@
                             Background="{DynamicResource Brush.Key.Regular.Background}"
                             BorderBrush="{DynamicResource Brush.Window.Border}"
                             BorderThickness="1"
-                            CornerRadius="5"
-                            Padding="6,2">
+                            CornerRadius="6"
+                            Padding="8,2">
                         <Grid>
-                            <TextBox x:Name="SearchTextBox"
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="🔍"
+                                       FontSize="11.5"
+                                       Foreground="{DynamicResource Brush.Text.Muted}"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,6,0"
+                                       IsHitTestVisible="False" />
+                            <TextBox Grid.Column="1"
+                                     x:Name="SearchTextBox"
                                      Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
                                      Background="Transparent"
                                      Foreground="{DynamicResource Brush.Text.Primary}"
@@ -92,7 +99,8 @@
                                      FontSize="12.5"
                                      PreviewMouseLeftButtonDown="OnSearchBoxPreviewMouseLeftButtonDown"
                                      LostFocus="OnSearchBoxLostFocus" />
-                            <TextBlock Text="Search clipboard history (বাংলা / English)..."
+                            <TextBlock Grid.Column="1"
+                                       Text="Search clipboard history (বাংলা / English)..."
                                        Foreground="{DynamicResource Brush.Text.Muted}"
                                        FontSize="12"
                                        VerticalAlignment="Center"
@@ -116,20 +124,15 @@
                     <Button Grid.Column="2"
                             Command="{Binding ToggleMonitoringCommand}"
                             Click="OnNonSearchActionClick"
-                            Background="{DynamicResource Brush.Key.Special.Background}"
-                            Foreground="{DynamicResource Brush.Text.Primary}"
-                            BorderThickness="0"
-                            Padding="8,4"
                             Margin="8,0,0,0"
-                            FontSize="11.5"
-                            Cursor="Hand"
                             ToolTip="Pause or Resume Clipboard Monitoring">
                         <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Content" Value="Pause Capture" />
+                            <Style TargetType="Button" BasedOn="{StaticResource Style.Button.ToolbarPill}">
+                                <Setter Property="Content" Value="⏸ Pause Capture" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsMonitoringEnabled}" Value="False">
-                                        <Setter Property="Content" Value="Resume Capture" />
+                                        <Setter Property="Content" Value="▶ Resume Capture" />
+                                        <Setter Property="Foreground" Value="{DynamicResource Brush.Status.Warning}" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -138,16 +141,12 @@
 
                     <!-- Clear Unpinned Clips Button -->
                     <Button Grid.Column="3"
-                            Content="Clear Unpinned"
+                            Content="🗑️ Clear Unpinned"
                             Command="{Binding ClearUnpinnedCommand}"
                             Click="OnNonSearchActionClick"
-                            Background="{DynamicResource Brush.Key.Special.Background}"
+                            Style="{StaticResource Style.Button.ToolbarPill}"
                             Foreground="{DynamicResource Brush.Text.Secondary}"
-                            BorderThickness="0"
-                            Padding="8,4"
                             Margin="6,0,0,0"
-                            FontSize="11.5"
-                            Cursor="Hand"
                             ToolTip="Delete all unpinned clipboard items (pinned items are kept)" />
 
                     <!-- Close Panel Button -->
@@ -155,20 +154,15 @@
                             Content="✕"
                             Command="{Binding BackToKeyboardCommand}"
                             Click="OnNonSearchActionClick"
-                            Background="Transparent"
-                            Foreground="{DynamicResource Brush.Text.Secondary}"
-                            BorderThickness="0"
-                            Padding="8,4"
-                            Margin="4,0,0,0"
-                            FontSize="13"
-                            Cursor="Hand"
+                            Style="{StaticResource Style.Button.IconClose}"
+                            Margin="6,0,0,0"
                             ToolTip="Close Clipboard Panel" />
                 </Grid>
             </Border>
 
             <!-- Row 1: Scrollable List of Pinned & Recent Clips -->
             <ScrollViewer Grid.Row="1"
-                          Margin="6,4,6,2"
+                          Margin="8,6,6,4"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled">
                 <ItemsControl ItemsSource="{Binding Entries}">
@@ -177,9 +171,9 @@
                             <Border Background="{DynamicResource Brush.Key.Regular.Background}"
                                     BorderBrush="{DynamicResource Brush.Window.Border}"
                                     BorderThickness="1"
-                                    CornerRadius="5"
-                                    Margin="0,0,0,4"
-                                    Padding="6,4">
+                                    CornerRadius="6"
+                                    Margin="0,0,4,5"
+                                    Padding="8,5">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -193,11 +187,9 @@
                                             Command="{Binding DataContext.InsertEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                             CommandParameter="{Binding}"
                                             Click="OnNonSearchActionClick"
-                                            Background="Transparent"
-                                            BorderThickness="0"
+                                            Style="{StaticResource Style.Button.SubtleAction}"
                                             HorizontalContentAlignment="Left"
-                                            Cursor="Hand"
-                                            Focusable="False"
+                                            Padding="4,2"
                                             ToolTip="Click to insert into active window">
                                         <TextBlock Text="{Binding PreviewText}"
                                                    FontFamily="{StaticResource FontFamily.Bengali}"
@@ -209,18 +201,12 @@
 
                                     <!-- Re-Copy to System Clipboard Button -->
                                     <Button Grid.Column="1"
-                                            Content="Copy"
+                                            Content="📋 Copy"
                                             Command="{Binding DataContext.CopyEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                             CommandParameter="{Binding}"
                                             Click="OnNonSearchActionClick"
-                                            Background="Transparent"
-                                            Foreground="{DynamicResource Brush.Text.Secondary}"
-                                            BorderThickness="0"
-                                            Padding="6,2"
+                                            Style="{StaticResource Style.Button.SubtleAction}"
                                             Margin="4,0,0,0"
-                                            FontSize="11.5"
-                                            Cursor="Hand"
-                                            Focusable="False"
                                             ToolTip="Copy this clip to system clipboard" />
 
                                     <!-- Pin / Unpin Button (📌) -->
@@ -228,17 +214,11 @@
                                             Command="{Binding DataContext.TogglePinCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                             CommandParameter="{Binding}"
                                             Click="OnNonSearchActionClick"
-                                            Background="Transparent"
-                                            BorderThickness="0"
-                                            Padding="6,2"
                                             Margin="4,0,0,0"
-                                            FontSize="12"
-                                            Cursor="Hand"
-                                            Focusable="False"
                                             ToolTip="Pin or Unpin this clip">
                                         <Button.Style>
-                                            <Style TargetType="Button">
-                                                <Setter Property="Content" Value="Pin" />
+                                            <Style TargetType="Button" BasedOn="{StaticResource Style.Button.SubtleAction}">
+                                                <Setter Property="Content" Value="📌 Pin" />
                                                 <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Muted}" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsPinned}" Value="True">
@@ -256,14 +236,8 @@
                                             Command="{Binding DataContext.DeleteEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                             CommandParameter="{Binding}"
                                             Click="OnNonSearchActionClick"
-                                            Background="Transparent"
-                                            Foreground="{DynamicResource Brush.Text.Secondary}"
-                                            BorderThickness="0"
-                                            Padding="6,2"
+                                            Style="{StaticResource Style.Button.SubtleAction}"
                                             Margin="2,0,0,0"
-                                            FontSize="12"
-                                            Cursor="Hand"
-                                            Focusable="False"
                                             ToolTip="Delete this clip" />
                                 </Grid>
                             </Border>
@@ -277,7 +251,7 @@
                     Background="{DynamicResource Brush.Header.Background}"
                     BorderBrush="{DynamicResource Brush.Window.Border}"
                     BorderThickness="0,1,0,0"
-                    Padding="8,2">
+                    Padding="10,3">
                 <DockPanel>
                     <TextBlock Text="🔒 100% Local DPAPI Encrypted • Passwords Excluded"
                                Foreground="{DynamicResource Brush.Text.Muted}"
