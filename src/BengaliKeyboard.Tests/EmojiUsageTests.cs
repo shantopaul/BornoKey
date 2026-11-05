@@ -215,6 +215,40 @@ public sealed class EmojiUsageTests : IDisposable
         Assert.NotNull(grinning);
     }
 
+    [Fact]
+    public void ColorEmojiRenderer_RendersFullColorPixelsForEmojisAndCountryFlags()
+    {
+        foreach (var glyph in new[] { "😂", "❤️", "🔥", "🇧🇩", "🇺🇸" })
+        {
+            var bitmap = BengaliKeyboard.UI.Controls.ColorEmojiRenderer.GetOrCreateEmojiBitmap(glyph, 64);
+            Assert.NotNull(bitmap);
+            Assert.Equal(64, bitmap!.PixelWidth);
+            Assert.Equal(64, bitmap.PixelHeight);
+
+            var stride = bitmap.PixelWidth * 4;
+            var pixels = new byte[stride * bitmap.PixelHeight];
+            bitmap.CopyPixels(pixels, stride, 0);
+
+            var colorfulPixelCount = 0;
+            for (var i = 0; i < pixels.Length; i += 4)
+            {
+                var b = pixels[i];
+                var g = pixels[i + 1];
+                var r = pixels[i + 2];
+                var a = pixels[i + 3];
+
+                if (a > 32 && (Math.Abs(r - g) > 25 || Math.Abs(r - b) > 25 || Math.Abs(g - b) > 25))
+                {
+                    colorfulPixelCount++;
+                }
+            }
+
+            Assert.True(
+                colorfulPixelCount > 20,
+                $"Expected full-color pixels for '{glyph}', but found only {colorfulPixelCount} colorful pixels.");
+        }
+    }
+
     private EmojiUsageService CreateEmojiService()
     {
         var repository = new EmojiRepository();

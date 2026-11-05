@@ -4,6 +4,7 @@
     <RootNamespace>BengaliKeyboard.UI</RootNamespace>
     <AssemblyName>BengaliKeyboard.UI</AssemblyName>
     <UseWPF>true</UseWPF>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

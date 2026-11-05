@@ -38,6 +38,16 @@
                 <TextBlock x:Name="PrimaryGlyphText"
                            Style="{StaticResource Style.Text.KeyPrimary}"
                            IsHitTestVisible="False" />
+
+                <!-- Full-Color Emoji / Clipboard Key Icon -->
+                <Image x:Name="PrimaryEmojiImage"
+                       Width="22"
+                       Height="22"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Visibility="Collapsed"
+                       IsHitTestVisible="False" />
             </Grid>
         </Border>
     </Border>

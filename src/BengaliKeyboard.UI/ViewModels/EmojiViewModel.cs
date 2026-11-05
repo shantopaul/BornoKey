@@ -49,7 +49,10 @@ public sealed partial class EmojiViewModel : ObservableObject
     private string _statusMessage = string.Empty;
 
     [ObservableProperty]
-    private string _currentSectionTitle = "😀  Smileys & Emotions";
+    private string _currentSectionIcon = "😀";
+
+    [ObservableProperty]
+    private string _currentSectionTitle = "Smileys & Emotions";
 
     [ObservableProperty]
     private bool _isFrequentlyUsedSelected;
@@ -305,7 +308,8 @@ public sealed partial class EmojiViewModel : ObservableObject
         }
 
         var (icon, _) = EmojiCategoryTab.ResolveMetadata(activeCategory);
-        CurrentSectionTitle = $"{icon}  {activeCategory}";
+        CurrentSectionIcon = icon;
+        CurrentSectionTitle = activeCategory;
     }
 
     private async Task RefreshPopularFallbackAsync(
@@ -356,19 +360,23 @@ public sealed partial class EmojiViewModel : ObservableObject
 
         if (!string.IsNullOrWhiteSpace(SearchQuery))
         {
-            CurrentSectionTitle = $"🔍  Search Results for \"{SearchQuery.Trim()}\"";
+            CurrentSectionIcon = "🔍";
+            CurrentSectionTitle = $"Search Results for \"{SearchQuery.Trim()}\"";
         }
         else
         {
             var (icon, _) = EmojiCategoryTab.ResolveMetadata(SelectedCategory);
-            CurrentSectionTitle = $"{icon}  {SelectedCategory}";
+            CurrentSectionIcon = icon;
+            CurrentSectionTitle = SelectedCategory;
         }
 
         if (DisplayedEmojis.Count > 0)
         {
             SetHoveredEmoji(DisplayedEmojis[0]);
             IsEmptyStateVisible = false;
-            StatusMessage = $"{DisplayedEmojis.Count} emojis";
+            StatusMessage = ShowPopularFallbackSection && PopularEmojis.Count > 0
+                ? $"{DisplayedEmojis.Count} recent • {PopularEmojis.Count} popular"
+                : $"{DisplayedEmojis.Count} emojis";
         }
         else if (PopularEmojis.Count > 0)
         {

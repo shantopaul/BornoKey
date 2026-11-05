@@ -1,6 +1,7 @@
 <Window x:Class="BengaliKeyboard.UI.Windows.EmojiWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:BengaliKeyboard.UI.Controls"
         Title="BornoKey — Emoji Keyboard"
         Width="850"
         Height="310"
@@ -27,6 +28,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <controls:ColorEmojiConverter x:Key="ColorEmojiConverter" />
         </ResourceDictionary>
     </Window.Resources>
 
@@ -87,14 +89,14 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0"
-                                       Text="🔍"
-                                       FontFamily="{StaticResource FontFamily.Emoji}"
-                                       FontSize="11.5"
-                                       Foreground="{DynamicResource Brush.Text.Muted}"
-                                       VerticalAlignment="Center"
-                                       Margin="0,0,6,0"
-                                       IsHitTestVisible="False" />
+                            <Image Grid.Column="0"
+                                   Source="{Binding Source=🔍, Converter={StaticResource ColorEmojiConverter}, ConverterParameter=32}"
+                                   Width="14"
+                                   Height="14"
+                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,6,0"
+                                   IsHitTestVisible="False" />
 
                             <TextBox Grid.Column="1"
                                      x:Name="SearchTextBox"
@@ -141,13 +143,23 @@
 
                     <!-- Clear Frequently Used History Button -->
                     <Button Grid.Column="2"
-                            Content="🗑️ Clear Recent"
                             Command="{Binding ClearHistoryCommand}"
                             Click="OnNonSearchActionClick"
                             Style="{StaticResource Style.Button.ToolbarPill}"
                             Foreground="{DynamicResource Brush.Text.Secondary}"
                             Margin="8,0,0,0"
-                            ToolTip="Clear Frequently Used Emoji History" />
+                            ToolTip="Clear Frequently Used Emoji History">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="{Binding Source=🗑️, Converter={StaticResource ColorEmojiConverter}, ConverterParameter=32}"
+                                   Width="13"
+                                   Height="13"
+                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,5,0" />
+                            <TextBlock Text="Clear Recent"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
 
                     <!-- Size Decrease [ − ] & Increase [ + ] Pill Buttons -->
                     <StackPanel Grid.Column="3"
@@ -205,12 +217,12 @@
                                     Style="{StaticResource Style.Button.EmojiCategoryTab}"
                                     ToolTip="{Binding DisplayTooltip}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Icon}"
-                                               FontFamily="{StaticResource FontFamily.Emoji}"
-                                               Foreground="{DynamicResource Brush.Text.Primary}"
-                                               FontSize="13"
-                                               VerticalAlignment="Center"
-                                               Margin="0,0,4,0" />
+                                    <Image Source="{Binding Icon, Converter={StaticResource ColorEmojiConverter}, ConverterParameter=40}"
+                                           Width="15"
+                                           Height="15"
+                                           RenderOptions.BitmapScalingMode="HighQuality"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,4,0" />
                                     <TextBlock Text="{Binding ShortTitle}"
                                                FontSize="11"
                                                FontWeight="SemiBold"
@@ -229,11 +241,21 @@
                               HorizontalScrollBarVisibility="Disabled">
                     <StackPanel>
                         <!-- Active Category / Search Section Header -->
-                        <TextBlock Text="{Binding CurrentSectionTitle}"
-                                   Foreground="{DynamicResource Brush.Text.Secondary}"
-                                   FontSize="11.5"
-                                   FontWeight="SemiBold"
-                                   Margin="4,2,0,4" />
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="4,3,0,5"
+                                    VerticalAlignment="Center">
+                            <Image Source="{Binding CurrentSectionIcon, Converter={StaticResource ColorEmojiConverter}, ConverterParameter=40}"
+                                   Width="15"
+                                   Height="15"
+                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,6,0" />
+                            <TextBlock Text="{Binding CurrentSectionTitle}"
+                                       Foreground="{DynamicResource Brush.Text.Secondary}"
+                                       FontSize="11.5"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
 
                         <!-- Primary Emoji Grid -->
                         <ItemsControl ItemsSource="{Binding DisplayedEmojis}">
@@ -250,12 +272,12 @@
                                             MouseEnter="OnEmojiTileMouseEnter"
                                             Style="{StaticResource Style.Button.EmojiTile}"
                                             ToolTip="{Binding Name}">
-                                        <TextBlock Text="{Binding Emoji}"
-                                                   FontFamily="{StaticResource FontFamily.Emoji}"
-                                                   Foreground="{DynamicResource Brush.Text.Primary}"
-                                                   FontSize="24"
-                                                   HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center" />
+                                        <Image Source="{Binding Emoji, Converter={StaticResource ColorEmojiConverter}, ConverterParameter=64}"
+                                               Width="30"
+                                               Height="30"
+                                               RenderOptions.BitmapScalingMode="HighQuality"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
                                     </Button>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -267,11 +289,21 @@
                             <Border BorderBrush="{DynamicResource Brush.Window.Border}"
                                     BorderThickness="0,1,0,0"
                                     Padding="0,6,0,0">
-                                <TextBlock Text="✨  Popular &amp; Quick Emojis"
-                                           Foreground="{DynamicResource Brush.Text.Secondary}"
-                                           FontSize="11.5"
-                                           FontWeight="SemiBold"
-                                           Margin="4,0,0,4" />
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="4,0,0,5"
+                                            VerticalAlignment="Center">
+                                    <Image Source="{Binding Source=✨, Converter={StaticResource ColorEmojiConverter}, ConverterParameter=40}"
+                                           Width="15"
+                                           Height="15"
+                                           RenderOptions.BitmapScalingMode="HighQuality"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,6,0" />
+                                    <TextBlock Text="Popular &amp; Quick Emojis"
+                                               Foreground="{DynamicResource Brush.Text.Secondary}"
+                                               FontSize="11.5"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
                             </Border>
 
                             <ItemsControl ItemsSource="{Binding PopularEmojis}">
@@ -288,12 +320,12 @@
                                                 MouseEnter="OnEmojiTileMouseEnter"
                                                 Style="{StaticResource Style.Button.EmojiTile}"
                                                 ToolTip="{Binding Name}">
-                                            <TextBlock Text="{Binding Emoji}"
-                                                       FontFamily="{StaticResource FontFamily.Emoji}"
-                                                       Foreground="{DynamicResource Brush.Text.Primary}"
-                                                       FontSize="24"
-                                                       HorizontalAlignment="Center"
-                                                       VerticalAlignment="Center" />
+                                            <Image Source="{Binding Emoji, Converter={StaticResource ColorEmojiConverter}, ConverterParameter=64}"
+                                                   Width="30"
+                                                   Height="30"
+                                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" />
                                         </Button>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -310,12 +342,12 @@
                                 Margin="4,12,8,4"
                                 HorizontalAlignment="Center">
                             <StackPanel HorizontalAlignment="Center">
-                                <TextBlock Text="🔎"
-                                           FontFamily="{StaticResource FontFamily.Emoji}"
-                                           Foreground="{DynamicResource Brush.Text.Primary}"
-                                           FontSize="26"
-                                           HorizontalAlignment="Center"
-                                           Margin="0,0,0,6" />
+                                <Image Source="{Binding Source=🔎, Converter={StaticResource ColorEmojiConverter}, ConverterParameter=64}"
+                                       Width="28"
+                                       Height="28"
+                                       RenderOptions.BitmapScalingMode="HighQuality"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,0,0,6" />
                                 <TextBlock Text="{Binding StatusMessage}"
                                            Foreground="{DynamicResource Brush.Text.Primary}"
                                            FontSize="13"
@@ -350,12 +382,12 @@
                                Margin="12,0,14,0" />
 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding PreviewEmoji}"
-                                   FontFamily="{StaticResource FontFamily.Emoji}"
-                                   Foreground="{DynamicResource Brush.Text.Primary}"
-                                   FontSize="16"
-                                   VerticalAlignment="Center"
-                                   Margin="0,0,8,0" />
+                        <Image Source="{Binding PreviewEmoji, Converter={StaticResource ColorEmojiConverter}, ConverterParameter=48}"
+                               Width="18"
+                               Height="18"
+                               RenderOptions.BitmapScalingMode="HighQuality"
+                               VerticalAlignment="Center"
+                               Margin="0,0,8,0" />
                         <TextBlock Text="{Binding PreviewTitle}"
                                    Foreground="{DynamicResource Brush.Text.Primary}"
                                    FontSize="12"

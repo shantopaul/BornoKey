@@ -97,6 +97,27 @@ public partial class KeyboardKeyControl : UserControl
             ? Visibility.Collapsed
             : Visibility.Visible;
 
+        if (key.KeyType is KeyType.EmojiSwitch or KeyType.ClipboardSwitch && !string.IsNullOrWhiteSpace(key.DisplayLabel))
+        {
+            var colorBitmap = ColorEmojiRenderer.GetOrCreateEmojiBitmap(key.DisplayLabel, 48);
+            if (colorBitmap is not null)
+            {
+                PrimaryEmojiImage.Source = colorBitmap;
+                PrimaryEmojiImage.Visibility = Visibility.Visible;
+                PrimaryGlyphText.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                PrimaryEmojiImage.Visibility = Visibility.Collapsed;
+                PrimaryGlyphText.Visibility = Visibility.Visible;
+            }
+        }
+        else
+        {
+            PrimaryEmojiImage.Visibility = Visibility.Collapsed;
+            PrimaryGlyphText.Visibility = Visibility.Visible;
+        }
+
         ToolTip = string.IsNullOrWhiteSpace(key.Tooltip) ? null : key.Tooltip;
 
         PrimaryGlyphText.FontSize = key.KeyType switch
