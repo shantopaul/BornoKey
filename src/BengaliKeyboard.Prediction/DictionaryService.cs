@@ -66,12 +66,17 @@ public sealed class DictionaryService
 
                     await using (var countCmd = connection.CreateCommand())
                     {
-                        countCmd.CommandText = "SELECT COUNT(1) FROM BengaliWords;";
-                        var existingCount = Convert.ToInt64(
+                        countCmd.CommandText = """
+                            SELECT
+                                (SELECT COUNT(1) FROM BengaliWords WHERE Word NOT GLOB '[A-Za-z]*') > 0
+                                AND
+                                (SELECT COUNT(1) FROM BengaliWords WHERE Word = 'hello') > 0;
+                            """;
+                        var hasBothBengaliAndEnglish = Convert.ToInt64(
                             await countCmd.ExecuteScalarAsync(ct).ConfigureAwait(false),
-                            CultureInfo.InvariantCulture);
+                            CultureInfo.InvariantCulture) == 1;
 
-                        if (existingCount > 0)
+                        if (hasBothBengaliAndEnglish)
                         {
                             _isSeeded = true;
                             return;
@@ -362,7 +367,8 @@ public sealed class DictionaryService
             return string.Empty;
         }
 
-        return normalizedWord.Length >= 2 ? normalizedWord[..2] : normalizedWord;
+        var slice = normalizedWord.Length >= 2 ? normalizedWord[..2] : normalizedWord;
+        return slice.ToLowerInvariant();
     }
 
     /// <summary>

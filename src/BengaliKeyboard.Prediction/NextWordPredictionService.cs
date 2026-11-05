@@ -4,9 +4,7 @@ namespace BengaliKeyboard.Prediction;
 
 /// <summary>
 /// Context-aware next-word prediction service using a Trigram → Bigram → Unigram backoff model
-/// (PRD.md Section 3.4 Capability 2).
-/// Example: <c>আমি</c> → <c>[বাংলা] [একটি] [আজ] [তোমাকে] [ভালো]</c>;
-/// <c>আমি বাংলা</c> → <c>[লিখতে] [ভাষা] [শিখছি] [পড়তে]</c>.
+/// for both Bengali and English contexts (PRD.md Section 3.4 Capability 2).
 /// </summary>
 public sealed class NextWordPredictionService
 {
@@ -25,16 +23,18 @@ public sealed class NextWordPredictionService
         CancellationToken cancellationToken = default)
     {
         var clampedMax = Math.Clamp(maxResults, 1, 10);
-        var seenWords = new HashSet<string>(StringComparer.Ordinal);
+        var seenWords = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var ranked = new List<SuggestionCandidate>(clampedMax);
 
         var hasW1 = !string.IsNullOrWhiteSpace(previousWord1);
         var hasW2 = !string.IsNullOrWhiteSpace(previousWord2);
+        var isEnglishContext = (hasW2 && WordCompletionService.IsAsciiWord(previousWord2!.Trim()))
+            || (hasW1 && WordCompletionService.IsAsciiWord(previousWord1!.Trim()));
 
         // 1. Trigram lookup when two context words are present
         if (hasW1 && hasW2)
         {
-            // Support both chronological ("আমি", "বাংলা") and reverse-chronological ("বাংলা", "আমি") call conventions
+            // Support both chronological ("আমি", "বাংলা" / "how", "are") and reverse-chronological call conventions
             var trigramMatches = await _nGramModel
                 .QueryTrigramsAsync(previousWord1!, previousWord2!, clampedMax, cancellationToken)
                 .ConfigureAwait(false);
@@ -111,9 +111,9 @@ public sealed class NextWordPredictionService
             }
         }
 
-        // 3. Unigram fallback if still under maxResults
+        // 3. Script-aware Unigram fallback if still under maxResults
         var unigramMatches = await _nGramModel
-            .QueryTopUnigramsAsync(clampedMax * 2, cancellationToken)
+            .QueryTopUnigramsAsync(clampedMax * 2, preferEnglish: isEnglishContext, cancellationToken)
             .ConfigureAwait(false);
 
         if (unigramMatches.Count > 0)

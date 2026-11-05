@@ -6,7 +6,7 @@ namespace BengaliKeyboard.Prediction;
 
 /// <summary>
 /// Queries offline Unigram, Bigram, and Trigram language model tables in <c>dictionary.db</c> (ReadOnly mode)
-/// and merges session-learned user bigrams without mutating <c>dictionary.db</c> (CHK-10).
+/// for both Bengali and English contexts and merges session-learned user bigrams without mutating <c>dictionary.db</c> (CHK-10).
 /// </summary>
 public sealed class NGramModel
 {
@@ -32,7 +32,7 @@ public sealed class NGramModel
             return;
         }
 
-        var norm1 = previousWord.Trim().Normalize(NormalizationForm.FormC);
+        var norm1 = NormalizeContextLookupWord(previousWord);
         var norm2 = currentWord.Trim().Normalize(NormalizationForm.FormC);
         if (norm1.Length == 0 || norm2.Length == 0)
         {
@@ -63,8 +63,8 @@ public sealed class NGramModel
 
         await _dictionaryService.EnsureSeededAsync(cancellationToken).ConfigureAwait(false);
 
-        var norm1 = word1.Trim().Normalize(NormalizationForm.FormC);
-        var norm2 = word2.Trim().Normalize(NormalizationForm.FormC);
+        var norm1 = NormalizeContextLookupWord(word1);
+        var norm2 = NormalizeContextLookupWord(word2);
         var clampedLimit = Math.Clamp(limit, 1, 20);
 
         return await SqliteConnectionFactory.ExecuteWithRetryAsync(
@@ -110,7 +110,7 @@ public sealed class NGramModel
 
         await _dictionaryService.EnsureSeededAsync(cancellationToken).ConfigureAwait(false);
 
-        var norm = previousWord.Trim().Normalize(NormalizationForm.FormC);
+        var norm = NormalizeContextLookupWord(previousWord);
         var clampedLimit = Math.Clamp(limit, 1, 20);
 
         return await SqliteConnectionFactory.ExecuteWithRetryAsync(
@@ -159,6 +159,7 @@ public sealed class NGramModel
 
     public async Task<IReadOnlyList<(string Word, int Frequency)>> QueryTopUnigramsAsync(
         int limit = 5,
+        bool preferEnglish = false,
         CancellationToken cancellationToken = default)
     {
         await _dictionaryService.EnsureSeededAsync(cancellationToken).ConfigureAwait(false);
@@ -172,12 +173,21 @@ public sealed class NGramModel
                     .ConfigureAwait(false);
 
                 await using var command = connection.CreateCommand();
-                command.CommandText = """
-                    SELECT Word, Frequency
-                    FROM BengaliWords
-                    ORDER BY Frequency DESC
-                    LIMIT @limit;
-                    """;
+                command.CommandText = preferEnglish
+                    ? """
+                      SELECT Word, Frequency
+                      FROM BengaliWords
+                      WHERE Word GLOB '[A-Za-z]*'
+                      ORDER BY Frequency DESC
+                      LIMIT @limit;
+                      """
+                    : """
+                      SELECT Word, Frequency
+                      FROM BengaliWords
+                      WHERE Word NOT GLOB '[A-Za-z]*'
+                      ORDER BY Frequency DESC
+                      LIMIT @limit;
+                      """;
                 command.Parameters.AddWithValue("@limit", clampedLimit);
 
                 var results = new List<(string Word, int Frequency)>();
@@ -190,5 +200,13 @@ public sealed class NGramModel
                 return (IReadOnlyList<(string Word, int Frequency)>)results;
             },
             cancellationToken).ConfigureAwait(false);
+    }
+
+    private static string NormalizeContextLookupWord(string word)
+    {
+        var normalized = word.Trim().Normalize(NormalizationForm.FormC);
+        return WordCompletionService.IsAsciiWord(normalized)
+            ? normalized.ToLowerInvariant()
+            : normalized;
     }
 }
